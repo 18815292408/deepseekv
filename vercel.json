@@ -1,10 +1,27 @@
 {
-    "version": 2,
-    "name": "deepseek-3.2-landing-page",
-    "rewrites": [
-      {
-        "source": "/",
-        "destination": "/deepseek32-landing.html"
-      }
-    ]
-  }
+  "version": 2,
+  "name": "deepseek-3.2-landing-page",
+  "builds": [
+    {
+      "src": "deepseek32-landing.html",
+      "use": "@vercel/static"
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/deepseek32-landing.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/deepseek32-landing.html",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
+        }
+      ]
+    }
+  ]
+}
