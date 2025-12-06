@@ -1,87 +1,10 @@
 {
-  "version": 2,
-  "name": "deepseek-3.2-landing-page",
-  "builds": [
-    {
-      "src": "deepseek32-landing.html",
-      "use": "@vercel/static"
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/",
-      "destination": "/deepseek32-landing.html"
-    }
-  ],
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "X-Content-Type-Options",
-          "value": "nosniff"
-        },
-        {
-          "key": "X-Frame-Options",
-          "value": "DENY"
-        },
-        {
-          "key": "X-XSS-Protection",
-          "value": "1; mode=block"
-        },
-        {
-          "key": "Referrer-Policy",
-          "value": "strict-origin-when-cross-origin"
-        },
-        {
-          "key": "Permissions-Policy",
-          "value": "camera=(), microphone=(), geolocation=()"
-        }
-      ]
-    },
-    {
-      "source": "/deepseek32-landing.html",
-      "headers": [
-        {
-          "key": "X-Robots-Tag",
-          "value": "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
-        },
-        {
-          "key": "Content-Type",
-          "value": "text/html; charset=UTF-8"
-        },
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=3600"
-        }
-      ]
-    },
-    {
-      "source": "/robots.txt",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=86400"
-        }
-      ]
-    },
-    {
-      "source": "/sitemap.xml",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=86400"
-        }
-      ]
-    },
-    {
-      "source": "/(.*\\.(svg|png|jpg|jpeg|gif|webp|ico|woff|woff2|ttf))",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
-        }
-      ]
-    }
-  ]
-}
+    "version": 2,
+    "name": "deepseek-3.2-landing-page",
+    "rewrites": [
+      {
+        "source": "/",
+        "destination": "/deepseek32-landing.html"
+      }
+    ]
+  }
