@@ -1,0 +1,66 @@
+# deepseek 3.2 robots.txt
+# 生成时间: 2024年
+
+User-agent: *
+Allow: /
+Allow: /deepseek32-landing.html
+Allow: /images/
+Allow: /css/
+Allow: /js/
+
+# 禁止访问敏感文件和目录
+Disallow: /admin/
+Disallow: /private/
+Disallow: /logs/
+Disallow: /config/
+Disallow: /temp/
+Disallow: /*.log$
+Disallow: /*.tmp$
+Disallow: /*.bak$
+
+# 禁止访问开发相关文件
+Disallow: /node_modules/
+Disallow: /src/
+Disallow: /.git/
+Disallow: /package.json
+Disallow: /package-lock.json
+
+# 搜索引擎爬取频率建议
+Crawl-delay: 1
+
+# 站点地图位置
+Sitemap: https://deepseek.com/sitemap.xml
+
+# 特殊搜索引擎处理
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: BaiduSpider
+Allow: /
+
+User-agent: YandexBot
+Allow: /
+
+# 社交媒体爬虫
+User-agent: FacebookBot
+Allow: /
+
+User-agent: TwitterBot
+Allow: /
+
+# SEO工具爬虫
+User-agent: AhrefsBot
+Crawl-delay: 5
+
+User-agent: SemrushBot
+Crawl-delay: 5
+
+# 屏蔽恶意爬虫
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /

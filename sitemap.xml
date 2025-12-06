@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" 
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 
+        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+
+    <!-- 首页 - deepseek 3.2 落地页 -->
+    <url>
+        <loc>https://deepseek.com/</loc>
+        <lastmod>2024-12-06</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>1.0</priority>
+    </url>
+    
+    <!-- deepseek 3.2 落地页 -->
+    <url>
+        <loc>https://deepseek.com/deepseek32-landing.html</loc>
+        <lastmod>2024-12-06</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.9</priority>
+    </url>
+    
+    <!-- 功能特性页面锚点 -->
+    <url>
+        <loc>https://deepseek.com/deepseek32-landing.html#features</loc>
+        <lastmod>2024-12-06</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    
+    <!-- 价格方案页面锚点 -->
+    <url>
+        <loc>https://deepseek.com/deepseek32-landing.html#pricing</loc>
+        <lastmod>2024-12-06</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    
+    <!-- 常见问题页面锚点 -->
+    <url>
+        <loc>https://deepseek.com/deepseek32-landing.html#faq</loc>
+        <lastmod>2024-12-06</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    
+    <!-- 技术详情页面锚点 -->
+    <url>
+        <loc>https://deepseek.com/deepseek32-landing.html#technical</loc>
+        <lastmod>2024-12-06</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    
+    <!-- 行业解决方案页面锚点 -->
+    <url>
+        <loc>https://deepseek.com/deepseek32-landing.html#solutions</loc>
+        <lastmod>2024-12-06</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    
+    <!-- 竞品对比分析页面锚点 -->
+    <url>
+        <loc>https://deepseek.com/deepseek32-landing.html#comparison</loc>
+        <lastmod>2024-12-06</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    
+    <!-- 客户案例页面锚点 -->
+    <url>
+        <loc>https://deepseek.com/deepseek32-landing.html#cases</loc>
+        <lastmod>2024-12-06</lastmod>
+        <changefreq>quarterly</changefreq>
+        <priority>0.6</priority>
+    </url>
+
+</urlset>

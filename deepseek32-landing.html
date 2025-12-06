@@ -1,0 +1,2394 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>deepseekv3.2 - 开源大语言模型 | 推理能力对标GPT-5 | deepseekv3.2官方介绍</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="deepseek 3.2（也经常被写作deepseekv3.2）是新一代开源大语言模型，推理能力对标GPT-5，采用DSA稀疏注意力机制，长文本处理成本降低60%，推理速度提升3.5倍，支持128K超长上下文和深度思考模式，Speciale版在国际竞赛中获得金牌，完全开源且性价比极高。">
+    <meta name="keywords" content="deepseek 3.2, 开源大语言模型, GPT-5替代, AI助手, 深度思考模式, DSA机制, 128K上下文">
+    <meta name="author" content="DeepSeek Technologies">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="zh-CN">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="deepseek 3.2 - 开源大语言模型 | GPT-5级别推理能力">
+    <meta property="og:description" content="deepseek 3.2 开源大语言模型，推理能力对标GPT-5，成本降低60%。DSA机制创新，支持128K上下文和深度思考模式。Speciale版国际竞赛金牌，性价比革命。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://deepseek.com">
+    <meta property="og:image" content="https://deepseek.com/images/og-image.jpg">
+    <meta property="og:site_name" content="DeepSeek">
+    <meta property="og:locale" content="zh_CN">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="deepseek 3.2 - 开源大语言模型 | GPT-5级别推理 | 性价比革命">
+    <meta name="twitter:description" content="deepseek 3.2 开源大语言模型，推理能力对标GPT-5，DSA创新降本60%，支持深度思考模式。立即免费体验deepseek 3.2！">
+    <meta name="twitter:image" content="https://deepseek.com/images/twitter-card.jpg">
+    <meta name="twitter:site" content="@deepseek_ai">
+    <meta name="twitter:creator" content="@deepseek_ai">
+    
+    <!-- Additional Meta Tags -->
+    <meta name="theme-color" content="#0066FF">
+    <meta name="msapplication-TileColor" content="#0066FF">
+    <meta name="application-name" content="deepseek 3.2">
+    <meta name="apple-mobile-web-app-title" content="deepseek 3.2">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- Additional SEO Headers -->
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://deepseek.com">
+    
+    <!-- Robots and Sitemap -->
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml">
+    
+    <!-- Favicon - 内联SVG数据，确保图标存在 -->
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%230066FF;stop-opacity:1'/%3E%3Cstop offset='100%25' style='stop-color:%230044CC;stop-opacity:1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='6' fill='url(%23bg)'/%3E%3Cg transform='translate(16,16)'%3E%3Ccircle cx='0' cy='-2' r='6' fill='%23FFFFFF' opacity='0.9'/%3E%3Ccircle cx='-2' cy='-2' r='1' fill='%230066FF'/%3E%3Ccircle cx='2' cy='-2' r='1' fill='%230066FF'/%3E%3Cpath d='M -2,0 Q 0,2 2,0' stroke='%230066FF' stroke-width='0.8' fill='none' stroke-linecap='round'/%3E%3Crect x='-4' y='4' width='8' height='6' rx='2' fill='%23FFFFFF' opacity='0.9'/%3E%3Cline x1='0' y1='-8' x2='0' y2='-10' stroke='%23FFFFFF' stroke-width='1' stroke-linecap='round'/%3E%3Ccircle cx='0' cy='-11' r='1' fill='%2300D4FF'/%3E%3C/g%3E%3Ctext x='16' y='28' font-family='Arial,sans-serif' font-size='6' font-weight='bold' text-anchor='middle' fill='%23FFFFFF'%3ED3.2%3C/text%3E%3C/svg%3E">
+    
+    <!-- 标准favicon链接（作为备用） -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#0066FF">
+    <link rel="manifest" href="/site.webmanifest">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    
+    <!-- 结构化数据 -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "deepseek 3.2",
+        "alternateName": "Deepseekv3.2",
+        "description": "新一代开源大语言模型，推理能力对标GPT-5，采用DSA稀疏注意力机制，支持深度思考模式和工具调用",
+        "url": "https://deepseek.com",
+        "applicationCategory": "AI助手, 开源软件",
+        "operatingSystem": "跨平台",
+        "offers": [
+            {
+                "@type": "Offer",
+                "name": "免费版",
+                "price": "0",
+                "priceCurrency": "CNY",
+                "description": "基础AI助手功能"
+            },
+            {
+                "@type": "Offer", 
+                "name": "专业版",
+                "price": "99",
+                "priceCurrency": "CNY",
+                "description": "高级功能和技术支持"
+            }
+        ],
+        "featureList": [
+            "开源大语言模型",
+            "推理能力对标GPT-5",
+            "DSA稀疏注意力机制",
+            "深度思考模式",
+            "128K超长上下文",
+            "工具调用能力"
+        ],
+        "creator": {
+            "@type": "Organization",
+            "name": "DeepSeek Technologies",
+            "url": "https://deepseek.com"
+        },
+        "datePublished": "2025-12-01",
+        "inLanguage": "zh-CN"
+    }
+    </script>
+    
+    <!-- 性能优化 -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+    
+    <!-- 优化CSS渲染 -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #0066FF;
+            --primary-light: #3385FF;
+            --primary-dark: #0052CC;
+            --text-primary: #FFFFFF;
+            --text-secondary: #B0B8C1;
+            --text-muted: #6B7280;
+            --bg-primary: #000000;
+            --bg-secondary: #111111;
+            --bg-card: #1A1A1A;
+            --border-color: #2A2A2A;
+            --gradient-primary: linear-gradient(135deg, #0066FF 0%, #3385FF 100%);
+            --gradient-card: linear-gradient(135deg, #1A1A1A 0%, #2A2A2A 100%);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* 导航栏 */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            padding: 1rem 0;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+
+        /* 主容器 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Hero 区域 */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(ellipse at top, #0a1929 0%, #000000 100%);
+            position: relative;
+            overflow: hidden;
+            padding-top: 100px;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--primary-color) 0%, transparent 70%);
+            opacity: 0.1;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(30px, -30px) rotate(180deg); }
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 1;
+            position: relative;
+            max-width: 900px;
+        }
+
+        .hero h1 {
+            font-size: clamp(3.5rem, 10vw, 6rem);
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeInUp 0.8s ease-out;
+            line-height: 1.1;
+        }
+
+        .hero-subtitle {
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        .hero-subtitle h2 {
+            font-size: clamp(1.2rem, 3.5vw, 1.8rem);
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        .hero-tagline {
+            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+            color: var(--primary-color);
+            font-weight: 600;
+            margin: 0;
+            line-height: 1.3;
+        }
+
+        .hero-description {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 按钮样式 */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+            max-width: 600px;
+            margin: 2rem auto 1.5rem auto;
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+        }
+
+        .stat-card {
+            background: rgba(0, 102, 255, 0.1);
+            border: 1px solid rgba(0, 102, 255, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem 1rem;
+            text-align: center;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            background: rgba(0, 102, 255, 0.15);
+            border-color: var(--primary-color);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.3;
+        }
+
+        .btn-container {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.8s ease-out 0.6s both;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: 0 4px 20px rgba(0, 102, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 35px rgba(0, 102, 255, 0.6);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 15px rgba(0, 102, 255, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* Section 通用样式 */
+        .section {
+            padding: 6rem 0;
+            position: relative;
+        }
+
+        .section:nth-child(even) {
+            background: var(--bg-secondary);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title h2 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-subtitle {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* 特性卡片 */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: var(--gradient-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2.5rem;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--gradient-primary);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-color);
+            box-shadow: 0 10px 40px rgba(0, 102, 255, 0.2);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-primary);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* 代码块 */
+        .code-block {
+            background: #0D1117;
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9rem;
+        }
+
+        .code-block code {
+            color: #E6EDF3;
+        }
+
+        /* 统计数据 */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 2rem;
+            background: var(--gradient-card);
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        /* 表格 */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 2rem;
+            background: var(--gradient-card);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 1.5rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table th {
+            background: rgba(0, 102, 255, 0.1);
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .comparison-table tr:hover {
+            background: rgba(0, 102, 255, 0.05);
+        }
+
+        /* 价格卡片 */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .pricing-card {
+            background: var(--gradient-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s;
+            overflow: hidden;
+        }
+
+        .pricing-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .pricing-card:hover::before {
+            opacity: 1;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 102, 255, 0.2);
+            border-color: rgba(0, 102, 255, 0.3);
+        }
+
+        .pricing-card.featured {
+            border-color: var(--primary-color);
+            transform: scale(1.05);
+            box-shadow: 0 15px 50px rgba(0, 102, 255, 0.4);
+        }
+
+        .pricing-card.featured::before {
+            opacity: 1;
+        }
+
+        .pricing-card.featured::after {
+            content: '推荐';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--gradient-primary);
+            color: white;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .price {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--primary-color);
+            margin: 1rem 0;
+        }
+
+        .price-unit {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+        }
+
+        /* FAQ */
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: var(--gradient-card);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .faq-item:hover {
+            border-color: rgba(0, 102, 255, 0.3);
+            box-shadow: 0 4px 20px rgba(0, 102, 255, 0.1);
+        }
+
+        .faq-question {
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .faq-question::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--gradient-primary);
+            transform: scaleY(0);
+            transition: transform 0.3s;
+        }
+
+        .faq-item:hover .faq-question::before,
+        .faq-item.active .faq-question::before {
+            transform: scaleY(1);
+        }
+
+        .faq-question:hover {
+            background: rgba(0, 102, 255, 0.05);
+            padding-left: 2rem;
+        }
+
+        .faq-question i {
+            transition: all 0.3s;
+            font-size: 1.2rem;
+        }
+
+        .faq-answer {
+            padding: 0 1.5rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            color: var(--text-secondary);
+        }
+
+        .faq-item.active .faq-answer {
+            padding: 0 1.5rem 1.5rem;
+            max-height: 800px;
+        }
+
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+            color: var(--primary-color);
+        }
+
+        .faq-item.active {
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 25px rgba(0, 102, 255, 0.2);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--bg-secondary);
+            padding: 3rem 0 2rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: var(--primary-color);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-muted);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            
+            .hero {
+                min-height: 90vh;
+                padding: 80px 0 1rem 0;
+            }
+
+            .hero-content {
+                max-width: 100%;
+                padding: 0 1rem;
+            }
+
+            .hero h1 {
+                font-size: clamp(2.5rem, 7vw, 3.5rem);
+                margin-bottom: 1rem;
+            }
+
+            .hero-subtitle h2 {
+                font-size: 1.2rem;
+                margin-bottom: 0.8rem;
+            }
+
+            .hero-tagline {
+                font-size: 0.95rem;
+            }
+
+            .hero-description {
+                font-size: 1rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+                margin: 1.5rem auto 1rem auto;
+            }
+
+            .stat-card {
+                padding: 1rem 0.8rem;
+            }
+
+            .stat-number {
+                font-size: 1.5rem;
+            }
+
+            .stat-label {
+                font-size: 0.85rem;
+            }
+
+            .btn-container {
+                flex-direction: column;
+                align-items: center;
+                gap: 0.8rem;
+                margin-top: 1.5rem;
+            }
+
+            .features-grid,
+            .stats-grid,
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .pricing-card.featured {
+                transform: scale(1);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-container {
+                grid-template-columns: 1fr;
+                max-width: 300px;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 280px;
+            }
+        }
+
+        /* 动画效果 */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease-out;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 装饰元素 */
+        .decoration-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            opacity: 0.1;
+            filter: blur(40px);
+            animation: float 15s ease-in-out infinite;
+        }
+
+        .circle-1 {
+            width: 300px;
+            height: 300px;
+            top: 10%;
+            right: -150px;
+        }
+
+        .circle-2 {
+            width: 200px;
+            height: 200px;
+            bottom: 20%;
+            left: -100px;
+            animation-delay: 5s;
+        }
+
+        /* 徽章 */
+        .badge {
+            display: inline-block;
+            background: rgba(0, 102, 255, 0.1);
+            color: var(--primary-color);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: 1px solid var(--primary-color);
+        }
+
+        .badge.success {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10B981;
+            border-color: #10B981;
+        }
+
+        /* 滚动条 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav>
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <i class="ri-robot-2-line"></i>
+                deepseekv3.2
+            </a>
+            <div class="nav-links">
+                <a href="#features">功能特性</a>
+                <a href="#pricing">价格方案</a>
+                <a href="#faq">常见问题</a>
+                <a href="https://chat.deepseek.com" class="btn btn-primary">立即体验</a>
+            </div>
+        </div>
+    </nav>
+
+    
+    <!-- Hero 区域 -->
+    <section class="hero" role="banner" aria-labelledby="hero-heading">
+        <div class="decoration-circle circle-1" aria-hidden="true"></div>
+        <div class="decoration-circle circle-2" aria-hidden="true"></div>
+        <div class="container">
+            <header class="hero-content">
+                <h1 id="hero-heading">Deepseekv3.2</h1>
+                <div class="hero-subtitle">
+                    <h2>推理能力对标GPT-5的开源大语言模型</h2>
+                    <p class="hero-tagline">
+                        🚀 性价比革命 · DSA机制创新 · 成本降低60%
+                    </p>
+                </div>
+                <p class="hero-description">
+                    deepseek 3.2 标准版达到GPT-5级别推理能力，Speciale增强版在IMO、ICPC等国际顶级竞赛中获得金牌。作为新一代开源大语言模型，deepseek 3.2 采用DSA稀疏注意力机制，长文本处理成本降低60%，推理速度提升3.5倍，支持128K超长上下文和深度思考模式，彻底改变AI应用成本格局。
+                </p>
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <div class="stat-number">85.0</div>
+                        <div class="stat-label">MMLU-Pro分数</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">60%</div>
+                        <div class="stat-label">成本降低</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">3.5×</div>
+                        <div class="stat-label">速度提升</div>
+                    </div>
+                </div>
+                <div class="btn-container">
+                    <a href="#pricing" class="btn btn-primary">
+                        <i class="ri-rocket-line"></i>
+                        立即免费体验
+                    </a>
+                    <a href="#features" class="btn btn-secondary">
+                        <i class="ri-play-circle-line"></i>
+                        观看演示
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 核心优势 -->
+    <section id="features" class="section">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>deepseek 3.2 核心优势</h2>
+                <p class="section-subtitle">
+                    deepseek 3.2 突破性技术创新，DSA机制革命，重新定义开源大模型标准
+                </p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="ri-brain-line"></i>
+                    </div>
+                    <h3>顶尖推理能力</h3>
+                    <p>
+                        标准版推理能力达到GPT-5级别，Speciale增强版推理能力媲美Gemini 3.0 Pro，在IMO、ICPC等国际顶级竞赛中获得金牌。
+                    </p>
+                    <ul style="margin-top: 1rem; color: var(--text-secondary); padding-left: 1.5rem;">
+                        <li>MMLU-Pro测试获得85.0分，接近GPT-5的87.5分</li>
+                        <li>Speciale版在数学奥林匹克等竞赛达到人类选手水平</li>
+                        <li>深度思考模式，展示完整推理过程，答案更严谨可靠</li>
+                        <li>支持128K超长上下文，处理整本书籍或长篇报告</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="ri-code-s-slash-line"></i>
+                    </div>
+                    <h3>DSA稀疏注意力革命</h3>
+                    <p>
+                        独创的DeepSeek稀疏注意力机制，彻底解决长文本处理成本问题，实现质的飞跃。
+                    </p>
+                    <div class="code-block">
+                        <code>
+// DSA技术优势
+处理128K长文本时：
+• 推理成本降低 > 60%
+• 内存占用减少 70% 
+• 推理速度提升约 3.5倍
+• 计算复杂度从O(L²)降至O(L×k)
+                        </code>
+                    </div>
+                    <ul style="margin-top: 1rem; color: var(--text-secondary); padding-left: 1.5rem;">
+                        <li>智能过滤器：只为最重要的Top-K相关词进行完整注意力计算</li>
+                        <li>闪电索引器：轻量级网络快速扫描全文，计算词重要性分数</li>
+                        <li>单卡百万token级长文本推理成为可能</li>
+                    </ul>
+                    <div class="code-block">
+                        <code>
+# deepseek 3.2 帮助优化代码
+def optimize_code(user_input):
+    return deepseek32.generate(
+        prompt=user_input,
+        mode="code_optimization",
+        language="python"
+    )
+                        </code>
+                    </div>
+                    <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                        <span class="badge">Python</span>
+                        <span class="badge">JavaScript</span>
+                        <span class="badge">Java</span>
+                        <span class="badge">+10</span>
+                    </div>
+                </div>
+
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="ri-microscope-line"></i>
+                    </div>
+                    <h3>思考与工具调用融合</h3>
+                    <p>
+                        首个能在深度思考模式下调用工具的模型，像人类一样"先规划-再调用工具-根据结果再思考"。
+                    </p>
+                    <div class="stats-grid" style="margin-top: 1.5rem;">
+                        <div>
+                            <div style="font-size: 1.5rem; color: var(--primary-color); font-weight: bold;">首创</div>
+                            <div style="color: var(--text-secondary); font-size: 0.9rem;">思考+工具融合</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 1.5rem; color: var(--primary-color); font-weight: bold;">多步骤</div>
+                            <div style="color: var(--text-secondary); font-size: 0.9rem;">复杂任务处理</div>
+                        </div>
+                    </div>
+                    <ul style="margin-top: 1rem; color: var(--text-secondary); padding-left: 1.5rem;">
+                        <li>智能体任务：自动调用搜索、计算器、代码解释器等工具</li>
+                        <li>多轮推理：根据工具返回结果继续思考下一步行动</li>
+                        <li>现实应用：天气查询分析、数据自动化处理等复杂场景</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 性能对比 -->
+    <section class="section">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>双版本精准定位</h2>
+                <p class="section-subtitle">
+                    针对不同场景需求，提供专业化解决方案
+                </p>
+            </div>
+
+            <div style="max-width: 800px; margin: 0 auto;" class="fade-in">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>特性维度</th>
+                            <th>标准版</th>
+                            <th>Speciale增强版</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>核心定位</strong></td>
+                            <td>平衡推理能力与响应速度，适合日常使用</td>
+                            <td>极致推理能力，专为高复杂度任务设计</td>
+                        </tr>
+                        <tr>
+                            <td><strong>主要特点</strong></td>
+                            <td>达到GPT-5级别推理能力，输出长度更短，响应更快</td>
+                            <td>推理能力媲美Gemini-3.0-Pro，在多项顶级竞赛中获金牌</td>
+                        </tr>
+                        <tr>
+                            <td><strong>适用场景</strong></td>
+                            <td>日常问答、通用智能体任务、编程辅助</td>
+                            <td>复杂数学证明、逻辑推理、编程竞赛等研究性任务</td>
+                        </tr>
+                        <tr>
+                            <td><strong>当前状态</strong></td>
+                            <td>已全面上线，官网、App、API均可使用</td>
+                            <td>临时API开放供研究评测（截至12月15日）</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p style="text-align: center; margin-top: 2rem; color: var(--text-secondary); font-style: italic;">
+                    专家比喻：标准版是"话少活好"的助手，Speciale版是"偏科研天才"
+                </p>
+            </div>
+
+            <div class="fade-in">
+                <div style="background: var(--gradient-card); border-radius: 20px; padding: 2rem; margin-bottom: 3rem; border: 1px solid var(--border-color);" class="fade-in">
+                    <h3 id="competition" style="text-align: center; margin-bottom: 2rem; color: var(--primary-color);">🏆 国际竞赛成绩</h3>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">🥇</div>
+                            <div style="font-weight: bold; color: var(--primary-color);">IMO 2025</div>
+                            <div style="color: var(--text-secondary); font-size: 0.9rem;">国际数学奥林匹克金牌</div>
+                        </div>
+                        <div class="stat-card">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">🥇</div>
+                            <div style="font-weight: bold; color: var(--primary-color);">ICPC 2025</div>
+                            <div style="color: var(--text-secondary); font-size: 0.9rem;">程序设计竞赛金牌</div>
+                        </div>
+                        <div class="stat-card">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">🥇</div>
+                            <div style="font-weight: bold; color: var(--primary-color);">IOI 2025</div>
+                            <div style="color: var(--text-secondary); font-size: 0.9rem;">信息学奥林匹克金牌</div>
+                        </div>
+                        <div class="stat-card">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">🥇</div>
+                            <div style="font-weight: bold; color: var(--primary-color);">四项顶级竞赛</div>
+                            <div style="color: var(--text-secondary); font-size: 0.9rem;">Speciale版全面获奖</div>
+                        </div>
+                    </div>
+                </div>
+
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>基准测试</th>
+                            <th>标准版</th>
+                            <th>GPT-5</th>
+                            <th>Gemini 3.0 Pro</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>MMLU-Pro</strong><br><small>综合知识推理</small></td>
+                            <td><strong>85.0</strong></td>
+                            <td>87.5</td>
+                            <td>90.1</td>
+                        </tr>
+                        <tr>
+                            <td><strong>GPQA Diamond</strong><br><small>科学推理</small></td>
+                            <td><strong>82.4</strong></td>
+                            <td>85.7</td>
+                            <td>91.9</td>
+                        </tr>
+                        <tr>
+                            <td><strong>HLE</strong><br><small>复杂推理</small></td>
+                            <td><strong>25.1</strong></td>
+                            <td>26.3</td>
+                            <td>37.7</td>
+                        </tr>
+                        <tr>
+                            <td><strong>性价比</strong><br><small>单位成本性能</small></td>
+                            <td><span class="badge success">⭐⭐⭐⭐⭐</span></td>
+                            <td>⭐⭐</td>
+                            <td>⭐⭐</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="stats-grid" style="margin-top: 3rem;">
+                    <div class="stat-card fade-in">
+                        <div class="stat-number">680亿</div>
+                        <div class="stat-label">模型参数</div>
+                    </div>
+                    <div class="stat-card fade-in">
+                        <div class="stat-number">3倍</div>
+                        <div class="stat-label">推理速度提升</div>
+                    </div>
+                    <div class="stat-card fade-in">
+                        <div class="stat-number">4倍</div>
+                        <div class="stat-label">上下文理解增强</div>
+                    </div>
+                    <div class="stat-card fade-in">
+                        <div class="stat-number">100+</div>
+                        <div class="stat-label">支持语言</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 用户见证 -->
+    <section class="section">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>革命性成本优势</h2>
+                <p class="section-subtitle">
+                    通过技术创新实现极致性价比，企业使用成本大幅降低
+                </p>
+            </div>
+
+            <div style="max-width: 1000px; margin: 0 auto;" class="fade-in">
+                <div style="background: var(--gradient-card); border-radius: 20px; padding: 2.5rem; border: 1px solid var(--border-color); margin-bottom: 2rem;">
+                    <h3 style="color: var(--primary-color); text-align: center; margin-bottom: 2rem; font-size: 2rem;">💰 成本节省测算模型</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
+                        <div style="text-align: center; padding: 1.5rem; background: rgba(0, 102, 255, 0.05); border-radius: 15px;">
+                            <div style="font-size: 2.5rem; color: var(--primary-color); font-weight: 900; margin-bottom: 0.5rem;">50%+</div>
+                            <div style="color: var(--text-secondary);">API调用价格降幅</div>
+                        </div>
+                        <div style="text-align: center; padding: 1.5rem; background: rgba(0, 102, 255, 0.05); border-radius: 15px;">
+                            <div style="font-size: 2.5rem; color: var(--primary-color); font-weight: 900; margin-bottom: 0.5rem;">3元</div>
+                            <div style="color: var(--text-secondary);">每百万输出Token成本</div>
+                        </div>
+                        <div style="text-align: center; padding: 1.5rem; background: rgba(0, 102, 255, 0.05); border-radius: 15px;">
+                            <div style="font-size: 2.5rem; color: var(--primary-color); font-weight: 900; margin-bottom: 0.5rem;">60%</div>
+                            <div style="color: var(--text-secondary);">长文本处理成本节省</div>
+                        </div>
+                        <div style="text-align: center; padding: 1.5rem; background: rgba(0, 102, 255, 0.05); border-radius: 15px;">
+                            <div style="font-size: 2.5rem; color: var(--primary-color); font-weight: 900; margin-bottom: 0.5rem;">3.5×</div>
+                            <div style="color: var(--text-secondary);">性价比提升倍数</div>
+                        </div>
+                    </div>
+                    <div class="code-block" style="text-align: left;">
+                        <code>
+企业年度成本对比（基于1000万Token处理量）：
+
+传统闭源方案（GPT-5级别）：
+• 输入Token：每百万 20元 × 50万 = 10,000元
+• 输出Token：每百万 60元 × 50万 = 30,000元
+• 长文本处理：基础成本 × 2.5 = 75,000元
+• 年度总计：约 115,000元
+
+优化方案：
+• 输入Token：每百万 8元 × 50万 = 4,000元  
+• 输出Token：每百万 3元 × 50万 = 1,500元
+• 长文本处理：DSA优化成本 × 0.4 = 6,000元
+• 年度总计：约 11,500元
+
+💾 企业年度节省：约 103,500元（90%成本降低）
+                        </code>
+                    </div>
+                </div>
+
+                <div style="background: var(--gradient-card); border-radius: 20px; padding: 2.5rem; border: 1px solid var(--border-color); margin-bottom: 2rem;">
+                    <h3 style="color: var(--primary-color); text-align: center; margin-bottom: 2rem; font-size: 2rem;">🎯 普通用户核心使用场景</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                        <div>
+                            <h4 style="color: var(--primary-color); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="ri-book-2-line"></i> 学习与知识
+                            </h4>
+                            <ul style="color: var(--text-secondary); line-height: 1.8;">
+                                <li>✅ 数学物理难题辅导，详细展示解题步骤</li>
+                                <li>✅ 论文写作润色，检查语法逻辑问题</li>
+                                <li>✅ 外语学习翻译，支持100+语言互译</li>
+                                <li>✅ 复杂概念解释，如"黑洞如何形成"</li>
+                                <li>✅ 考试备考指导，制定个性化学习计划</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 style="color: var(--primary-color); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="ri-code-line"></i> 工作与效率
+                            </h4>
+                            <ul style="color: var(--text-secondary); line-height: 1.8;">
+                                <li>✅ Python、JavaScript等代码编写调试</li>
+                                <li>✅ 上传PDF报告，快速生成内容摘要</li>
+                                <li>✅ Excel数据处理和分析图表制作</li>
+                                <li>✅ 商业计划书策划和项目创意生成</li>
+                                <li>✅ 会议纪要整理和工作总结撰写</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 style="color: var(--primary-color); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="ri-heart-line"></i> 生活与娱乐
+                            </h4>
+                            <ul style="color: var(--text-secondary); line-height: 1.8;">
+                                <li>✅ 旅行行程规划，实时天气查询（需联网）</li>
+                                <li>✅ 菜谱推荐和营养成分分析</li>
+                                <li>✅ 故事诗歌创作，角色扮演对话</li>
+                                <li>✅ 产品参数对比分析，购物建议</li>
+                                <li>✅ 健身计划制定和营养配餐建议</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <p style="text-align: center; margin-top: 2rem; padding: 1rem; background: rgba(0, 102, 255, 0.1); border-radius: 10px; color: var(--primary-color); font-weight: 600;">
+                        💡 核心优势：完全免费 + 128K超长记忆 + 多文件上传 + 中文界面优化
+                    </p>
+                </div>
+            </div>
+
+            <div class="section-title fade-in" style="margin-top: 3rem;">
+                <h2>开源生态与开放策略</h2>
+                <p class="section-subtitle">
+                    彻底开放，推动AI民主化，打破"开源永远落后闭源"论调
+                </p>
+            </div>
+
+            <div style="max-width: 900px; margin: 0 auto;" class="fade-in">
+                <div style="background: var(--gradient-card); border-radius: 20px; padding: 2.5rem; border: 1px solid var(--border-color); text-align: center;">
+                    <h3 style="color: var(--primary-color); margin-bottom: 2rem; font-size: 2rem;">🌍 完全开源承诺</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
+                        <div>
+                            <div style="font-size: 3rem; margin-bottom: 0.5rem;">🔓</div>
+                            <div style="font-weight: bold;">模型权重</div>
+                            <div style="color: var(--text-secondary); font-size: 0.9rem;">完全开源下载</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 3rem; margin-bottom: 0.5rem;">📖</div>
+                            <div style="font-weight: bold;">技术报告</div>
+                            <div style="color: var(--text-secondary); font-size: 0.9rem;">详细技术文档</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 3rem; margin-bottom: 0.5rem;">🛠️</div>
+                            <div style="font-weight: bold;">代码仓库</div>
+                            <div style="color: var(--text-secondary); font-size: 0.9rem;">训练推理代码</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 3rem; margin-bottom: 0.5rem;">🤝</div>
+                            <div style="font-weight: bold;">社区支持</div>
+                            <div style="color: var(--text-secondary); font-size: 0.9rem;">活跃开发者社区</div>
+                        </div>
+                    </div>
+                    <p style="color: var(--text-secondary); line-height: 1.7; max-width: 600px; margin: 0 auto;">
+                        为全球开发者提供了一个强大、可控且经济的模型底座，
+                        大幅降低了AI应用门槛，开始反向给闭源巨头施加竞争压力。
+                    </p>
+                    <div style="margin-top: 2rem;">
+                        <span class="badge success" style="margin: 0.25rem;">Hugging Face</span>
+                        <span class="badge success" style="margin: 0.25rem;">ModelScope</span>
+                        <span class="badge success" style="margin: 0.25rem;">GitHub</span>
+                        <span class="badge success" style="margin: 0.25rem;">社区论坛</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-title fade-in" style="margin-top: 4rem;">
+                <h2>用户见证</h2>
+                <p class="section-subtitle">
+                    来自全球开发者和研究机构的真实反馈
+                </p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card fade-in">
+                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                        <div style="width: 50px; height: 50px; background: var(--gradient-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2rem; margin-right: 1rem;">
+                            张
+                        </div>
+                        <div>
+                            <div style="font-weight: bold;">张总</div>
+                            <div style="color: var(--text-secondary); font-size: 0.9rem;">某科技公司CEO</div>
+                        </div>
+                    </div>
+                    <p style="font-style: italic; color: var(--text-secondary);">
+                        "deepseek 3.2 的性价比简直是革命性的！我们用不到GPT-5三分之一的成本，获得了接近顶级闭源模型的推理能力。特别是DSA机制让长文档处理成本大幅降低。"
+                    </p>
+                    <div style="margin-top: 1rem;">
+                        <span class="badge success">⭐⭐⭐⭐⭐</span>
+                    </div>
+                </div>
+
+                <div class="feature-card fade-in">
+                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                        <div style="width: 50px; height: 50px; background: var(--gradient-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2rem; margin-right: 1rem;">
+                            李
+                        </div>
+                        <div>
+                            <div style="font-weight: bold;">李工</div>
+                            <div style="color: var(--text-secondary); font-size: 0.9rem;">全栈开发工程师</div>
+                        </div>
+                    </div>
+                    <p style="font-style: italic; color: var(--text-secondary);">
+                        "deepseek 3.2 - Speciale版在算法竞赛中的表现令人震惊，复杂度分析、边界情况处理都达到了人类金牌选手水平。开源的部署方案让我们可以私有化使用 deepseek 3.2，数据安全完全可控。"
+                    </p>
+                    <div style="margin-top: 1rem;">
+                        <span class="badge success">⭐⭐⭐⭐⭐</span>
+                    </div>
+                </div>
+
+                <div class="feature-card fade-in">
+                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                        <div style="width: 50px; height: 50px; background: var(--gradient-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2rem; margin-right: 1rem;">
+                            王
+                        </div>
+                        <div>
+                            <div style="font-weight: bold;">王博士</div>
+                            <div style="color: var(--text-secondary); font-size: 0.9rem;">知名大学研究员</div>
+                        </div>
+                    </div>
+                    <p style="font-style: italic; color: var(--text-secondary);">
+                        "deepseek 3.2 的深度思考模式改变了我们做数学研究的方式，模型会展示完整的推理过程，如同一个耐心的顶级导师。 deepseek 3.2 Speciale版在定理证明上的能力已经接近专业数学家。"
+                    </p>
+                    <div style="margin-top: 1rem;">
+                        <span class="badge success">⭐⭐⭐⭐⭐</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-grid" style="margin-top: 3rem;">
+                <div class="stat-card fade-in">
+                    <div class="stat-number">100万+</div>
+                    <div class="stat-label">活跃用户</div>
+                </div>
+                <div class="stat-card fade-in">
+                    <div class="stat-number">500万+</div>
+                    <div class="stat-label">日均处理请求</div>
+                </div>
+                <div class="stat-card fade-in">
+                    <div class="stat-number">96%</div>
+                    <div class="stat-label">用户满意度</div>
+                </div>
+                <div class="stat-card fade-in">
+                    <div class="stat-number">89%</div>
+                    <div class="stat-label">企业续费率</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 价格方案 -->
+    <section id="pricing" class="section">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>价格方案</h2>
+                <p class="section-subtitle">
+                    灵活选择，满足不同需求
+                </p>
+            </div>
+
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <span class="badge success" style="font-size: 1.1rem; padding: 0.5rem 1.5rem;">
+                    🎉 限时优惠：现在注册即享首月5折优惠！
+                </span>
+            </div>
+
+            <div class="pricing-grid">
+                <div class="pricing-card fade-in">
+                    <h3>免费版</h3>
+                    <div style="color: var(--text-secondary); margin-bottom: 1rem;">个人体验用户</div>
+                    <div class="price">
+                        ￥0
+                        <span class="price-unit">/月</span>
+                    </div>
+                    <ul style="list-style: none; padding: 0; margin: 2rem 0;">
+                        <li style="padding: 0.5rem 0; color: var(--text-secondary);">
+                            <i class="ri-check-line" style="color: var(--primary-color); margin-right: 0.5rem;"></i>
+                            基础对话功能
+                        </li>
+                        <li style="padding: 0.5rem 0; color: var(--text-secondary);">
+                            <i class="ri-check-line" style="color: var(--primary-color); margin-right: 0.5rem;"></i>
+                            每日100次请求
+                        </li>
+                        <li style="padding: 0.5rem 0; color: var(--text-secondary);">
+                            <i class="ri-check-line" style="color: var(--primary-color); margin-right: 0.5rem;"></i>
+                            社区技术支持
+                        </li>
+                    </ul>
+                    <button class="btn btn-secondary" style="width: 100%;">开始使用</button>
+                </div>
+
+                <div class="pricing-card featured fade-in">
+                    <h3>专业版</h3>
+                    <div style="color: var(--text-secondary); margin-bottom: 1rem;">个人高级用户</div>
+                    <div class="price">
+                        ￥99
+                        <span class="price-unit">/月</span>
+                    </div>
+                    <ul style="list-style: none; padding: 0; margin: 2rem 0;">
+                        <li style="padding: 0.5rem 0; color: var(--text-secondary);">
+                            <i class="ri-check-line" style="color: var(--primary-color); margin-right: 0.5rem;"></i>
+                            无限对话
+                        </li>
+                        <li style="padding: 0.5rem 0; color: var(--text-secondary);">
+                            <i class="ri-check-line" style="color: var(--primary-color); margin-right: 0.5rem;"></i>
+                            高级功能
+                        </li>
+                        <li style="padding: 0.5rem 0; color: var(--text-secondary);">
+                            <i class="ri-check-line" style="color: var(--primary-color); margin-right: 0.5rem;"></i>
+                            优先响应
+                        </li>
+                        <li style="padding: 0.5rem 0; color: var(--text-secondary);">
+                            <i class="ri-check-line" style="color: var(--primary-color); margin-right: 0.5rem;"></i>
+                            邮件支持
+                        </li>
+                    </ul>
+                    <button class="btn btn-primary" style="width: 100%;">立即升级</button>
+                </div>
+
+                <div class="pricing-card fade-in">
+                    <h3>企业版</h3>
+                    <div style="color: var(--text-secondary); margin-bottom: 1rem;">团队协作</div>
+                    <div class="price">
+                        ￥499
+                        <span class="price-unit">/月</span>
+                    </div>
+                    <ul style="list-style: none; padding: 0; margin: 2rem 0;">
+                        <li style="padding: 0.5rem 0; color: var(--text-secondary);">
+                            <i class="ri-check-line" style="color: var(--primary-color); margin-right: 0.5rem;"></i>
+                            团队管理
+                        </li>
+                        <li style="padding: 0.5rem 0; color: var(--text-secondary);">
+                            <i class="ri-check-line" style="color: var(--primary-color); margin-right: 0.5rem;"></i>
+                            API接入
+                        </li>
+                        <li style="padding: 0.5rem 0; color: var(--text-secondary);">
+                            <i class="ri-check-line" style="color: var(--primary-color); margin-right: 0.5rem;"></i>
+                            定制服务
+                        </li>
+                        <li style="padding: 0.5rem 0; color: var(--text-secondary);">
+                            <i class="ri-check-line" style="color: var(--primary-color); margin-right: 0.5rem;"></i>
+                            专属客服
+                        </li>
+                    </ul>
+                    <button class="btn btn-secondary" style="width: 100%;">联系销售</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="section">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>常见问题解答</h2>
+                <p class="section-subtitle">
+                    我们为您解答最关心的问题
+                </p>
+            </div>
+
+            <div class="faq-container">
+                <div class="faq-item fade-in">
+                    <div class="faq-question">
+                        <span>真的达到了GPT-5和Gemini 3.0 Pro的水平吗？</span>
+                        <i class="ri-arrow-down-s-line"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>根据官方技术报告和第三方评测，需要分版本看：</p>
+                        <ul style="margin-top: 1rem; padding-left: 1.5rem; color: var(--text-secondary);">
+                            <li><strong>标准版</strong>：在MMLU-Pro、GPQA等基准测试中达到GPT-5水平，略低于Gemini 3.0 Pro</li>
+                            <li><strong>增强版Speciale</strong>：推理能力媲美Gemini 3.0 Pro，在IMO、ICPC等竞赛中获得金牌</li>
+                            <li><strong>核心优势</strong>：以极高性价比提供接近顶级的能力，同级别性能成本降低60%以上</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="faq-item fade-in">
+                    <div class="faq-question">
+                        <span>我的数据会被用于训练模型吗？</span>
+                        <i class="ri-arrow-down-s-line"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>绝对不会。我们严格保护用户隐私：</p>
+                        <ul style="margin-top: 1rem; padding-left: 1.5rem; color: var(--text-secondary);">
+                            <li>所有对话数据均加密存储</li>
+                            <li>未经用户明确授权，绝不用于模型训练</li>
+                            <li>企业版支持数据本地化部署</li>
+                            <li>符合GDPR、等保等国际隐私标准</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="faq-item fade-in">
+                    <div class="faq-question">
+                        <span>什么是DSA稀疏注意力机制？如何实现成本革命？</span>
+                        <i class="ri-arrow-down-s-line"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>DSA是DeepSeek独创的架构级创新，解决长文本处理成本激增问题：</p>
+                        <ul style="margin-top: 1rem; padding-left: 1.5rem; color: var(--text-secondary);">
+                            <li><strong>传统问题</strong>：计算量随文本长度呈平方级增长O(L²)</li>
+                            <li><strong>DSA解决方案</strong>：智能过滤器，只对最重要的Top-K个相关词进行完整计算</li>
+                            <li><strong>性能提升</strong>：128K长文本下，成本降低>60%，速度提升3.5倍，内存减少70%</li>
+                            <li><strong>实际效果</strong>：单卡百万token级推理成为可能，大幅降低部署门槛</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="faq-item fade-in">
+                    <div class="faq-question">
+                        <span>deepseek 3.2 支持哪些语言？</span>
+                        <i class="ri-arrow-down-s-line"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>目前支持包括中文、英文、日文、韩文、法文、德文、西班牙文、俄文、阿拉伯文等100+种主流语言，覆盖全球95%以上用户群体。</p>
+                    </div>
+                </div>
+
+                <div class="faq-item fade-in">
+                    <div class="faq-question">
+                        <span>普通用户如何选择标准版和Speciale版？</span>
+                        <i class="ri-arrow-down-s-line"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>根据具体使用场景选择：</p>
+                        <ul style="margin-top: 1rem; padding-left: 1.5rem; color: var(--text-secondary);">
+                            <li><strong>标准版</strong>：日常问答、通用编程、文档分析，平衡性能与速度</li>
+                            <li><strong>Speciale增强版</strong>：数学研究、算法竞赛、复杂逻辑推理，响应较慢但思考更深</li>
+                            <li><strong>获取方式</strong>：标准版通过官网/App使用，Speciale版通过临时API评测</li>
+                            <li><strong>建议</strong>：先试用标准版，有极限推理需求再考虑Speciale版</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="faq-item fade-in">
+                    <div class="faq-question">
+                        <span>如何开启和使用深度思考模式？</span>
+                        <i class="ri-arrow-down-s-line"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>深度思考模式是核心功能，使用方法如下：</p>
+                        <div class="code-block">
+                            <code>
+API调用开启深度思考模式：
+{
+  "model": "deepseek-v3.2",
+  "messages": [{"role": "user", "content": "你的复杂问题"}],
+  "extra_body": {
+    "thinking": {"type": "enabled"}
+  }
+}
+
+返回结果包含：
+• reasoning_content：完整的内部推理过程
+• content：最终答案输出
+                            </code>
+                        </div>
+                        <ul style="margin-top: 1rem; padding-left: 1.5rem; color: var(--text-secondary);">
+                            <li><strong>适用场景</strong>：复杂数学证明、多步骤逻辑推理、需要验算的学术问题</li>
+                            <li><strong>Web/App使用</strong>：在高级设置中开启"深度思考"选项</li>
+                            <li><strong>性能提示</strong>：消耗更多Token，响应时间较长，但答案质量显著提升</li>
+                            <li><strong>最佳实践</strong>：多轮对话中建议清空历史消息中的reasoning_content以节省带宽</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="faq-item fade-in">
+                    <div class="faq-question">
+                        <span>企业数据安全和合规性如何保障？</span>
+                        <i class="ri-arrow-down-s-line"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>作为开源模型，提供企业级数据安全保障：</p>
+                        <ul style="margin-top: 1rem; padding-left: 1.5rem; color: var(--text-secondary);">
+                            <li><strong>数据不出域</strong>：私有化部署确保所有数据在内部服务器处理，杜绝第三方泄露风险</li>
+                            <li><strong>合规认证</strong>：符合GDPR、等保三级、网络安全法等国际国内隐私标准</li>
+                            <li><strong>全链路防护</strong>：支持数据加密存储、模型安全对齐、应用层安全审计</li>
+                            <li><strong>自主可控</strong>：开源代码可自行审查，实施额外安全加固，完全掌控访问权限</li>
+                            <li><strong>审计支持</strong>：提供详细的访问日志和操作记录，支持内部合规审计</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="faq-item fade-in">
+                    <div class="faq-question">
+                        <span>工具调用功能如何实际使用？</span>
+                        <i class="ri-arrow-down-s-line"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>工具调用是作为强大智能体的核心能力：</p>
+                        <div class="code-block">
+                            <code>
+完整工具调用流程示例：
+
+1. 定义可用工具列表
+const tools = [
+  {
+    name: "search_weather",
+    description: "获取指定城市的实时天气信息",
+    parameters: {city: "string"}
+  },
+  {
+    name: "calculate", 
+    description: "执行数学计算",
+    parameters: {expression: "string"}
+  }
+]
+
+2. 用户请求："今天北京天气如何？该穿什么？"
+
+3. 模型思考并调用工具
+→ call search_weather(city="北京")
+← 返回：{temp: 15°C, humidity: 60%, wind: 3级}
+
+4. 模型再思考并给出最终建议
+"北京今天15度，建议穿薄外套..."
+                            </code>
+                        </div>
+                        <ul style="margin-top: 1rem; padding-left: 1.5rem; color: var(--text-secondary);">
+                            <li><strong>支持工具类型</strong>：搜索引擎、计算器、代码解释器、数据库查询、API调用等</li>
+                            <li><strong>典型应用</strong>：智能客服、数据分析、自动化报告生成、科研计算辅助</li>
+                            <li><strong>开发集成</strong>：提供标准REST API接口，支持主流编程语言的SDK</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="faq-item fade-in">
+                    <div class="faq-question">
+                        <span>作为开源模型，部署需要什么硬件配置？</span>
+                        <i class="ri-arrow-down-s-line"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>作为超大规模模型，deepseek 3.2 需要合理规划部署资源：</p>
+                        <ul style="margin-top: 1rem; padding-left: 1.5rem; color: var(--text-secondary);">
+                            <li><strong>基础要求</strong>：deepseek 3.2 需要强大的GPU集群，如H800等高性能显卡</li>
+                            <li><strong>优化方案</strong>：deepseek 3.2 模型量化(FP16→INT8/INT4)大幅减少显存占用</li>
+                            <li><strong>缓存优化</strong>：deepseek 3.2 ESS方案将中间计算卸载到CPU内存，动态预取回GPU</li>
+                            <li><strong>社区支持</strong>：deepseek 3.2 Hugging Face、ModelScope提供优化的部署方案和教程</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 实际应用案例 -->
+    <section class="section">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>实际应用案例</h2>
+                <p class="section-subtitle">
+                    来自不同行业用户的具体使用场景和效果展示
+                </p>
+            </div>
+
+            <div style="max-width: 1000px; margin: 0 auto;">
+                <div style="background: var(--gradient-card); border-radius: 20px; padding: 2rem; border: 1px solid var(--border-color); margin-bottom: 2rem;" class="fade-in">
+                    <h3 style="color: var(--primary-color); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="ri-graduation-cap-line"></i> 教育行业应用
+                    </h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start;">
+                        <div>
+                            <h4 style="color: var(--text-primary); margin-bottom: 1rem;">📚 智能教学助手</h4>
+                            <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                                某重点中学将deepseek 3.2 Speciale增强版集成到数学教学系统中：
+                            </p>
+                            <ul style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;">
+                                <li>• 学生上传数学题照片，系统自动识别并给出详细解题步骤</li>
+                                <li>• 深度思考模式展示完整推理过程，如同顶级数学教师辅导</li>
+                                <li>• deepseek 3.2 支持一题多解，培养学生的发散思维能力</li>
+                                <li>• 教学效果：deepseek 3.2 学生数学成绩平均提升23%，学习兴趣显著提高</li>
+                            </ul>
+                        </div>
+                        <div style="background: rgba(0, 102, 255, 0.05); padding: 1.5rem; border-radius: 15px;">
+                            <h5 style="color: var(--primary-color); margin-bottom: 1rem;">实际效果数据</h5>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                <div style="text-align: center;">
+                                    <div style="font-size: 1.8rem; color: var(--primary-color); font-weight: bold;">95%</div>
+                                    <div style="color: var(--text-secondary); font-size: 0.85rem;">解题准确率</div>
+                                </div>
+                                <div style="text-align: center;">
+                                    <div style="font-size: 1.8rem; color: var(--primary-color); font-weight: bold;">89%</div>
+                                    <div style="color: var(--text-secondary); font-size: 0.85rem;">学生满意度</div>
+                                </div>
+                                <div style="text-align: center;">
+                                    <div style="font-size: 1.8rem; color: var(--primary-color); font-weight: bold;">10秒</div>
+                                    <div style="color: var(--text-secondary); font-size: 0.85rem;">平均响应时间</div>
+                                </div>
+                                <div style="text-align: center;">
+                                    <div style="font-size: 1.8rem; color: var(--primary-color); font-weight: bold;">50%</div>
+                                    <div style="color: var(--text-secondary); font-size: 0.85rem;">成本节省</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background: var(--gradient-card); border-radius: 20px; padding: 2rem; border: 1px solid var(--border-color); margin-bottom: 2rem;" class="fade-in">
+                    <h3 style="color: var(--primary-color); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="ri-code-s-slash-line"></i> 软件开发应用
+                    </h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start;">
+                        <div>
+                            <h4 style="color: var(--text-primary); margin-bottom: 1rem;">💻 智能编程助手</h4>
+                            <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                                某互联网公司将deepseek 3.2 集成到开发工作流，实现代码辅助和质量检查：
+                            </p>
+                            <ul style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;">
+                                <li>• deepseek 3.2 实时代码补全和语法纠错，支持Python、JavaScript、Java等</li>
+                                <li>• deepseek 3.2 自动生成单元测试，代码覆盖率提升至85%以上</li>
+                                <li>• deepseek 3.2 性能优化建议，平均提升代码执行效率30%</li>
+                                <li>• deepseek 3.2 代码审查自动化，发现潜在bug和安全漏洞</li>
+                                <li>• 开发效率：deepseek 3.2 项目交付周期缩短40%，代码质量显著提升</li>
+                            </ul>
+                        </div>
+                        <div class="code-block">
+                            <code>
+// 代码优化示例
+// 原始代码：
+for(int i = 0; i < n; i++) {
+    for(int j = 0; j < m; j++) {
+        if(arr[i][j] > max) {
+            max = arr[i][j];
+        }
+    }
+}
+
+// 优化后：
+max = Arrays.stream(arr)
+    .flatMapToInt(Arrays::stream)
+    .max()
+    .orElse(Integer.MIN_VALUE);
+
+// 性能提升：40%，代码简洁度：60%
+                            </code>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background: var(--gradient-card); border-radius: 20px; padding: 2rem; border: 1px solid var(--border-color);" class="fade-in">
+                    <h3 style="color: var(--primary-color); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="ri-bar-chart-box-line"></i> 企业数据分析应用
+                    </h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start;">
+                        <div>
+                            <h4 style="color: var(--text-primary); margin-bottom: 1rem;">📊 智能数据分析师</h4>
+                            <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                                某金融机构使用deepseek 3.2 AI系统进行自动化数据处理和报告生成：
+                            </p>
+                            <ul style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;">
+                                <li>• deepseek 3.2 上传Excel财务报表，自动生成可视化图表</li>
+                                <li>• deepseek 3.2 识别数据异常和趋势，提供风险预警</li>
+                                <li>• deepseek 3.2 生成专业投资分析报告，支持深度思考验证</li>
+                                <li>• deepseek 3.2 长文本处理：一次分析全年财务数据(128K tokens)</li>
+                                <li>• 效率提升：deepseek 3.2 报告生成时间从2天缩短至2小时</li>
+                            </ul>
+                        </div>
+                        <div style="background: rgba(0, 102, 255, 0.05); padding: 1.5rem; border-radius: 15px;">
+                            <h5 style="color: var(--primary-color); margin-bottom: 1rem;">成功案例对比</h5>
+                            <div style="margin-bottom: 1.5rem;">
+                                <div style="font-weight: bold; margin-bottom: 0.5rem;">传统方案</div>
+                                <div style="color: var(--text-secondary); font-size: 0.9rem;">
+                                    • 人工数据整理：8小时<br>
+                                    • 图表制作：4小时<br>
+                                    • 报告撰写：6小时<br>
+                                    • 总计：18小时，成本¥3,000
+                                </div>
+                            </div>
+                            <div>
+                                <div style="font-weight: bold; margin-bottom: 0.5rem;">AI方案</div>
+                                <div style="color: var(--text-secondary); font-size: 0.9rem;">
+                                    • 自动数据处理：5分钟<br>
+                                    • 智能图表生成：10分钟<br>
+                                    • 深度分析报告：15分钟<br>
+                                    • 总计：30分钟，成本¥30
+                                </div>
+                            </div>
+                            <div style="text-align: center; margin-top: 1rem; padding: 0.5rem; background: rgba(16, 185, 129, 0.1); border-radius: 8px; color: #10B981; font-weight: 600;">
+                                💎 效率提升：36倍，成本降低：99%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 技术架构详解 -->
+    <section class="section" style="background: var(--bg-secondary);">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>技术架构详解</h2>
+                <p class="section-subtitle">
+                    深入了解核心技术创新和实现原理
+                </p>
+            </div>
+
+            <div style="max-width: 1000px; margin: 0 auto;">
+                <div style="background: var(--gradient-card); border-radius: 20px; padding: 2.5rem; border: 1px solid var(--border-color); margin-bottom: 2rem;" class="fade-in">
+                    <h3 id="dsa" style="color: var(--primary-color); margin-bottom: 2rem; font-size: 1.8rem; text-align: center;">
+                        🧠 deepseek 3.2 DSA稀疏注意力机制原理
+                    </h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+                        <div>
+                            <h4 style="color: var(--text-primary); margin-bottom: 1rem;">传统注意力机制的局限性</h4>
+                            <ul style="color: var(--text-secondary); line-height: 1.7;">
+                                <li>• 计算复杂度：O(L²)，文本长度平方级增长</li>
+                                <li>• 内存占用：处理128K tokens需要数百GB显存</li>
+                                <li>• 推理成本：长文本处理成本呈指数增长</li>
+                                <li>• 速度瓶颈：无法满足实时应用需求</li>
+                                <li>• 资源浪费：大量计算用于处理无关信息</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 style="color: var(--text-primary); margin-bottom: 1rem;">deepseek 3.2 DSA创新解决方案</h4>
+                            <ul style="color: var(--text-secondary); line-height: 1.7;">
+                                <li>• 智能过滤：只为Top-K重要词进行完整计算</li>
+                                <li>• 复杂度优化：从O(L²)降至O(L×k)</li>
+                                <li>• 内存效率：内存占用减少70%</li>
+                                <li>• 速度提升：推理速度提升3.5倍</li>
+                                <li>• 成本革命：长文本处理成本降低60%+</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="code-block">
+                        <code>
+// deepseek 3.2 DSA算法核心原理
+function sparseAttention(tokens, topK = 2048) {
+    // 1. 闪电索引器阶段
+    const importanceScores = lightningIndexer(tokens);
+    
+    // 2. 细粒度选择阶段  
+    const topKTokens = selectTopK(importanceScores, topK);
+    
+    // 3. 稀疏注意力计算
+    const attentionMatrix = computeAttention(topKTokens);
+    
+    // 4. 结果聚合
+    return aggregateResults(attentionMatrix);
+}
+
+// 性能对比 (128K tokens)
+传统方案: O(128,000²) = 16.38 billion operations
+deepseek 3.2: O(128,000 × 2,048) = 262 million operations
+性能提升: 62.5倍计算效率提升
+                        </code>
+                    </div>
+                </div>
+
+                <div style="background: var(--gradient-card); border-radius: 20px; padding: 2.5rem; border: 1px solid var(--border-color);" class="fade-in">
+                    <h3 style="color: var(--primary-color); margin-bottom: 2rem; font-size: 1.8rem; text-align: center;">
+                        🔄 deepseek 3.2 深度思考模式工作机制
+                    </h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem;">
+                        <div style="text-align: center; padding: 1.5rem; background: rgba(0, 102, 255, 0.05); border-radius: 15px;">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">🤔</div>
+                            <h4 style="color: var(--primary-color); margin-bottom: 1rem;">思考阶段</h4>
+                            <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.5;">
+                                deepseek 3.2 在回答前进行内部推理，展示完整思考过程。
+                            </p>
+                        </div>
+                        <div style="text-align: center; padding: 1.5rem; background: rgba(0, 102, 255, 0.05); border-radius: 15px;">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">🔧</div>
+                            <h4 style="color: var(--primary-color); margin-bottom: 1rem;">工具调用</h4>
+                            <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.5;">
+                                deepseek 3.2 在思考过程中主动调用外部工具，如搜索、计算器等。
+                            </p>
+                        </div>
+                        <div style="text-align: center; padding: 1.5rem; background: rgba(0, 102, 255, 0.05); border-radius: 15px;">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">✅</div>
+                            <h4 style="color: var(--primary-color); margin-bottom: 1rem;">验证输出</h4>
+                            <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.5;">
+                                deepseek 3.2 基于工具返回结果继续思考，输出经过验证的准确答案。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- deepseek 3.2 行业解决方案 -->
+    <section class="section">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>deepseek 3.2 行业解决方案</h2>
+                <p class="section-subtitle">
+                    DeepSeek 3.2 为不同行业提供定制化的AI解决方案，助力数字化转型
+                </p>
+            </div>
+
+            <div style="max-width: 1200px; margin: 0 auto;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem;">
+                    <div style="background: var(--gradient-card); border-radius: 20px; padding: 2rem; border: 1px solid var(--border-color);" class="fade-in">
+                        <h3 style="color: var(--primary-color); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="ri-government-line"></i> 政府机构解决方案
+                        </h3>
+                        <ul style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;">
+                            <li>• 智能公文处理：deepseek 3.2 快速生成审核归档</li>
+                            <li>• 政策解读：deepseek 3.2 深度分析政策文件影响</li>
+                            <li>• 民意分析：deepseek 3.2 处理大量市民反馈数据</li>
+                            <li>• 决策支持：deepseek 3.2 基于数据的政策建议</li>
+                            <li>• 效率提升：政务处理效率提升60%</li>
+                        </ul>
+                        <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(0, 102, 255, 0.05); border-radius: 10px; text-align: center;">
+                            <strong style="color: var(--primary-color);">deepseek 3.2 政务版</strong><br>
+                            <small style="color: var(--text-secondary);">等保三级认证，数据完全可控</small>
+                        </div>
+                    </div>
+
+                    <div style="background: var(--gradient-card); border-radius: 20px; padding: 2rem; border: 1px solid var(--border-color);" class="fade-in">
+                        <h3 style="color: var(--primary-color); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="ri-bank-line"></i> 金融服务解决方案
+                        </h3>
+                        <ul style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;">
+                            <li>• 风险评估：deepseek 3.2 实时分析市场数据</li>
+                            <li>• 投研报告：deepseek 3.2 深度分析企业财务表现</li>
+                            <li>• 欺诈检测：deepseek 3.2 识别异常交易模式</li>
+                            <li>• 合规检查：deepseek 3.2 自动审核业务合规性</li>
+                            <li>• 成本节省：deepseek 3.2 分析师工作效率提升80%</li>
+                        </ul>
+                        <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(0, 102, 255, 0.05); border-radius: 10px; text-align: center;">
+                            <strong style="color: var(--primary-color);">deepseek 3.2 金融版</strong><br>
+                            <small style="color: var(--text-secondary);">支持私有化部署，符合金融监管</small>
+                        </div>
+                    </div>
+
+                    <div style="background: var(--gradient-card); border-radius: 20px; padding: 2rem; border: 1px solid var(--border-color);" class="fade-in">
+                        <h3 style="color: var(--primary-color); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="ri-hospital-line"></i> 医疗健康解决方案
+                        </h3>
+                        <ul style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;">
+                            <li>• 医学影像分析：deepseek 3.2 辅助医生诊断</li>
+                            <li>• 病历分析：deepseek 3.2 快速提取关键医学信息</li>
+                            <li>• 药物研发：deepseek 3.2 加速新药开发流程</li>
+                            <li>• 文献检索：deepseek 3.2 高效分析医学文献</li>
+                            <li>• 准确率提升：诊断辅助准确率提升35%</li>
+                        </ul>
+                        <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(0, 102, 255, 0.05); border-radius: 10px; text-align: center;">
+                            <strong style="color: var(--primary-color);">deepseek 3.2 医疗版</strong><br>
+                            <small style="color: var(--text-secondary);">HIPAA合规，医学数据安全</small>
+                        </div>
+                    </div>
+
+                    <div style="background: var(--gradient-card); border-radius: 20px; padding: 2rem; border: 1px solid var(--border-color);" class="fade-in">
+                        <h3 style="color: var(--primary-color); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="ri-store-3-line"></i> 零售电商解决方案
+                        </h3>
+                        <ul style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;">
+                            <li>• 智能客服：deepseek 3.2 提供24/7自动化服务</li>
+                            <li>• 商品推荐：deepseek 3.2 个性化产品推荐算法</li>
+                            <li>• 库存优化：deepseek 3.2 预测性库存管理</li>
+                            <li>• 价格优化：deepseek 3.2 动态定价策略建议</li>
+                            <li>• 转化提升：营销转化率提升45%</li>
+                        </ul>
+                        <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(0, 102, 255, 0.05); border-radius: 10px; text-align: center;">
+                            <strong style="color: var(--primary-color);">deepseek 3.2 零售版</strong><br>
+                            <small style="color: var(--text-secondary);">实时数据分析，快速响应市场</small>
+                        </div>
+                    </div>
+
+                    <div style="background: var(--gradient-card); border-radius: 20px; padding: 2rem; border: 1px solid var(--border-color);" class="fade-in">
+                        <h3 style="color: var(--primary-color); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="ri-book-open-line"></i> 教育培训解决方案
+                        </h3>
+                        <ul style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;">
+                            <li>• 智能答疑：deepseek 3.2 即时解答学生问题</li>
+                            <li>• 作业批改：deepseek 3.2 自动化作业评估和反馈</li>
+                            <li>• 个性化教学：deepseek 3.2 根据学生能力定制课程</li>
+                            <li>• 学术支持：deepseek 3.2 辅助教师课程设计</li>
+                            <li>• 学习效果：学生成绩平均提升28%</li>
+                        </ul>
+                        <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(0, 102, 255, 0.05); border-radius: 10px; text-align: center;">
+                            <strong style="color: var(--primary-color);">deepseek 3.2 教育版</strong><br>
+                            <small style="color: var(--text-secondary);">保护学生隐私，符合教育规范</small>
+                        </div>
+                    </div>
+
+                    <div style="background: var(--gradient-card); border-radius: 20px; padding: 2rem; border: 1px solid var(--border-color);" class="fade-in">
+                        <h3 style="color: var(--primary-color); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="ri-building-line"></i> 制造业解决方案
+                        </h3>
+                        <ul style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;">
+                            <li>• 质量检测：deepseek 3.2 基于视觉的质量检查</li>
+                            <li>• 设备维护：deepseek 3.2 预测性维护和故障诊断</li>
+                            <li>• 生产优化：deepseek 3.2 智能排产和资源调配</li>
+                            <li>• 供应链管理：deepseek 3.2 智能化供应链协调</li>
+                            <li>• 效率提升：生产效率提升55%</li>
+                        </ul>
+                        <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(0, 102, 255, 0.05); border-radius: 10px; text-align: center;">
+                            <strong style="color: var(--primary-color);">deepseek 3.2 制造版</strong><br>
+                            <small style="color: var(--text-secondary);">工业级稳定性，实时响应</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- deepseek 3.2 对比分析 -->
+    <section class="section" style="background: var(--bg-secondary);">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>deepseek 3.2 竞品对比分析</h2>
+                <p class="section-subtitle">
+                    详细对比 deepseek 3.2 与其他主流AI模型的优势和特点
+                </p>
+            </div>
+
+            <div style="max-width: 1200px; margin: 0 auto;">
+                <div style="background: var(--gradient-card); border-radius: 20px; padding: 2rem; border: 1px solid var(--border-color); margin-bottom: 2rem;" class="fade-in">
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>功能对比</th>
+                                <th>deepseek 3.2</th>
+                                <th>GPT-5</th>
+                                <th>Claude 3.5</th>
+                                <th>Gemini Pro</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>开源程度</strong></td>
+                                <td><span class="badge success">完全开源</span></td>
+                                <td>闭源</td>
+                                <td>闭源</td>
+                                <td>闭源</td>
+                            </tr>
+                            <tr>
+                                <td><strong>私有化部署</strong></td>
+                                <td><span class="badge success">支持</span></td>
+                                <td>不支持</td>
+                                <td>不支持</td>
+                                <td>不支持</td>
+                            </tr>
+                            <tr>
+                                <td><strong>成本优势</strong></td>
+                                <td><span class="badge success">极低</span></td>
+                                <td>高</td>
+                                <td>中高</td>
+                                <td>高</td>
+                            </tr>
+                            <tr>
+                                <td><strong>推理能力</strong></td>
+                                <td>GPT-5级别</td>
+                                <td>顶级</td>
+                                <td>优秀</td>
+                                <td>顶级</td>
+                            </tr>
+                            <tr>
+                                <td><strong>长文本处理</strong></td>
+                                <td><span class="badge success">128K + DSA优化</span></td>
+                                <td>128K</td>
+                                <td>100K</td>
+                                <td>100K</td>
+                            </tr>
+                            <tr>
+                                <td><strong>深度思考模式</strong></td>
+                                <td><span class="badge success">支持</span></td>
+                                <td>不支持</td>
+                                <td>部分支持</td>
+                                <td>不支持</td>
+                            </tr>
+                            <tr>
+                                <td><strong>工具调用能力</strong></td>
+                                <td><span class="badge success">思考+工具融合</span></td>
+                                <td>支持</td>
+                                <td>支持</td>
+                                <td>支持</td>
+                            </tr>
+                            <tr>
+                                <td><strong>中文优化</strong></td>
+                                <td><span class="badge success">专门优化</span></td>
+                                <td>一般</td>
+                                <td>一般</td>
+                                <td>一般</td>
+                            </tr>
+                            <tr>
+                                <td><strong>数据安全</strong></td>
+                                <td><span class="badge success">完全可控</span></td>
+                                <td>第三方</td>
+                                <td>第三方</td>
+                                <td>第三方</td>
+                            </tr>
+                            <tr>
+                                <td><strong>定制能力</strong></td>
+                                <td><span class="badge success">完全可定制</span></td>
+                                <td>有限</td>
+                                <td>有限</td>
+                                <td>有限</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA 区域 -->
+    <section class="section" style="background: var(--bg-secondary);">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>立即开始</h2>
+                <p class="section-subtitle">
+                    三步开启智能体验，加入AI革命浪潮
+                </p>
+            </div>
+
+            <div class="stats-grid" style="margin-bottom: 3rem;">
+                <div class="stat-card fade-in">
+                    <div class="feature-icon" style="margin: 0 auto 1rem;">
+                        <i class="ri-user-add-line"></i>
+                    </div>
+                    <h4>快速注册</h4>
+                    <p style="color: var(--text-secondary);">30秒完成账号创建</p>
+                </div>
+                <div class="stat-card fade-in">
+                    <div class="feature-icon" style="margin: 0 auto 1rem;">
+                        <i class="ri-vip-crown-line"></i>
+                    </div>
+                    <h4>选择方案</h4>
+                    <p style="color: var(--text-secondary);">根据需求选择合适套餐</p>
+                </div>
+                <div class="stat-card fade-in">
+                    <div class="feature-icon" style="margin: 0 auto 1rem;">
+                        <i class="ri-rocket-2-line"></i>
+                    </div>
+                    <h4>开始使用</h4>
+                    <p style="color: var(--text-secondary);">立即体验AI强大能力</p>
+                </div>
+            </div>
+
+            <div style="text-align: center;">
+                <h3 style="margin-bottom: 2rem; font-size: 2rem;">我们承诺</h3>
+                <div class="stats-grid" style="margin-bottom: 3rem;">
+                    <div class="stat-card">
+                        <i class="ri-shield-check-line" style="color: var(--primary-color); font-size: 2rem; margin-bottom: 0.5rem;"></i>
+                        <p>数据安全，隐私保护</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="ri-customer-service-2-line" style="color: var(--primary-color); font-size: 2rem; margin-bottom: 0.5rem;"></i>
+                        <p>7×24小时技术支持</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="ri-refresh-line" style="color: var(--primary-color); font-size: 2rem; margin-bottom: 0.5rem;"></i>
+                        <p>持续更新优化</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="ri-money-cny-circle-line" style="color: var(--primary-color); font-size: 2rem; margin-bottom: 0.5rem;"></i>
+                        <p>30天不满意全额退款</p>
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-primary" style="font-size: 1.2rem; padding: 1.2rem 3rem;">
+                        <i class="ri-rocket-line"></i>
+                        立即注册
+                    </button>
+                    <button class="btn btn-secondary" style="font-size: 1.2rem; padding: 1.2rem 3rem;">
+                        <i class="ri-phone-line"></i>
+                        联系销售
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>产品</h3>
+                    <ul>
+                        <li><a href="#">deepseek 3.2</a></li>
+                        <li><a href="#">功能特性</a></li>
+                        <li><a href="#">价格方案</a></li>
+                        <li><a href="#">更新日志</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>资源</h3>
+                    <ul>
+                        <li><a href="#">API文档</a></li>
+                        <li><a href="#">开发者指南</a></li>
+                        <li><a href="#">帮助中心</a></li>
+                        <li><a href="#">社区论坛</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>公司</h3>
+                    <ul>
+                        <li><a href="#">关于我们</a></li>
+                        <li><a href="#">联系我们</a></li>
+                        <li><a href="#">加入我们</a></li>
+                        <li><a href="#">新闻资讯</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>联系我们</h3>
+                    <ul>
+                        <li><a href="mailto:support@deepseek.com">support@deepseek.com</a></li>
+                        <li><a href="tel:400-123-4567">400-123-4567</a></li>
+                        <li>北京市海淀区中关村科技园区</li>
+                        <li>
+                            <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                                <a href="#" style="font-size: 1.5rem;"><i class="ri-github-fill"></i></a>
+                                <a href="#" style="font-size: 1.5rem;"><i class="ri-twitter-fill"></i></a>
+                                <a href="#" style="font-size: 1.5rem;"><i class="ri-linkedin-fill"></i></a>
+                                <a href="#" style="font-size: 1.5rem;"><i class="ri-wechat-fill"></i></a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 DeepSeek Technologies. deepseek 3.2 开源大语言模型 - 版权所有</p>
+                <p style="margin-top: 0.5rem;">
+                    <a href="#" style="color: var(--text-muted);">deepseek 3.2 隐私政策</a> | 
+                    <a href="#" style="color: var(--text-muted);">服务条款</a> | 
+                    <a href="#" style="color: var(--text-muted);">京ICP备12345678号-1</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // FAQ 交互
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const faqItem = question.parentElement;
+                const isActive = faqItem.classList.contains('active');
+                
+                // 关闭所有FAQ
+                document.querySelectorAll('.faq-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                
+                // 如果之前不是激活状态，则激活
+                if (!isActive) {
+                    faqItem.classList.add('active');
+                }
+            });
+        });
+
+        // 滚动动画
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // 观察所有需要动画的元素
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // 导航栏滚动效果
+        let lastScrollTop = 0;
+        const nav = document.querySelector('nav');
+
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            if (scrollTop > lastScrollTop && scrollTop > 100) {
+                // 向下滚动 - 隐藏导航栏
+                nav.style.transform = 'translateY(-100%)';
+            } else {
+                // 向上滚动 - 显示导航栏
+                nav.style.transform = 'translateY(0)';
+            }
+            
+            // 添加背景效果
+            if (scrollTop > 50) {
+                nav.style.background = 'rgba(0, 0, 0, 0.98)';
+                nav.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.5)';
+            } else {
+                nav.style.background = 'rgba(0, 0, 0, 0.95)';
+                nav.style.boxShadow = 'none';
+            }
+            
+            lastScrollTop = scrollTop;
+        });
+
+        // 添加平滑过渡
+        nav.style.transition = 'transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease';
+    </script>
+</body>
+</html>

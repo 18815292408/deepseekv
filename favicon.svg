@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0066FF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0044CC;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="text" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#E6F2FF;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- 背景 -->
+  <rect width="32" height="32" rx="6" fill="url(#bg)"/>
+  
+  <!-- AI机器人图标 -->
+  <g transform="translate(16, 16)">
+    <!-- 头部 -->
+    <circle cx="0" cy="-2" r="6" fill="url(#text)" opacity="0.9"/>
+    
+    <!-- 眼睛 -->
+    <circle cx="-2" cy="-2" r="1" fill="#0066FF"/>
+    <circle cx="2" cy="-2" r="1" fill="#0066FF"/>
+    
+    <!-- 嘴巴 -->
+    <path d="M -2,0 Q 0,2 2,0" stroke="#0066FF" stroke-width="0.8" fill="none" stroke-linecap="round"/>
+    
+    <!-- 身体 -->
+    <rect x="-4" y="4" width="8" height="6" rx="2" fill="url(#text)" opacity="0.9"/>
+    
+    <!-- 天线 -->
+    <line x1="0" y1="-8" x2="0" y2="-10" stroke="url(#text)" stroke-width="1" stroke-linecap="round"/>
+    <circle cx="0" cy="-11" r="1" fill="#00D4FF"/>
+  </g>
+  
+  <!-- D3.2 标识 -->
+  <text x="16" y="28" font-family="Arial, sans-serif" font-size="6" font-weight="bold" text-anchor="middle" fill="url(#text)">D3.2</text>
+</svg>
