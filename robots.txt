@@ -29,7 +29,7 @@ Disallow: /package-lock.json
 Crawl-delay: 1
 
 # 站点地图位置
-Sitemap: https://deepseek.com/sitemap.xml
+Sitemap: https://deepseekv.pro/sitemap.xml
 
 # 特殊搜索引擎处理
 User-agent: Googlebot
