@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="page-title">deepseekv3.2 - 开源大语言模型 | 推理能力对标GPT-5 | deepseekv3.2官方介绍</title>
+    <title id="page-title">deepseekv3.2 - 开源AI模型 | GPT-5级推理能力</title>
     
     <!-- SEO Meta Tags -->
-    <meta name="description" id="meta-description" content="deepseek 3.2（也经常被写作deepseekv3.2）是新一代开源大语言模型，推理能力对标GPT-5，采用DSA稀疏注意力机制，长文本处理成本降低60%，推理速度提升3.5倍，支持128K超长上下文和深度思考模式，Speciale版在国际竞赛中获得金牌，完全开源且性价比极高。">
-    <meta name="keywords" content="deepseek 3.2, 开源大语言模型, GPT-5替代, AI助手, 深度思考模式, DSA机制, 128K上下文">
+    <meta name="description" id="meta-description" content="deepseek 3.2开源AI模型，推理能力对标GPT-5。DSA机制成本降60%，速度提升3.5倍。Speciale版国际竞赛金牌，完全开源性价比高。">
+    <meta name="keywords" id="meta-keywords" content="deepseek 3.2, 开源大语言模型, GPT-5替代, AI助手, 深度思考模式, DSA机制, 128K上下文">
     <meta name="author" content="DeepSeek Technologies">
     <meta name="robots" content="index, follow">
     <meta name="language" content="en">
@@ -1382,8 +1382,9 @@ Thinking process:
         const translations = {
             zh: {
                 // 页面标题和meta
-                'page-title': 'deepseekv3.2 - 开源大语言模型 | 推理能力对标GPT-5 | deepseekv3.2官方介绍',
-                'meta-description': 'deepseek 3.2（也经常被写作deepseekv3.2）是新一代开源大语言模型，推理能力对标GPT-5，采用DSA稀疏注意力机制，长文本处理成本降低60%，推理速度提升3.5倍，支持128K超长上下文和深度思考模式，Speciale版在国际竞赛中获得金牌，完全开源且性价比极高。',
+                'page-title': 'deepseekv3.2 - 开源AI模型 | GPT-5级推理能力',
+                'meta-description': 'deepseek 3.2开源AI模型，推理能力对标GPT-5。DSA机制成本降60%，速度提升3.5倍。Speciale版国际竞赛金牌，完全开源性价比高。',
+                'meta-keywords': 'deepseek 3.2, 开源大语言模型, GPT-5替代, AI助手, 深度思考模式, DSA机制, 128K上下文',
                 'og-title': 'deepseek 3.2 - 开源大语言模型 | GPT-5级别推理能力',
                 'og-description': 'deepseek 3.2 开源大语言模型，推理能力对标GPT-5，成本降低60%。DSA机制创新，支持128K上下文和深度思考模式。Speciale版国际竞赛金牌，性价比革命。',
                 'twitter-title': 'deepseek 3.2 - 开源大语言模型 | GPT-5级别推理 | 性价比革命',
@@ -1417,8 +1418,9 @@ Thinking process:
             },
             en: {
                 // 页面标题和meta
-                'page-title': 'deepseekv3.2 - Open Source LLM | GPT-5 Level Reasoning | Official Introduction',
-                'meta-description': 'deepseek 3.2 (also written as deepseekv3.2) is a new generation open source large language model with GPT-5 level reasoning capabilities. Featuring DSA sparse attention mechanism, it reduces long text processing costs by 60%, boosts inference speed by 3.5x, supports 128K ultra-long context and deep thinking mode. The Speciale version won gold medals in international competitions, offering extreme cost-effectiveness with full open source availability.',
+                'page-title': 'deepseekv3.2 - Open Source AI Model | GPT-5 Level Reasoning',
+                'meta-description': 'deepseek 3.2 new gen open source LLM with GPT-5 reasoning. Features DSA cutting costs 60%, boosting speed 3.5x. Speciale version won gold medals.',
+                'meta-keywords': 'deepseek 3.2, open source large language model, GPT-5 alternative, AI assistant, deep thinking mode, DSA mechanism, 128K context',
                 'og-title': 'deepseek 3.2 - Open Source LLM | GPT-5 Level Reasoning',
                 'og-description': 'deepseek 3.2 open source large language model with GPT-5 level reasoning, 60% cost reduction. DSA mechanism innovation, supports 128K context and deep thinking mode. Speciale version international competition gold medal, cost-effective revolution.',
                 'twitter-title': 'deepseek 3.2 - Open Source LLM | GPT-5 Level Reasoning | Cost Revolution',
@@ -1518,6 +1520,7 @@ Thinking process:
         function updateMetaTags() {
             document.getElementById('page-title').textContent = translations[currentLanguage]['page-title'];
             document.getElementById('meta-description').content = translations[currentLanguage]['meta-description'];
+            document.getElementById('meta-keywords').content = translations[currentLanguage]['meta-keywords'];
             document.getElementById('og-title').content = translations[currentLanguage]['og-title'];
             document.getElementById('og-description').content = translations[currentLanguage]['og-description'];
             document.getElementById('twitter-title').content = translations[currentLanguage]['twitter-title'];
