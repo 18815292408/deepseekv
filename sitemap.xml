@@ -6,7 +6,7 @@
 
     <!-- 首页 - deepseek 3.2 落地页 -->
     <url>
-        <loc>https://deepseek.com/</loc>
+        <loc>https://deepseekv.pro/</loc>
         <lastmod>2024-12-06</lastmod>
         <changefreq>weekly</changefreq>
         <priority>1.0</priority>
@@ -14,7 +14,7 @@
     
     <!-- deepseek 3.2 落地页 -->
     <url>
-        <loc>https://deepseek.com/deepseek32-landing.html</loc>
+        <loc>https://deepseekv.pro/deepseek32-landing.html</loc>
         <lastmod>2024-12-06</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.9</priority>
@@ -22,7 +22,7 @@
     
     <!-- 功能特性页面锚点 -->
     <url>
-        <loc>https://deepseek.com/deepseek32-landing.html#features</loc>
+        <loc>https://deepseekv.pro/deepseek32-landing.html#features</loc>
         <lastmod>2024-12-06</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
@@ -30,7 +30,7 @@
     
     <!-- 价格方案页面锚点 -->
     <url>
-        <loc>https://deepseek.com/deepseek32-landing.html#pricing</loc>
+        <loc>https://deepseekv.pro/deepseek32-landing.html#pricing</loc>
         <lastmod>2024-12-06</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
@@ -38,7 +38,7 @@
     
     <!-- 常见问题页面锚点 -->
     <url>
-        <loc>https://deepseek.com/deepseek32-landing.html#faq</loc>
+        <loc>https://deepseekv.pro/deepseek32-landing.html#faq</loc>
         <lastmod>2024-12-06</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.7</priority>
@@ -46,7 +46,7 @@
     
     <!-- 技术详情页面锚点 -->
     <url>
-        <loc>https://deepseek.com/deepseek32-landing.html#technical</loc>
+        <loc>https://deepseekv.pro/deepseek32-landing.html#technical</loc>
         <lastmod>2024-12-06</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
@@ -54,7 +54,7 @@
     
     <!-- 行业解决方案页面锚点 -->
     <url>
-        <loc>https://deepseek.com/deepseek32-landing.html#solutions</loc>
+        <loc>https://deepseekv.pro/deepseek32-landing.html#solutions</loc>
         <lastmod>2024-12-06</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
@@ -62,7 +62,7 @@
     
     <!-- 竞品对比分析页面锚点 -->
     <url>
-        <loc>https://deepseek.com/deepseek32-landing.html#comparison</loc>
+        <loc>https://deepseekv.pro/deepseek32-landing.html#comparison</loc>
         <lastmod>2024-12-06</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.6</priority>
@@ -70,7 +70,7 @@
     
     <!-- 客户案例页面锚点 -->
     <url>
-        <loc>https://deepseek.com/deepseek32-landing.html#cases</loc>
+        <loc>https://deepseekv.pro/deepseek32-landing.html#cases</loc>
         <lastmod>2024-12-06</lastmod>
         <changefreq>quarterly</changefreq>
         <priority>0.6</priority>
