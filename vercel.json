@@ -3,11 +3,7 @@
   "name": "deepseek-3.2-landing-page",
   "rewrites": [
     {
-      "source": "/",
-      "destination": "/deepseek32-landing.html"
-    },
-    {
-      "source": "/((?!sitemap\\.xml|robots\\.txt).*)",
+      "source": "/((?!.*\\.xml|.*\\.txt|.*\\.html).*)",
       "destination": "/deepseek32-landing.html"
     }
   ],
