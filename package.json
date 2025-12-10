@@ -1,0 +1,20 @@
+{
+  "name": "deepseek-3.2-landing-page",
+  "version": "1.0.0",
+  "description": "deepseek 3.2 - 开源大语言模型落地页",
+  "main": "deepseek32-landing.html",
+  "scripts": {
+    "start": "echo 'Static site - no build step required'",
+    "build": "echo 'Static site - no build step required'"
+  },
+  "keywords": [
+    "deepseek",
+    "ai",
+    "llm",
+    "static-site",
+    "landing-page"
+  ],
+  "author": "DeepSeek Technologies",
+  "license": "MIT",
+  "type": "static"
+}
