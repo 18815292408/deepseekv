@@ -5,17 +5,17 @@
     {
       "src": "deepseek32-landing.html",
       "use": "@vercel/static"
+    },
+    {
+      "src": "sitemap.xml",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "robots.txt", 
+      "use": "@vercel/static"
     }
   ],
   "rewrites": [
-    {
-      "source": "/sitemap.xml",
-      "destination": "/sitemap.xml"
-    },
-    {
-      "source": "/robots.txt",
-      "destination": "/robots.txt"
-    },
     {
       "source": "/",
       "destination": "/deepseek32-landing.html"
