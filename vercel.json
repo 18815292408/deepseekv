@@ -1,23 +1,13 @@
 {
   "version": 2,
   "name": "deepseek-3.2-landing-page",
-  "builds": [
-    {
-      "src": "deepseek32-landing.html",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "sitemap.xml",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "robots.txt", 
-      "use": "@vercel/static"
-    }
-  ],
   "rewrites": [
     {
       "source": "/",
+      "destination": "/deepseek32-landing.html"
+    },
+    {
+      "source": "/((?!sitemap\\.xml|robots\\.txt).*)",
       "destination": "/deepseek32-landing.html"
     }
   ],
