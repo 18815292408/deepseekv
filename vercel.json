@@ -1,9 +1,32 @@
 {
   "version": 2,
-  "rewrites": [
+  "name": "deepseek-3.2-landing-page",
+  "builds": [
     {
-      "source": "/(.*)",
-      "destination": "/deepseek32-landing.html"
+      "src": "deepseek32-landing.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "public/**/*",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/deepseek32-landing.html",
+      "dest": "/deepseek32-landing.html"
+    },
+    {
+      "src": "/sitemap.xml",
+      "dest": "/sitemap.xml"
+    },
+    {
+      "src": "/robots.txt", 
+      "dest": "/robots.txt"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/deepseek32-landing.html"
     }
   ]
 }
