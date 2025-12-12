@@ -20,26 +20,31 @@
       "dest": "/remixicon-custom.css",
       "headers": {
         "Content-Type": "text/css; charset=utf-8",
-        "Cache-Control": "public, max-age=86400"
+        "Cache-Control": "public, max-age=31536000, immutable"
       }
     },
     {
       "src": "/sitemap.xml",
       "dest": "/public/sitemap.xml",
       "headers": {
-        "Content-Type": "application/xml; charset=utf-8"
+        "Content-Type": "application/xml; charset=utf-8",
+        "Cache-Control": "public, max-age=86400"
       }
     },
     {
       "src": "/robots.txt", 
       "dest": "/public/robots.txt",
       "headers": {
-        "Content-Type": "text/plain; charset=utf-8"
+        "Content-Type": "text/plain; charset=utf-8",
+        "Cache-Control": "public, max-age=86400"
       }
     },
     {
       "src": "/deepseek32-landing.html",
-      "dest": "/deepseek32-landing.html"
+      "dest": "/deepseek32-landing.html",
+      "headers": {
+        "Cache-Control": "public, max-age=3600"
+      }
     },
     {
       "src": "/(.*)",

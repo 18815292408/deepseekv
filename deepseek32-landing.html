@@ -64,6 +64,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     
+    <!-- 优化字体加载 -->
+    <link rel="preload" as="font" type="font/woff2" crossorigin href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.woff2?t=1690542014099">
+    
     <!-- 优化后的图标CSS - 自定义精简版本 -->
     <link rel="preload" href="/remixicon-custom.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="/remixicon-custom.css"></noscript>
@@ -84,7 +87,7 @@
             width: 100%;
             background: rgba(0, 0, 0, 0.95);
             backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--bd);
             z-index: 1000;
             padding: 1rem 0;
         }
@@ -101,7 +104,7 @@
         .logo {
             font-size: 1.8rem;
             font-weight: 700;
-            color: var(--text-primary);
+            color: var(--t0);
             text-decoration: none;
             display: flex;
             align-items: center;
@@ -109,7 +112,7 @@
         }
 
         .logo i {
-            color: var(--primary-color);
+            color: var(--p);
             font-size: 2rem;
         }
 
@@ -120,32 +123,36 @@
         }
 
         .nav-links a {
-            color: var(--text-secondary);
+            color: var(--t1);
             text-decoration: none;
             transition: color 0.3s;
             font-weight: 500;
         }
 
         .nav-links a:hover {
-            color: var(--text-primary);
+            color: var(--t0);
         }
 
         .language-switcher {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
+            background: var(--b2);
+            border: 1px solid var(--bd);
             border-radius: 8px;
             padding: 0.5rem 1rem;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            color: var(--text-secondary);
+            color: var(--t2);
             transition: all 0.3s;
+            min-width: 80px; /* 防止布局偏移 */
+            height: 36px; /* 固定高度 */
+            box-sizing: border-box;
+            contain: layout style paint;
         }
 
         .language-switcher:hover {
-            border-color: var(--primary-color);
-            color: var(--text-primary);
+            border-color: var(--p);
+            color: var(--t0);
         }
 
         /* Hero 区域 */
@@ -188,7 +195,7 @@
         .hero h1 {
             font-size: clamp(3rem, 8vw, 6rem);
             font-weight: 800;
-            background: var(--gradient-primary);
+            background: var(--g-p);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -203,27 +210,30 @@
         .hero-subtitle h2 {
             font-size: clamp(1.5rem, 4vw, 2.5rem);
             font-weight: 600;
-            color: var(--text-primary);
+            color: var(--t0);
             margin-bottom: 0.5rem;
         }
 
         .hero-tagline {
             font-size: 1.2rem;
-            color: var(--primary-color);
+            color: var(--p);
             font-weight: 500;
             margin-bottom: 2rem;
         }
 
         .hero-description {
             font-size: 1.1rem;
-            color: var(--text-secondary);
+            color: var(--t1);
             margin-bottom: 2rem;
             max-width: 700px;
             margin-left: auto;
             margin-right: auto;
-            contain: layout style paint; /* 性能优化 */
-            transform: translateZ(0); /* 硬件加速 */
-            backface-visibility: hidden; /* 防止闪烁 */
+            contain: layout style paint;
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            min-height: 3.6em; /* 防止布局偏移 */
+            line-height: 1.8;
+            overflow-anchor: none; /* 防止滚动锚定 */
         }
 
         .stats-container {
@@ -234,8 +244,8 @@
         }
 
         .stat-card {
-            background: var(--gradient-card);
-            border: 1px solid var(--border-color);
+            background: var(--g-c);
+            border: 1px solid var(--bd);
             border-radius: 16px;
             padding: 1.5rem;
             text-align: center;
@@ -245,12 +255,12 @@
         .stat-number {
             font-size: 2.5rem;
             font-weight: 700;
-            color: var(--primary-color);
+            color: var(--p);
             margin-bottom: 0.5rem;
         }
 
         .stat-label {
-            color: var(--text-secondary);
+            color: var(--t1);
             font-size: 0.9rem;
             font-weight: 500;
         }
@@ -271,7 +281,7 @@
         }
 
         .btn-primary {
-            background: var(--gradient-primary);
+            background: var(--g-p);
             color: white;
             box-shadow: 0 4px 20px rgba(0, 102, 255, 0.3);
             position: relative;
@@ -300,12 +310,12 @@
 
         .btn-secondary {
             background: transparent;
-            color: var(--primary-color);
-            border: 2px solid var(--primary-color);
+            color: var(--p);
+            border: 2px solid var(--p);
         }
 
         .btn-secondary:hover {
-            background: var(--primary-color);
+            background: var(--p);
             color: white;
             transform: translateY(-2px);
         }
@@ -336,7 +346,7 @@
             font-size: clamp(2rem, 5vw, 3.5rem);
             font-weight: 700;
             margin-bottom: 1rem;
-            background: linear-gradient(135deg, var(--text-primary) 0%, var(--primary-color) 100%);
+            background: linear-gradient(135deg, var(--t0) 0%, var(--p) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -344,7 +354,7 @@
 
         .section-subtitle {
             font-size: 1.2rem;
-            color: var(--text-secondary);
+            color: var(--t1);
             max-width: 600px;
             margin: 0 auto;
         }
@@ -358,8 +368,8 @@
         }
 
         .feature-card {
-            background: var(--gradient-card);
-            border: 1px solid var(--border-color);
+            background: var(--g-c);
+            border: 1px solid var(--bd);
             border-radius: 20px;
             padding: 2rem;
             position: relative;
@@ -374,7 +384,7 @@
             left: 0;
             right: 0;
             height: 4px;
-            background: var(--gradient-primary);
+            background: var(--g-p);
             opacity: 0;
             transition: opacity 0.3s;
         }
@@ -392,7 +402,7 @@
         .feature-icon {
             width: 60px;
             height: 60px;
-            background: var(--gradient-primary);
+            background: var(--g-p);
             border-radius: 12px;
             display: flex;
             align-items: center;
@@ -405,18 +415,18 @@
             font-size: 1.3rem;
             font-weight: 600;
             margin-bottom: 1rem;
-            color: var(--text-primary);
+            color: var(--t0);
         }
 
         .feature-card p {
-            color: var(--text-secondary);
+            color: var(--t1);
             line-height: 1.6;
         }
 
         /* Code Block */
         .code-block {
             background: rgba(0, 0, 0, 0.5);
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--bd);
             border-radius: 8px;
             padding: 1rem;
             margin: 1rem 0;
@@ -426,7 +436,7 @@
         }
 
         .code-block code {
-            color: var(--primary-color);
+            color: var(--p);
         }
 
         /* FAQ Section Styles */
@@ -439,7 +449,7 @@
 
         .faq-item {
             background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--bd);
             border-radius: 12px;
             padding: 1.5rem;
             transition: all 0.3s ease;
@@ -447,12 +457,12 @@
 
         .faq-item:hover {
             background: rgba(255, 255, 255, 0.06);
-            border-color: var(--primary-color);
+            border-color: var(--p);
             transform: translateY(-2px);
         }
 
         .faq-item h3 {
-            color: var(--primary-color);
+            color: var(--p);
             font-size: 1.1rem;
             font-weight: 600;
             margin-bottom: 1rem;
@@ -460,7 +470,7 @@
         }
 
         .faq-item p {
-            color: var(--text-secondary);
+            color: var(--t1);
             line-height: 1.6;
         }
 
@@ -474,7 +484,7 @@
 
         .review-card {
             background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--bd);
             border-radius: 12px;
             padding: 2rem;
             transition: all 0.3s ease;
@@ -501,7 +511,7 @@
         }
 
         .review-header h3 {
-            color: var(--text-primary);
+            color: var(--t0);
             font-size: 1.2rem;
             font-weight: 600;
             margin: 0;
@@ -513,7 +523,7 @@
         }
 
         .review-content {
-            color: var(--text-secondary);
+            color: var(--t1);
         }
 
         .positive-points, .limitations {
@@ -521,7 +531,7 @@
         }
 
         .positive-points h4, .limitations h4 {
-            color: var(--text-primary);
+            color: var(--t0);
             font-size: 1rem;
             font-weight: 600;
             margin-bottom: 0.8rem;
@@ -566,14 +576,14 @@
 
         .review-summary {
             background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--bd);
             border-radius: 12px;
             padding: 2rem;
             margin-top: 2rem;
         }
 
         .review-summary h3 {
-            color: var(--primary-color);
+            color: var(--p);
             font-size: 1.3rem;
             margin-bottom: 1.5rem;
             text-align: center;
@@ -593,7 +603,7 @@
         }
 
         .summary-item h4 {
-            color: var(--text-primary);
+            color: var(--t0);
             font-size: 1.1rem;
             font-weight: 600;
             margin-bottom: 1rem;
@@ -610,19 +620,19 @@
             padding-left: 1.2rem;
             margin-bottom: 0.6rem;
             line-height: 1.5;
-            color: var(--text-secondary);
+            color: var(--t1);
         }
 
         .summary-item li::before {
             content: '•';
             position: absolute;
             left: 0;
-            color: var(--primary-color);
+            color: var(--p);
             font-weight: bold;
         }
 
         .review-summary > p {
-            color: var(--text-secondary);
+            color: var(--t1);
             line-height: 1.6;
             font-style: italic;
             text-align: center;
@@ -639,7 +649,7 @@
 
         .scenario-card {
             background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--bd);
             border-radius: 12px;
             padding: 2rem;
             text-align: center;
@@ -648,14 +658,14 @@
 
         .scenario-card:hover {
             background: rgba(255, 255, 255, 0.06);
-            border-color: var(--primary-color);
+            border-color: var(--p);
             transform: translateY(-4px);
         }
 
         .scenario-icon {
             width: 80px;
             height: 80px;
-            background: var(--gradient-primary);
+            background: var(--g-p);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -668,11 +678,11 @@
             font-size: 1.3rem;
             font-weight: 600;
             margin-bottom: 1rem;
-            color: var(--text-primary);
+            color: var(--t0);
         }
 
         .scenario-card p {
-            color: var(--text-secondary);
+            color: var(--t1);
             line-height: 1.6;
         }
 
@@ -686,7 +696,7 @@
 
         .pricing-card {
             background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--bd);
             border-radius: 12px;
             padding: 2rem;
             text-align: center;
@@ -696,12 +706,12 @@
 
         .pricing-card:hover {
             background: rgba(255, 255, 255, 0.06);
-            border-color: var(--primary-color);
+            border-color: var(--p);
             transform: translateY(-4px);
         }
 
         .pricing-card.highlight {
-            border-color: var(--primary-color);
+            border-color: var(--p);
             background: rgba(0, 119, 255, 0.1);
         }
 
@@ -710,7 +720,7 @@
             top: -12px;
             left: 50%;
             transform: translateX(-50%);
-            background: var(--gradient-primary);
+            background: var(--g-p);
             color: white;
             padding: 4px 16px;
             border-radius: 16px;
@@ -722,7 +732,7 @@
             font-size: 1.5rem;
             font-weight: 700;
             margin-bottom: 1rem;
-            color: var(--text-primary);
+            color: var(--t0);
         }
 
         .price {
@@ -731,19 +741,19 @@
 
         .currency {
             font-size: 1.5rem;
-            color: var(--primary-color);
+            color: var(--p);
             vertical-align: top;
         }
 
         .amount {
             font-size: 3rem;
             font-weight: 800;
-            color: var(--primary-color);
+            color: var(--p);
             line-height: 1;
         }
 
         .unit {
-            color: var(--text-secondary);
+            color: var(--t1);
             font-size: 0.9rem;
         }
 
@@ -754,7 +764,7 @@
         }
 
         .pricing-card li {
-            color: var(--text-secondary);
+            color: var(--t1);
             margin-bottom: 0.8rem;
             position: relative;
             padding-left: 1.5rem;
@@ -764,13 +774,13 @@
             content: '✓';
             position: absolute;
             left: 0;
-            color: var(--primary-color);
+            color: var(--p);
             font-weight: bold;
         }
 
         .roi-calculator {
             background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--bd);
             border-radius: 12px;
             padding: 2rem;
             margin-top: 2rem;
@@ -778,13 +788,13 @@
         }
 
         .roi-calculator h3 {
-            color: var(--primary-color);
+            color: var(--p);
             font-size: 1.3rem;
             margin-bottom: 1rem;
         }
 
         .roi-calculator p {
-            color: var(--text-secondary);
+            color: var(--t1);
             line-height: 1.6;
         }
 
@@ -882,11 +892,11 @@
 
         /* Language selector styles */
         .lang-select {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
+            background: var(--b2);
+            border: 1px solid var(--bd);
             border-radius: 8px;
             padding: 0.5rem;
-            color: var(--text-primary);
+            color: var(--t0);
             font-size: 0.9rem;
             cursor: pointer;
         }
