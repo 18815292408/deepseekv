@@ -59,9 +59,38 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#0066FF">
     <link rel="manifest" href="/site.webmanifest">
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <!-- 预连接关键资源 -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- 异步加载非关键CSS -->
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css"></noscript>
     
     <style>
+        /* 关键性能优化 */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            text-rendering: optimizeSpeed;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        img {
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
+        }
+        
+        /* 预加载重要字体 */
+        @font-face {
+            font-family: 'system-ui';
+            font-display: swap;
+        }
+        
         :root {
             --primary-color: #0066FF;
             --secondary-color: #0052CC;
@@ -177,12 +206,14 @@
         .hero::before {
             content: '';
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(0, 102, 255, 0.1) 0%, transparent 70%);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(0, 102, 255, 0.08) 0%, transparent 60%);
             animation: pulse 15s ease-in-out infinite;
+            will-change: transform, opacity;
+            transform: translateZ(0); /* 硬件加速 */
         }
 
         @keyframes pulse {
@@ -207,6 +238,9 @@
             margin-bottom: 1rem;
             line-height: 1.1;
             letter-spacing: -0.02em;
+            contain: layout style paint; /* 性能优化 */
+            transform: translateZ(0); /* 硬件加速 */
+            will-change: transform; /* 优化动画性能 */
         }
 
         .hero-subtitle h2 {
@@ -230,6 +264,9 @@
             max-width: 700px;
             margin-left: auto;
             margin-right: auto;
+            contain: layout style paint; /* 性能优化 */
+            transform: translateZ(0); /* 硬件加速 */
+            backface-visibility: hidden; /* 防止闪烁 */
         }
 
         .stats-container {
