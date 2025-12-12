@@ -1,0 +1,31 @@
+/* 自定义RemixIcon - 只包含使用的图标 */
+@font-face {
+  font-family: 'RemixIcon';
+  src: url('https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.woff2?t=1690542014099') format('woff2'),
+       url('https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.woff?t=1690542014099') format('woff'),
+       url('https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.ttf?t=1690542014099') format('truetype');
+  font-display: swap;
+}
+
+/* 只包含使用的图标 */
+.ri-robot-2-line:before { content: '\ee6f'; }
+.ri-translate-2:before { content: '\f022'; }
+.ri-rocket-line:before { content: '\ee71'; }
+.ri-play-circle-line:before { content: '\eaeb'; }
+.ri-lightning-line:before { content: '\ed1d'; }
+.ri-brain-line:before { content: '\ecfb'; }
+.ri-tools-line:before { content: '\f1eb'; }
+.ri-database-2-line:before { content: '\ed1f'; }
+.ri-trophy-line:before { content: '\ef6e'; }
+.ri-code-s-slash-line:before { content: '\ef1d'; }
+.ri-graduation-cap-line:before { content: '\eed2'; }
+.ri-code-line:before { content: '\ef1e'; }
+.ri-customer-service-line:before { content: '\eccc'; }
+.ri-search-line:before { content: '\f0de'; }
+
+[class^="ri-"], [class*=" ri-"] {
+  font-family: 'RemixIcon' !important;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

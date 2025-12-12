@@ -57,3 +57,4 @@ out/
 # 锁文件（根据需要保留）
 # package-lock.json
 # yarn.lock
+.vercel

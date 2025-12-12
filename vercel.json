@@ -6,11 +6,23 @@
       "use": "@vercel/static"
     },
     {
+      "src": "remixicon-custom.css",
+      "use": "@vercel/static"
+    },
+    {
       "src": "public/**/*",
       "use": "@vercel/static"
     }
   ],
   "routes": [
+    {
+      "src": "/remixicon-custom.css",
+      "dest": "/remixicon-custom.css",
+      "headers": {
+        "Content-Type": "text/css; charset=utf-8",
+        "Cache-Control": "public, max-age=86400"
+      }
+    },
     {
       "src": "/sitemap.xml",
       "dest": "/public/sitemap.xml",
