@@ -136,9 +136,7 @@ MIT License - 详见LICENSE文件
 
 ## 📞 联系方式
 
-如有问题，请通过以下方式联系：
-- GitHub Issues
-- 官方邮箱: contact@deepseek.com
+https://www.deepseekv.pro/
 
 ---
 
