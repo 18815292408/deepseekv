@@ -40,15 +40,18 @@
       }
     },
     {
-      "src": "/deepseek32-landing.html",
+      "src": "/favicon.svg",
+      "dest": "/favicon.svg"
+    },
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/(.*)",
       "dest": "/deepseek32-landing.html",
       "headers": {
         "Cache-Control": "public, max-age=3600"
       }
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/deepseek32-landing.html"
     }
   ]
 }
