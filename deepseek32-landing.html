@@ -914,6 +914,25 @@
         .hidden {
             display: none !important;
         }
+
+        /* 友情链接样式 */
+        .friendlinks-container a:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: var(--p);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 102, 255, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .friendlinks-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .friendlinks-container a {
+                justify-content: center;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1385,6 +1404,25 @@ Thinking process:
             <div class="roi-calculator fade-in">
                 <h3 data-zh="成本节省计算器" data-en="Cost Savings Calculator">成本节省计算器</h3>
                 <p data-zh="假设您的项目每月需要处理1000万tokens，使用deepseek 3.2 相比GPT-5可节省成本70%以上，相比Gemini可节省成本60%以上。deepseek 3.2 的成本优势让更多企业和开发者能够负担顶级AI技术。deepseek 3.2 真正实现了AI技术的民主化。" data-en="Assuming your project processes 10 million tokens per month, using deepseek 3.2 saves over 70% cost compared to GPT-5 and over 60% compared to Gemini. deepseek 3.2's cost advantage allows more enterprises and developers to afford top-tier AI technology. deepseek 3.2 truly achieves the democratization of AI technology.">假设您的项目每月需要处理1000万tokens，使用deepseek 3.2 相比GPT-5可节省成本70%以上，相比Gemini可节省成本60%以上。deepseek 3.2 的成本优势让更多企业和开发者能够负担顶级AI技术。deepseek 3.2 真正实现了AI技术的民主化。</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 友情链接 -->
+    <section class="section" id="friendlinks" style="background: rgba(0, 0, 0, 0.3);">
+        <div class="container">
+            <div class="section-header fade-in" style="text-align: center; margin-bottom: 2rem;">
+                <h2 data-zh="友情链接" data-en="Friend Links" style="font-size: 1.5rem; color: var(--p);">友情链接</h2>
+            </div>
+            
+            <div class="friendlinks-container" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem;">
+                <a href="https://www.engagement-photos.net/" target="_blank" rel="nofollow noopener" 
+                   style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--bd); border-radius: 12px; 
+                          padding: 1rem 1.5rem; text-decoration: none; color: var(--t1); transition: all 0.3s ease;
+                          display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="ri-camera-line" style="color: var(--p); font-size: 1.2rem;"></i>
+                    <span data-zh="订婚摄影" data-en="Engagement Photos">订婚摄影</span>
+                </a>
             </div>
         </div>
     </section>
