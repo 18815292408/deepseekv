@@ -44,6 +44,13 @@
       "dest": "/favicon.svg"
     },
     {
+      "src": "/deepseek-v4.html",
+      "dest": "/deepseek-v4.html",
+      "headers": {
+        "Cache-Control": "public, max-age=3600"
+      }
+    },
+    {
       "handle": "filesystem"
     },
     {
