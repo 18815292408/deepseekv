@@ -6,15 +6,15 @@
     <title>DeepSeek V4 - Next-Gen AI Programming Model | Surpassing Claude & GPT</title>
     
     <!-- SEO Meta Tags -->
-    <meta name="description" content="DeepSeek V4 Coming Soon! Revolutionary AI programming model with next-generation architecture. Internal tests show coding capabilities surpassing Claude and GPT series. MoE architecture + Engram memory module, launching around Chinese New Year 2026.">
-    <meta name="keywords" content="DeepSeek V4, AI programming model, code generation, Claude alternative, GPT alternative, MoE architecture, Engram memory module, open source LLM, 2026 AI release">
+    <meta name="description" id="meta-description" content="DeepSeek V4 Coming Soon! Revolutionary AI programming model with next-generation architecture. Internal tests show coding capabilities surpassing Claude and GPT series. MoE architecture + Engram memory module, launching around Chinese New Year 2026.">
+    <meta name="keywords" id="meta-keywords" content="DeepSeek V4, AI programming model, code generation, Claude alternative, GPT alternative, MoE architecture, Engram memory module, open source LLM, 2026 AI release">
     <meta name="author" content="DeepSeek Technologies">
     <meta name="robots" content="index, follow">
     <meta name="language" content="en">
     
     <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="DeepSeek V4 - Next-Gen AI Programming Model | Surpassing Claude & GPT">
-    <meta property="og:description" content="Revolutionary AI programming model with coding capabilities surpassing Claude and GPT. MoE architecture + Engram memory module, launching Chinese New Year 2026.">
+    <meta property="og:title" id="og-title" content="DeepSeek V4 - Next-Gen AI Programming Model | Surpassing Claude & GPT">
+    <meta property="og:description" id="og-description" content="Revolutionary AI programming model with coding capabilities surpassing Claude and GPT. MoE architecture + Engram memory module, launching Chinese New Year 2026.">
     <meta property="og:type" content="article">
     <meta property="og:url" content="https://deepseekv.pro/deepseek-v4.html">
     <meta property="og:image" content="https://deepseekv.pro/images/deepseek-v4-og.jpg">
@@ -28,8 +28,8 @@
     
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="DeepSeek V4 - New Era of AI Programming | Surpassing Claude & GPT">
-    <meta name="twitter:description" content="Revolutionary AI programming model with coding capabilities surpassing industry leaders. MoE architecture + Engram memory, launching Chinese New Year 2026.">
+    <meta name="twitter:title" id="twitter-title" content="DeepSeek V4 - New Era of AI Programming | Surpassing Claude & GPT">
+    <meta name="twitter:description" id="twitter-description" content="Revolutionary AI programming model with coding capabilities surpassing industry leaders. MoE architecture + Engram memory, launching Chinese New Year 2026.">
     <meta name="twitter:image" content="https://deepseekv.pro/images/deepseek-v4-twitter.jpg">
     <meta name="twitter:site" content="@deepseek_ai">
     <meta name="twitter:creator" content="@deepseek_ai">
@@ -149,6 +149,7 @@
             display: flex;
             gap: 2rem;
             list-style: none;
+            align-items: center;
         }
 
         .nav-links a {
@@ -161,6 +162,23 @@
             color: var(--p);
         }
 
+        .language-switcher {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--bd);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .language-switcher:hover {
+            background: rgba(0, 102, 255, 0.1);
+            border-color: var(--p);
+        }
+
         /* Hero Section */
         .hero {
             margin-top: 80px;
@@ -171,7 +189,7 @@
         }
 
         .hero h1 {
-            font-size: 3rem;
+            font-size: clamp(2rem, 5vw, 3rem);
             font-weight: 800;
             margin-bottom: 1rem;
             background: var(--g-p);
@@ -181,9 +199,12 @@
         }
 
         .hero .subtitle {
-            font-size: 1.25rem;
+            font-size: clamp(1rem, 3vw, 1.25rem);
             color: var(--t1);
             margin-bottom: 2rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .hero .badges {
@@ -253,7 +274,7 @@
         }
 
         section h2 {
-            font-size: 2.5rem;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
             margin-bottom: 1.5rem;
             color: var(--t0);
             text-align: center;
@@ -539,10 +560,6 @@
 
         /* Responsive */
         @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2rem;
-            }
-
             .nav-links {
                 display: none;
             }
@@ -577,149 +594,157 @@
         <div class="nav-container">
             <a href="/" class="nav-logo">DeepSeek V4</a>
             <ul class="nav-links">
-                <li><a href="#news">最新动态</a></li>
-                <li><a href="#architecture">技术架构</a></li>
-                <li><a href="#features">核心特性</a></li>
-                <li><a href="#comparison">性能对比</a></li>
-                <li><a href="#timeline">发布时间线</a></li>
-                <li><a href="#faq">常见问题</a></li>
+                <li><a href="#news" data-zh="最新动态" data-en="Latest News">Latest News</a></li>
+                <li><a href="#architecture" data-zh="技术架构" data-en="Architecture">Architecture</a></li>
+                <li><a href="#features" data-zh="核心特性" data-en="Features">Features</a></li>
+                <li><a href="#comparison" data-zh="性能对比" data-en="Comparison">Comparison</a></li>
+                <li><a href="#timeline" data-zh="发布时间线" data-en="Timeline">Timeline</a></li>
+                <li><a href="#faq" data-zh="常见问题" data-en="FAQ">FAQ</a></li>
             </ul>
+            <div class="language-switcher" onclick="toggleLanguage()">
+                <i class="ri-translate-2"></i>
+                <span id="current-lang">English</span>
+            </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
     <section class="hero">
-        <h1>DeepSeek V4 即将发布</h1>
-        <p class="subtitle">下一代AI编程模型，重新定义代码生成边界</p>
+        <h1 id="hero-title" data-zh="DeepSeek V4 即将发布" data-en="DeepSeek V4 Coming Soon">DeepSeek V4 Coming Soon</h1>
+        <p class="subtitle" id="hero-subtitle" data-zh="下一代AI编程模型，重新定义代码生成边界" data-en="Next-generation AI programming model, redefining code generation boundaries">Next-generation AI programming model, redefining code generation boundaries</p>
         <div class="badges">
-            <span class="badge">🔥 预计2026年春节发布</span>
-            <span class="badge">💪 编程能力超越Claude和GPT</span>
-            <span class="badge">🚀 革命性MoE+Engram架构</span>
-            <span class="badge">💎 开源且高性价比</span>
+            <span class="badge" data-zh="🔥 预计2026年春节发布" data-en="🔥 Coming Chinese New Year 2026">🔥 Coming Chinese New Year 2026</span>
+            <span class="badge" data-zh="💪 编程能力超越Claude和GPT" data-en="💪 Surpassing Claude & GPT">💪 Surpassing Claude & GPT</span>
+            <span class="badge" data-zh="🚀 革命性MoE+Engram架构" data-en="🚀 Revolutionary MoE+Engram">🚀 Revolutionary MoE+Engram</span>
+            <span class="badge" data-zh="💎 开源且高性价比" data-en="💎 Open Source & Cost-Effective">💎 Open Source & Cost-Effective</span>
         </div>
         <div class="cta-buttons">
-            <a href="#features" class="btn btn-primary">了解特性</a>
-            <a href="#architecture" class="btn btn-secondary">查看架构</a>
+            <a href="#features" class="btn btn-primary">
+                <span data-zh="了解特性" data-en="Explore Features">Explore Features</span>
+            </a>
+            <a href="#architecture" class="btn btn-secondary">
+                <span data-zh="查看架构" data-en="View Architecture">View Architecture</span>
+            </a>
         </div>
     </section>
 
-    <!-- 最新动态 -->
+    <!-- Latest News -->
     <section id="news" class="container">
-        <h2>📰 最新动态</h2>
+        <h2 data-zh="📰 最新动态" data-en="📰 Latest News">📰 Latest News</h2>
         <div class="news-grid">
             <div class="news-card">
-                <div class="date">2026年1月13日</div>
-                <h4>DeepSeek V4架构首曝：直击Transformer致命缺陷</h4>
-                <p>梁文锋署名新论文，提出全新Engram模块解决Transformer记忆难题，让模型容量不再靠堆参数。这项创新技术有望在V4模型中首次应用。</p>
-                <div class="source">来源：51CTO</div>
+                <div class="date">January 13, 2026</div>
+                <h4 data-zh="DeepSeek V4架构首曝：直击Transformer致命缺陷" data-en="DeepSeek V4 Architecture Revealed: Fixing Transformer's Fatal Flaws">DeepSeek V4 Architecture Revealed: Fixing Transformer's Fatal Flaws</h4>
+                <p data-zh="梁文锋署名新论文，提出全新Engram模块解决Transformer记忆难题，让模型容量不再靠堆参数。这项创新技术有望在V4模型中首次应用。" data-en="New paper by Liang Wenfeng proposes innovative Engram module to solve Transformer memory challenges, enabling model capacity without parameter bloating. This breakthrough technology expected to debut in V4 model.">New paper by Liang Wenfeng proposes innovative Engram module to solve Transformer memory challenges, enabling model capacity without parameter bloating. This breakthrough technology expected to debut in V4 model.</p>
+                <div class="source">Source: 51CTO</div>
             </div>
             <div class="news-card">
-                <div class="date">2026年1月12日</div>
-                <h4>DeepSeek V4传闻背后：预训练、Agent化与稳定性的三重博弈</h4>
-                <p>DeepSeek或将在春节发布新一代V4大模型，重点强化代码能力，内部测试显示其编码表现已超越Claude和GPT系列。V4可能采用全新预训练框架，融合推理技术、稀疏注意力机制。</p>
-                <div class="source">来源：腾讯云</div>
+                <div class="date">January 12, 2026</div>
+                <h4 data-zh="DeepSeek V4传闻背后：预训练、Agent化与稳定性的三重博弈" data-en="Behind DeepSeek V4 Rumors: The Triple Game of Pre-training, Agent & Stability">Behind DeepSeek V4 Rumors: The Triple Game of Pre-training, Agent & Stability</h4>
+                <p data-zh="DeepSeek或将在春节发布新一代V4大模型，重点强化代码能力，内部测试显示其编码表现已超越Claude和GPT系列。V4可能采用全新预训练框架，融合推理技术、稀疏注意力机制。" data-en="DeepSeek may release new V4 model around Chinese New Year, focusing on enhanced coding capabilities. Internal tests show coding performance surpassing Claude and GPT series. V4 may adopt new pre-training framework with reasoning tech and sparse attention mechanisms.">DeepSeek may release new V4 model around Chinese New Year, focusing on enhanced coding capabilities. Internal tests show coding performance surpassing Claude and GPT series. V4 may adopt new pre-training framework with reasoning tech and sparse attention mechanisms.</p>
+                <div class="source">Source: Tencent Cloud</div>
             </div>
             <div class="news-card">
-                <div class="date">2026年1月11日</div>
-                <h4>DeepSeek V4重磅来袭：编程能力或将超越GPT系列</h4>
-                <p>DeepSeek即将发布V4旗舰模型，预计2月中旬上线，这是继R1后从推理转向编程的架构级调整。知情人士透露V4在编程任务上可能超越Claude和GPT系列。</p>
-                <div class="source">来源：CSDN</div>
+                <div class="date">January 11, 2026</div>
+                <h4 data-zh="DeepSeek V4重磅来袭：编程能力或将超越GPT系列" data-en="DeepSeek V4 Incoming: Programming Capabilities May Surpass GPT Series">DeepSeek V4 Incoming: Programming Capabilities May Surpass GPT Series</h4>
+                <p data-zh="DeepSeek即将发布V4旗舰模型，预计2月中旬上线，这是继R1后从推理转向编程的架构级调整。知情人士透露V4在编程任务上可能超越Claude和GPT系列。" data-en="DeepSeek to release V4 flagship model mid-February, marking architectural shift from reasoning to programming following R1. Sources indicate V4 may surpass Claude and GPT in programming tasks.">DeepSeek to release V4 flagship model mid-February, marking architectural shift from reasoning to programming following R1. Sources indicate V4 may surpass Claude and GPT in programming tasks.</p>
+                <div class="source">Source: CSDN</div>
             </div>
             <div class="news-card">
-                <div class="date">2026年1月10日</div>
-                <h4>DeepSeek V4爆春节登场！四大杀招突袭全球编程王座</h4>
-                <p>V3的核心技术优势在于创新的MoE（混合专家）架构。V4将在此基础上进一步优化，采用细粒度专家+通才专家的策略，更好地逼近连续的多维知识空间。</p>
-                <div class="source">来源：凤凰网财经</div>
+                <div class="date">January 10, 2026</div>
+                <h4 data-zh="DeepSeek V4爆春节登场！四大杀招突袭全球编程王座" data-en="DeepSeek V4 to Launch CNY! Four Major Moves Target Global Programming Throne">DeepSeek V4 to Launch CNY! Four Major Moves Target Global Programming Throne</h4>
+                <p data-zh="V3的核心技术优势在于创新的MoE（混合专家）架构。V4将在此基础上进一步优化，采用细粒度专家+通才专家的策略，更好地逼近连续的多维知识空间。" data-en="V3's core technical advantage lies in innovative MoE (Mixture of Experts) architecture. V4 will further optimize this, adopting fine-grained experts + generalist strategy to better approximate continuous multi-dimensional knowledge space.">V3's core technical advantage lies in innovative MoE (Mixture of Experts) architecture. V4 will further optimize this, adopting fine-grained experts + generalist strategy to better approximate continuous multi-dimensional knowledge space.</p>
+                <div class="source">Source: Phoenix Finance</div>
             </div>
             <div class="news-card">
-                <div class="date">2026年1月9日</div>
-                <h4>外媒：DeepSeek V4编程能力或超越ChatGPT</h4>
-                <p>据The Information报道，DeepSeek计划在2025年春节前后发布V4版本，内部测试显示其编程能力已超越Claude和ChatGPT。新模型将专注于代码生成和长上下文处理。</p>
-                <div class="source">来源：华尔街见闻</div>
+                <div class="date">January 9, 2026</div>
+                <h4 data-zh="外媒：DeepSeek V4编程能力或超越ChatGPT" data-en="Foreign Media: DeepSeek V4 Programming May Surpass ChatGPT">Foreign Media: DeepSeek V4 Programming May Surpass ChatGPT</h4>
+                <p data-zh="据The Information报道，DeepSeek计划在2025年春节前后发布V4版本，内部测试显示其编程能力已超越Claude和ChatGPT。新模型将专注于代码生成和长上下文处理。" data-en="According to The Information, DeepSeek plans to release V4 around Chinese New Year 2025. Internal tests show programming capabilities surpassing Claude and ChatGPT. New model will focus on code generation and long context processing.">According to The Information, DeepSeek plans to release V4 around Chinese New Year 2025. Internal tests show programming capabilities surpassing Claude and ChatGPT. New model will focus on code generation and long context processing.</p>
+                <div class="source">Source: Wall Street CN</div>
             </div>
             <div class="news-card">
-                <div class="date">2026年1月8日</div>
-                <h4>DeepSeek最新论文：下一代大模型实现"记忆分离"</h4>
-                <p>DeepSeek团队引入条件记忆作为补充的稀疏性维度，通过Engram条件记忆模块实现，优化神经计算与静态记忆之间的权衡关系。</p>
-                <div class="source">来源：证券时报</div>
+                <div class="date">January 8, 2026</div>
+                <h4 data-zh="DeepSeek最新论文：下一代大模型实现"记忆分离"" data-en="DeepSeek Latest Paper: Next-Gen Models Achieve Memory Separation">DeepSeek Latest Paper: Next-Gen Models Achieve Memory Separation</h4>
+                <p data-zh="DeepSeek团队引入条件记忆作为补充的稀疏性维度，通过Engram条件记忆模块实现，优化神经计算与静态记忆之间的权衡关系。" data-en="DeepSeek team introduces conditional memory as supplementary sparsity dimension, implemented through Engram conditional memory module, optimizing trade-off between neural computation and static memory.">DeepSeek team introduces conditional memory as supplementary sparsity dimension, implemented through Engram conditional memory module, optimizing trade-off between neural computation and static memory.</p>
+                <div class="source">Source: Securities Times</div>
             </div>
         </div>
     </section>
 
-    <!-- 技术架构 -->
+    <!-- Architecture -->
     <section id="architecture" class="container">
-        <h2>🏗️ 革命性技术架构</h2>
+        <h2 data-zh="🏗️ 革命性技术架构" data-en="🏗️ Revolutionary Technical Architecture">🏗️ Revolutionary Technical Architecture</h2>
         <div class="architecture-content">
-            <h3>MoE混合专家架构</h3>
+            <h3 data-zh="MoE混合专家架构" data-en="MoE Mixture-of-Experts Architecture">MoE Mixture-of-Experts Architecture</h3>
             <ul>
-                <li><strong>细粒度专家分配</strong>：使用大量小型专家而非少数大型专家，更好地逼近连续的多维知识空间</li>
-                <li><strong>稀疏激活机制</strong>：每次推理只激活相关专家，大幅降低计算成本</li>
-                <li><strong>通才专家策略</strong>：在专业专家基础上增加通才专家，提升模型泛化能力</li>
-                <li><strong>成本效益优化</strong>：训练成本仅为GPT-4的5%，但性能达到GPT-5水平</li>
+                <li data-zh="细粒度专家分配：使用大量小型专家而非少数大型专家，更好地逼近连续的多维知识空间" data-en="Fine-grained expert allocation: Uses many small experts instead of few large ones, better approximating continuous multi-dimensional knowledge space">Fine-grained expert allocation: Uses many small experts instead of few large ones, better approximating continuous multi-dimensional knowledge space</li>
+                <li data-zh="稀疏激活机制：每次推理只激活相关专家，大幅降低计算成本" data-en="Sparse activation mechanism: Only activates relevant experts per inference, significantly reducing computational costs">Sparse activation mechanism: Only activates relevant experts per inference, significantly reducing computational costs</li>
+                <li data-zh="通才专家策略：在专业专家基础上增加通才专家，提升模型泛化能力" data-en="Generalist expert strategy: Adds generalist experts on top of specialized ones, improving model generalization">Generalist expert strategy: Adds generalist experts on top of specialized ones, improving model generalization</li>
+                <li data-zh="成本效益优化：训练成本仅为GPT-4的5%，但性能达到GPT-5水平" data-en="Cost-effectiveness optimization: Training cost only 5% of GPT-4, but performance reaches GPT-5 level">Cost-effectiveness optimization: Training cost only 5% of GPT-4, but performance reaches GPT-5 level</li>
             </ul>
             
-            <h3>Engram条件记忆模块</h3>
+            <h3 data-zh="Engram条件记忆模块" data-en="Engram Conditional Memory Module">Engram Conditional Memory Module</h3>
             <ul>
-                <li><strong>记忆分离架构</strong>：将计算（MoE）与记忆（Engram）分离，解决Transformer记忆难题</li>
-                <li><strong>条件记忆机制</strong>：为模型配备"字典"，实现高效知识检索</li>
-                <li><strong>U型缩放定律</strong>：MoE专家和Engram记忆的混合稀疏容量分配优于纯MoE基准</li>
-                <li><strong>端到端可训练</strong>：整个架构针对现代GPU硬件深度优化</li>
+                <li data-zh="记忆分离架构：将计算与记忆分离，解决Transformer记忆难题" data-en="Memory separation architecture: Separates computation from memory, solving Transformer memory challenges">Memory separation architecture: Separates computation from memory, solving Transformer memory challenges</li>
+                <li data-zh="条件记忆机制：为模型配备"字典"，实现高效知识检索" data-en="Conditional memory mechanism: Equips model with "dictionary" for efficient knowledge retrieval">Conditional memory mechanism: Equips model with "dictionary" for efficient knowledge retrieval</li>
+                <li data-zh="U型缩放定律：MoE专家和Engram记忆的混合稀疏容量分配优于纯MoE基准" data-en="U-shaped scaling law: Mixed sparse capacity allocation of MoE experts and Engram memory outperforms pure MoE baseline">U-shaped scaling law: Mixed sparse capacity allocation of MoE experts and Engram memory outperforms pure MoE baseline</li>
+                <li data-zh="端到端可训练：整个架构针对现代GPU硬件深度优化" data-en="End-to-end trainable: Entire architecture deeply optimized for modern GPU hardware">End-to-end trainable: Entire architecture deeply optimized for modern GPU hardware</li>
             </ul>
 
-            <h3>其他核心技术</h3>
+            <h3 data-zh="其他核心技术" data-en="Other Core Technologies">Other Core Technologies</h3>
             <ul>
-                <li><strong>长上下文处理</strong>：支持超长代码上下文，擅长处理大型项目代码</li>
-                <li><strong>多语言支持</strong>：精通Python、JavaScript、C++、Java等主流编程语言</li>
-                <li><strong>代码理解能力</strong>：深度理解代码逻辑、架构设计和最佳实践</li>
-                <li><strong>实时学习优化</strong>：基于最新编程趋势和框架持续更新</li>
+                <li data-zh="长上下文处理：支持超长代码上下文，擅长处理大型项目代码" data-en="Long context processing: Supports ultra-long code context, excels at handling large project code">Long context processing: Supports ultra-long code context, excels at handling large project code</li>
+                <li data-zh="多语言支持：精通Python、JavaScript、C++、Java等主流编程语言" data-en="Multi-language support: Master of Python, JavaScript, C++, Java and other mainstream programming languages">Multi-language support: Master of Python, JavaScript, C++, Java and other mainstream programming languages</li>
+                <li data-zh="代码理解能力：深度理解代码逻辑、架构设计和最佳实践" data-en="Code understanding capability: Deep understanding of code logic, architecture design and best practices">Code understanding capability: Deep understanding of code logic, architecture design and best practices</li>
+                <li data-zh="实时学习优化：基于最新编程趋势和框架持续更新" data-en="Real-time learning optimization: Continuously updates based on latest programming trends and frameworks">Real-time learning optimization: Continuously updates based on latest programming trends and frameworks</li>
             </ul>
         </div>
     </section>
 
-    <!-- 核心特性 -->
+    <!-- Features -->
     <section id="features" class="container">
-        <h2>⭐ 核心特性</h2>
+        <h2 data-zh="⭐ 核心特性" data-en="⭐ Core Features">⭐ Core Features</h2>
         <div class="features-grid">
             <div class="feature-card">
                 <div class="icon">💻</div>
-                <h4>超强编程能力</h4>
-                <p>内部测试显示编程能力超越Claude和GPT系列，支持多种编程语言和复杂项目开发</p>
+                <h4 data-zh="超强编程能力" data-en="Superior Programming Capabilities">Superior Programming Capabilities</h4>
+                <p data-zh="内部测试显示编程能力超越Claude和GPT系列，支持多种编程语言和复杂项目开发" data-en="Internal tests show programming capabilities surpassing Claude and GPT series, supporting multiple programming languages and complex project development">Internal tests show programming capabilities surpassing Claude and GPT series, supporting multiple programming languages and complex project development</p>
             </div>
             <div class="feature-card">
                 <div class="icon">🧠</div>
-                <h4>智能代码理解</h4>
-                <p>深度理解代码逻辑、架构设计，能提供高质量的代码建议和重构方案</p>
+                <h4 data-zh="智能代码理解" data-en="Intelligent Code Understanding">Intelligent Code Understanding</h4>
+                <p data-zh="深度理解代码逻辑、架构设计，能提供高质量的代码建议和重构方案" data-en="Deep understanding of code logic and architecture design, providing high-quality code suggestions and refactoring solutions">Deep understanding of code logic and architecture design, providing high-quality code suggestions and refactoring solutions</p>
             </div>
             <div class="feature-card">
                 <div class="icon">📚</div>
-                <h4>长上下文处理</h4>
-                <p>支持超长代码上下文，轻松处理大型项目和复杂代码库</p>
+                <h4 data-zh="长上下文处理" data-en="Long Context Processing">Long Context Processing</h4>
+                <p data-zh="支持超长代码上下文，轻松处理大型项目和复杂代码库" data-en="Supports ultra-long code context, easily handling large projects and complex codebases">Supports ultra-long code context, easily handling large projects and complex codebases</p>
             </div>
             <div class="feature-card">
                 <div class="icon">⚡</div>
-                <h4>高效推理速度</h4>
-                <p>MoE架构确保高效的推理速度，大幅降低API调用成本</p>
+                <h4 data-zh="高效推理速度" data-en="Efficient Inference Speed">Efficient Inference Speed</h4>
+                <p data-zh="MoE架构确保高效的推理速度，大幅降低API调用成本" data-en="MoE architecture ensures efficient inference speed, significantly reducing API call costs">MoE architecture ensures efficient inference speed, significantly reducing API call costs</p>
             </div>
             <div class="feature-card">
                 <div class="icon">🔧</div>
-                <h4>多工具集成</h4>
-                <p>支持与IDE、CI/CD工具集成，无缝融入开发工作流</p>
+                <h4 data-zh="多工具集成" data-en="Multi-Tool Integration">Multi-Tool Integration</h4>
+                <p data-zh="支持与IDE、CI/CD工具集成，无缝融入开发工作流" data-en="Supports integration with IDEs and CI/CD tools, seamlessly fitting into development workflows">Supports integration with IDEs and CI/CD tools, seamlessly fitting into development workflows</p>
             </div>
             <div class="feature-card">
                 <div class="icon">🌐</div>
-                <h4>开源生态</h4>
-                <p>延续DeepSeek开源策略，提供API和本地部署选项</p>
+                <h4 data-zh="开源生态" data-en="Open Source Ecosystem">Open Source Ecosystem</h4>
+                <p data-zh="延续DeepSeek开源策略，提供API和本地部署选项" data-en="Continuing DeepSeek's open source strategy, providing API and local deployment options">Continuing DeepSeek's open source strategy, providing API and local deployment options</p>
             </div>
         </div>
     </section>
 
-    <!-- 性能对比 -->
+    <!-- Comparison -->
     <section id="comparison" class="container">
-        <h2>📊 性能对比</h2>
+        <h2 data-zh="📊 性能对比" data-en="📊 Performance Comparison">📊 Performance Comparison</h2>
         <table class="comparison-table">
             <thead>
                 <tr>
-                    <th>特性</th>
+                    <th data-zh="特性" data-en="Features">Features</th>
                     <th>DeepSeek V4</th>
                     <th>Claude</th>
                     <th>GPT-4</th>
@@ -727,107 +752,107 @@
             </thead>
             <tbody>
                 <tr>
-                    <td><strong>编程能力</strong></td>
-                    <td class="highlight">超越行业领导者</td>
-                    <td>优秀</td>
-                    <td>优秀</td>
+                    <td><strong data-zh="编程能力" data-en="Programming Capabilities">Programming Capabilities</strong></td>
+                    <td class="highlight" data-zh="超越行业领导者" data-en="Surpassing Industry Leaders">Surpassing Industry Leaders</td>
+                    <td data-zh="优秀" data-en="Excellent">Excellent</td>
+                    <td data-zh="优秀" data-en="Excellent">Excellent</td>
                 </tr>
                 <tr>
-                    <td><strong>架构创新</strong></td>
+                    <td><strong data-zh="架构创新" data-en="Architecture Innovation">Architecture Innovation</strong></td>
                     <td class="highlight">MoE + Engram</td>
                     <td>Transformer</td>
                     <td>Transformer</td>
                 </tr>
                 <tr>
-                    <td><strong>成本效益</strong></td>
-                    <td class="highlight">极高（仅GPT-4的5%成本）</td>
-                    <td>中等</td>
-                    <td>高</td>
+                    <td><strong data-zh="成本效益" data-en="Cost Effectiveness">Cost Effectiveness</strong></td>
+                    <td class="highlight" data-zh="极高（仅GPT-4的5%成本）" data-en="Excellent (Only 5% of GPT-4 cost)">Excellent (Only 5% of GPT-4 cost)</td>
+                    <td data-zh="中等" data-en="Medium">Medium</td>
+                    <td data-zh="高" data-en="High">High</td>
                 </tr>
                 <tr>
-                    <td><strong>开源策略</strong></td>
-                    <td class="highlight">完全开源</td>
-                    <td>闭源</td>
-                    <td>闭源</td>
+                    <td><strong data-zh="开源策略" data-en="Open Source Strategy">Open Source Strategy</strong></td>
+                    <td class="highlight" data-zh="完全开源" data-en="Fully Open Source">Fully Open Source</td>
+                    <td data-zh="闭源" data-en="Closed Source">Closed Source</td>
+                    <td data-zh="闭源" data-en="Closed Source">Closed Source</td>
                 </tr>
                 <tr>
-                    <td><strong>长上下文</strong></td>
-                    <td class="highlight">支持超长上下文</td>
+                    <td><strong data-zh="长上下文" data-en="Long Context">Long Context</strong></td>
+                    <td class="highlight" data-zh="支持超长上下文" data-en="Supports Ultra-Long Context">Supports Ultra-Long Context</td>
                     <td>200K tokens</td>
                     <td>128K tokens</td>
                 </tr>
                 <tr>
-                    <td><strong>推理速度</strong></td>
-                    <td class="highlight">MoE加速</td>
-                    <td>中等</td>
-                    <td>中等</td>
+                    <td><strong data-zh="推理速度" data-en="Inference Speed">Inference Speed</strong></td>
+                    <td class="highlight" data-zh="MoE加速" data-en="MoE Accelerated">MoE Accelerated</td>
+                    <td data-zh="中等" data-en="Medium">Medium</td>
+                    <td data-zh="中等" data-en="Medium">Medium</td>
                 </tr>
             </tbody>
         </table>
     </section>
 
-    <!-- 发布时间线 -->
+    <!-- Timeline -->
     <section id="timeline" class="container">
-        <h2>📅 发布时间线</h2>
+        <h2 data-zh="📅 发布时间线" data-en="📅 Release Timeline">📅 Release Timeline</h2>
         <div class="timeline">
             <div class="timeline-item left">
                 <div class="timeline-content">
-                    <h4>技术曝光期</h4>
-                    <p class="date">2025年7月 - 2026年1月</p>
-                    <p>梁文锋署名论文获ACL2025最佳论文奖，Engram记忆模块技术提前曝光</p>
+                    <h4 data-zh="技术曝光期" data-en="Technology Exposure">Technology Exposure</h4>
+                    <p class="date">July 2025 - January 2026</p>
+                    <p data-zh="梁文锋署名论文获ACL2025最佳论文奖，Engram记忆模块技术提前曝光" data-en="Liang Wenfeng's paper wins ACL2025 Best Paper Award, Engram memory module technology revealed early">Liang Wenfeng's paper wins ACL2025 Best Paper Award, Engram memory module technology revealed early</p>
                 </div>
             </div>
             <div class="timeline-item right">
                 <div class="timeline-content">
-                    <h4>预热阶段</h4>
-                    <p class="date">2026年1月</p>
-                    <p>多家媒体报导V4即将发布，内部测试结果流出</p>
+                    <h4 data-zh="预热阶段" data-en="Warm-up Phase">Warm-up Phase</h4>
+                    <p class="date">January 2026</p>
+                    <p data-zh="多家媒体报导V4即将发布，内部测试结果流出" data-en="Multiple media outlets report V4 upcoming release, internal test results leaked">Multiple media outlets report V4 upcoming release, internal test results leaked</p>
                 </div>
             </div>
             <div class="timeline-item left">
                 <div class="timeline-content">
-                    <h4>正式发布</h4>
-                    <p class="date">2026年2月中旬（预计春节前后）</p>
-                    <p>DeepSeek V4正式发布，专注编程能力</p>
+                    <h4 data-zh="正式发布" data-en="Official Launch">Official Launch</h4>
+                    <p class="date" data-zh="2026年2月中旬（预计春节前后）" data-en="Mid-February 2026 (Around Chinese New Year)">Mid-February 2026 (Around Chinese New Year)</p>
+                    <p data-zh="DeepSeek V4正式发布，专注编程能力" data-en="DeepSeek V4 officially launches, focusing on programming capabilities">DeepSeek V4 officially launches, focusing on programming capabilities</p>
                 </div>
             </div>
             <div class="timeline-item right">
                 <div class="timeline-content">
-                    <h4>开源生态</h4>
-                    <p class="date">2026年3月</p>
-                    <p>API开放、本地部署方案发布</p>
+                    <h4 data-zh="开源生态" data-en="Open Source Ecosystem">Open Source Ecosystem</h4>
+                    <p class="date">March 2026</p>
+                    <p data-zh="API开放、本地部署方案发布" data-en="API opens, local deployment solutions released">API opens, local deployment solutions released</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- 常见问题 -->
+    <!-- FAQ -->
     <section id="faq" class="container">
-        <h2>❓ 常见问题</h2>
+        <h2 data-zh="❓ 常见问题" data-en="❓ FAQ">❓ FAQ</h2>
         <div class="faq-grid">
             <div class="faq-item">
-                <h4>DeepSeek V4什么时候发布？</h4>
-                <p>根据多方消息，DeepSeek V4预计将在2026年2月中旬，即春节前后正式发布。这个时间点与DeepSeek去年发布R1的时间节点相似。</p>
+                <h4 data-zh="DeepSeek V4什么时候发布？" data-en="When will DeepSeek V4 be released?">When will DeepSeek V4 be released?</h4>
+                <p data-zh="根据多方消息，DeepSeek V4预计将在2026年2月中旬，即春节前后正式发布。这个时间点与DeepSeek去年发布R1的时间节点相似。" data-en="According to multiple sources, DeepSeek V4 is expected to be released in mid-February 2026, around Chinese New Year. This timing is similar to when DeepSeek released R1 last year.">According to multiple sources, DeepSeek V4 is expected to be released in mid-February 2026, around Chinese New Year. This timing is similar to when DeepSeek released R1 last year.</p>
             </div>
             <div class="faq-item">
-                <h4>V4的编程能力真的能超越Claude和GPT吗？</h4>
-                <p>根据DeepSeek内部员工测试结果，V4在编程任务上的表现确实超越了Claude和GPT系列。特别是其长上下文处理能力和对复杂代码结构的理解能力表现突出。</p>
+                <h4 data-zh="V4的编程能力真的能超越Claude和GPT吗？" data-en="Can V4 really surpass Claude and GPT in programming?">Can V4 really surpass Claude and GPT in programming?</h4>
+                <p data-zh="根据DeepSeek内部员工测试结果，V4在编程任务上的表现确实超越了Claude和GPT系列。特别是其长上下文处理能力和对复杂代码结构的理解能力表现突出。" data-en="According to internal DeepSeek employee test results, V4's performance in programming tasks indeed surpasses Claude and GPT series. Its long context processing capability and understanding of complex code structures are particularly outstanding.">According to internal DeepSeek employee test results, V4's performance in programming tasks indeed surpasses Claude and GPT series. Its long context processing capability and understanding of complex code structures are particularly outstanding.</p>
             </div>
             <div class="faq-item">
-                <h4>V4采用什么架构？有什么创新？</h4>
-                <p>V4将延续并升级V3的MoE（混合专家）架构，同时引入全新的Engram条件记忆模块。这种"计算+记忆"分离的架构解决了Transformer的记忆难题，让模型不再单纯依靠堆参数来提升性能。</p>
+                <h4 data-zh="V4采用什么架构？有什么创新？" data-en="What architecture does V4 use? What's innovative?">What architecture does V4 use? What's innovative?</h4>
+                <p data-zh="V4将延续并升级V3的MoE（混合专家）架构，同时引入全新的Engram条件记忆模块。这种"计算+记忆"分离的架构解决了Transformer的记忆难题，让模型不再单纯依靠堆参数来提升性能。" data-en="V4 will continue and upgrade V3's MoE (Mixture of Experts) architecture, while introducing the new Engram conditional memory module. This "computation + memory" separation architecture solves Transformer's memory challenges, allowing models to improve performance without solely relying on parameter scaling.">V4 will continue and upgrade V3's MoE (Mixture of Experts) architecture, while introducing the new Engram conditional memory module. This "computation + memory" separation architecture solves Transformer's memory challenges, allowing models to improve performance without solely relying on parameter scaling.</p>
             </div>
             <div class="faq-item">
-                <h4>V4会是开源的吗？</h4>
-                <p>按照DeepSeek的一贯策略，V4很可能会采用开源模式，提供API服务和本地部署选项。这将让开发者和企业能够灵活使用V4的强大编程能力。</p>
+                <h4 data-zh="V4会是开源的吗？" data-en="Will V4 be open source?">Will V4 be open source?</h4>
+                <p data-zh="按照DeepSeek的一贯策略，V4很可能会采用开源模式，提供API服务和本地部署选项。这将让开发者和企业能够灵活使用V4的强大编程能力。" data-en="Following DeepSeek's consistent strategy, V4 will likely adopt an open source model, providing API services and local deployment options. This will enable developers and enterprises to flexibly use V4's powerful programming capabilities.">Following DeepSeek's consistent strategy, V4 will likely adopt an open source model, providing API services and local deployment options. This will enable developers and enterprises to flexibly use V4's powerful programming capabilities.</p>
             </div>
             <div class="faq-item">
-                <h4>V4适合什么场景使用？</h4>
-                <p>V4专为编程场景优化，适合代码生成、代码审查、重构建议、Bug修复、文档生成等开发任务。特别适合需要处理大型代码库和复杂项目的企业开发团队。</p>
+                <h4 data-zh="V4适合什么场景使用？" data-en="What scenarios is V4 suitable for?">What scenarios is V4 suitable for?</h4>
+                <p data-zh="V4专为编程场景优化，适合代码生成、代码审查、重构建议、Bug修复、文档生成等开发任务。特别适合需要处理大型代码库和复杂项目的企业开发团队。" data-en="V4 is optimized for programming scenarios, suitable for code generation, code review, refactoring suggestions, bug fixes, documentation generation and other development tasks. Particularly suitable for enterprise development teams that need to handle large codebases and complex projects.">V4 is optimized for programming scenarios, suitable for code generation, code review, refactoring suggestions, bug fixes, documentation generation and other development tasks. Particularly suitable for enterprise development teams that need to handle large codebases and complex projects.</p>
             </div>
             <div class="faq-item">
-                <h4>如何抢先体验V4？</h4>
-                <p>关注DeepSeek官网和社交媒体，第一时间获取发布信息。同时可以体验现有的DeepSeek V3和R1模型，了解DeepSeek的技术实力。</p>
+                <h4 data-zh="如何抢先体验V4？" data-en="How to try V4 first?">How to try V4 first?</h4>
+                <p data-zh="关注DeepSeek官网和社交媒体，第一时间获取发布信息。同时可以体验现有的DeepSeek V3和R1模型，了解DeepSeek的技术实力。" data-en="Follow DeepSeek's official website and social media for the latest release information. You can also try existing DeepSeek V3 and R1 models to understand DeepSeek's technical capabilities.">Follow DeepSeek's official website and social media for the latest release information. You can also try existing DeepSeek V3 and R1 models to understand DeepSeek's technical capabilities.</p>
             </div>
         </div>
     </section>
@@ -836,17 +861,86 @@
     <footer>
         <p>&copy; 2026 DeepSeek Technologies. All rights reserved.</p>
         <div class="links">
-            <a href="/">返回首页</a>
+            <a href="/" data-zh="返回首页" data-en="Back to Home">Back to Home</a>
             <a href="/deepseek32-landing.html">DeepSeek 3.2</a>
-            <a href="https://deepseek.com" target="_blank">官方网站</a>
+            <a href="https://deepseek.com" target="_blank">Official Website</a>
             <a href="https://github.com/deepseek-ai" target="_blank">GitHub</a>
         </div>
-        <p style="margin-top: 2rem; font-size: 0.875rem;">
-            本页面内容基于公开信息整理，具体以官方发布为准
-        </p>
+        <p style="margin-top: 2rem; font-size: 0.875rem;" data-zh="本页面内容基于公开信息整理，具体以官方发布为准" data-en="Content based on public information, subject to official release">Content based on public information, subject to official release</p>
     </footer>
 
     <script>
+        // 语言切换功能 - 支持本地存储，默认英文
+        let currentLanguage = localStorage.getItem('preferredLanguage') || 'en';
+        
+        // 立即应用保存的语言设置
+        if (currentLanguage === 'zh') {
+            document.documentElement.lang = 'zh-CN';
+        } else {
+            document.documentElement.lang = 'en';
+        }
+        
+        function toggleLanguage() {
+            currentLanguage = currentLanguage === 'en' ? 'zh' : 'en';
+            localStorage.setItem('preferredLanguage', currentLanguage);
+            
+            // 更新 HTML lang 属性
+            document.documentElement.lang = currentLanguage === 'zh' ? 'zh-CN' : 'en';
+            
+            // 更新语言切换按钮文本
+            const langDisplay = currentLanguage === 'en' ? 'English' : '中文';
+            document.getElementById('current-lang').textContent = langDisplay;
+            
+            // 更新所有带有 data-zh 和 data-en 属性的元素
+            document.querySelectorAll('[data-zh][data-en]').forEach(element => {
+                const text = element.getAttribute(`data-${currentLanguage}`);
+                if (text) {
+                    element.textContent = text;
+                }
+            });
+            
+            // 更新 meta 标签
+            const titleEl = document.querySelector('title');
+            const metaDesc = document.getElementById('meta-description');
+            const metaKeywords = document.getElementById('meta-keywords');
+            const ogTitle = document.getElementById('og-title');
+            const ogDesc = document.getElementById('og-description');
+            const twitterTitle = document.getElementById('twitter-title');
+            const twitterDesc = document.getElementById('twitter-description');
+            
+            if (currentLanguage === 'zh') {
+                titleEl.textContent = 'DeepSeek V4 - 下一代AI编程模型 | 超越Claude和GPT的代码生成能力';
+                metaDesc.content = 'DeepSeek V4即将发布！全新架构的革命性AI编程模型，内部测试显示编程能力超越Claude和GPT系列。采用MoE混合专家架构+Engram记忆模块，2026年春节前后正式发布。';
+                metaKeywords.content = 'DeepSeek V4, AI编程模型, 代码生成, Claude替代, GPT替代, MoE架构, Engram记忆模块, 开源大模型, 2026年AI发布';
+                ogTitle.content = 'DeepSeek V4 - 下一代AI编程模型 | 超越Claude和GPT';
+                ogDesc.content = 'DeepSeek V4革命性AI编程模型，编程能力超越Claude和GPT系列。MoE混合专家架构+Engram记忆模块，2026年春节发布。';
+                twitterTitle.content = 'DeepSeek V4 - AI编程新纪元 | 超越Claude和GPT';
+                twitterDesc.content = '革命性AI编程模型，编程能力超越国际顶尖模型。MoE架构+Engram记忆，2026年春节发布。';
+            } else {
+                titleEl.textContent = 'DeepSeek V4 - Next-Gen AI Programming Model | Surpassing Claude & GPT';
+                metaDesc.content = 'DeepSeek V4 Coming Soon! Revolutionary AI programming model with next-generation architecture. Internal tests show coding capabilities surpassing Claude and GPT series. MoE architecture + Engram memory module, launching around Chinese New Year 2026.';
+                metaKeywords.content = 'DeepSeek V4, AI programming model, code generation, Claude alternative, GPT alternative, MoE architecture, Engram memory module, open source LLM, 2026 AI release';
+                ogTitle.content = 'DeepSeek V4 - Next-Gen AI Programming Model | Surpassing Claude & GPT';
+                ogDesc.content = 'Revolutionary AI programming model with coding capabilities surpassing Claude and GPT. MoE architecture + Engram memory module, launching Chinese New Year 2026.';
+                twitterTitle.content = 'DeepSeek V4 - New Era of AI Programming | Surpassing Claude & GPT';
+                twitterDesc.content = 'Revolutionary AI programming model with coding capabilities surpassing industry leaders. MoE architecture + Engram memory, launching Chinese New Year 2026.';
+            }
+        }
+        
+        // 页面加载时应用语言设置
+        window.addEventListener('DOMContentLoaded', function() {
+            const langDisplay = currentLanguage === 'en' ? 'English' : '中文';
+            document.getElementById('current-lang').textContent = langDisplay;
+            
+            // 应用当前语言
+            document.querySelectorAll('[data-zh][data-en]').forEach(element => {
+                const text = element.getAttribute(`data-${currentLanguage}`);
+                if (text) {
+                    element.textContent = text;
+                }
+            });
+        });
+
         // 平滑滚动
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
