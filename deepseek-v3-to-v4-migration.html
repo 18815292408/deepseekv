@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeepSeek V3 to V4 Migration Guide: deepseek-chat Deprecated July 24, 2026</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" id="meta-description" content="DeepSeek V3 to V4 migration guide: deepseek-chat and deepseek-reasoner deprecated July 24, 2026. Switch to deepseek-v4-flash or deepseek-v4-pro, base_url unchanged, code examples for OpenAI and Anthropic SDKs, thinking mode parameters reasoning_effort, 1M context window migration checklist.">
+    <meta name="keywords" id="meta-keywords" content="DeepSeek migration, deepseek-chat deprecated, deepseek-v4-flash, deepseek-v4-pro, deepseek-reasoner deprecation, July 24 2026, DeepSeek V4 API, reasoning_effort, deepseek API migration, OpenAI SDK, Anthropic SDK, DeepSeek thinking mode, 1M context migration">
+    <meta name="author" content="DeepSeek V Pro">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+    <meta name="language" content="en">
+
+    <!-- Open Graph -->
+    <meta property="og:title" id="og-title" content="DeepSeek V3 to V4 Migration Guide: deepseek-chat Deprecated July 24, 2026">
+    <meta property="og:description" id="og-description" content="Switch from deepseek-chat / deepseek-reasoner to deepseek-v4-flash or deepseek-v4-pro before July 24, 2026. Base URL unchanged, code examples for both SDKs, 1M context window ready.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://deepseekv.pro/deepseek-v3-to-v4-migration.html">
+    <meta property="og:image" content="https://deepseekv.pro/images/deepseek-migration-og.jpg">
+    <meta property="og:site_name" content="DeepSeek V Pro">
+    <meta property="article:published_time" content="2026-04-24">
+    <meta property="article:modified_time" content="2026-07-05">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" id="twitter-title" content="DeepSeek V3 to V4 Migration Guide (July 24, 2026)">
+    <meta name="twitter:description" id="twitter-description" content="19 days until deepseek-chat deprecated. Switch to deepseek-v4-flash or deepseek-v4-pro. Code examples + migration checklist inside.">
+
+    <meta name="theme-color" content="#0066FF">
+
+    <!-- Schema.org: TechArticle -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": "DeepSeek V3 to V4 Migration Guide",
+      "description": "Complete migration guide from deepseek-chat / deepseek-reasoner (deprecated July 24, 2026) to deepseek-v4-flash / deepseek-v4-pro. Includes base_url, model name, thinking mode parameters, code examples, and migration checklist.",
+      "author": {"@type": "Organization", "name": "DeepSeek V Pro", "url": "https://deepseekv.pro/"},
+      "publisher": {"@type": "Organization", "name": "DeepSeek V Pro"},
+      "datePublished": "2026-04-24",
+      "dateModified": "2026-07-05",
+      "mainEntityOfPage": {"@type": "WebPage", "@id": "https://deepseekv.pro/deepseek-v3-to-v4-migration.html"},
+      "keywords": "DeepSeek migration, deepseek-chat deprecated, deepseek-v4-flash, deepseek-v4-pro, reasoning_effort",
+      "articleSection": "API Migration",
+      "inLanguage": "en"
+    }
+    </script>
+
+    <!-- Schema.org: FAQPage -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "When does deepseek-chat get deprecated?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "deepseek-chat and deepseek-reasoner are deprecated on 2026-07-24 15:59 UTC (about 19 days from today, 2026-07-05). After this date, any code using these names will fail. Switch to deepseek-v4-flash (non-thinking mode replacement) or deepseek-v4-pro (for higher capability) before the deadline."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does the DeepSeek V4 base URL change?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. The base URL stays the same. OpenAI format: https://api.deepseek.com. Anthropic format: https://api.deepseek.com/anthropic. You only need to change the model parameter from deepseek-chat or deepseek-reasoner to deepseek-v4-flash or deepseek-v4-pro."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I enable thinking mode in V4?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "OpenAI SDK: pass extra_body={\"thinking\": {\"type\": \"enabled\"}} alongside reasoning_effort=\"high\" or \"max\". Anthropic SDK: pass thinking={\"type\": \"enabled\"} alongside output_config={\"effort\": \"high\" or \"max\"}. Thinking mode is enabled by default; reasoning_effort controls intensity."
+          }
+        }
+      ]
+    }
+    </script>
+
+    <link rel="canonical" href="https://deepseekv.pro/deepseek-v3-to-v4-migration.html">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PMY0EV67Q2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-PMY0EV67Q2');
+    </script>
+
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23ff6b6b;stop-opacity:1'/%3E%3Cstop offset='100%25' style='stop-color:%23cc4444;stop-opacity:1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='6' fill='url(%23bg)'/%3E%3Cg transform='translate(16,16)'%3E%3Ctext x='16' y='20' font-family='Arial,sans-serif' font-size='10' font-weight='bold' text-anchor='middle' fill='%23FFFFFF'%3EM%3C/text%3E%3C/g%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <style>
+        :root {
+            --p: #0066FF;
+            --p-light: #3385FF;
+            --warning: #ff6b6b;
+            --warning-dark: #cc4444;
+            --t0: #ffffff;
+            --t1: rgba(255,255,255,0.85);
+            --b1: rgba(255,255,255,0.05);
+            --b2: rgba(255,255,255,0.08);
+            --bd: rgba(255,255,255,0.1);
+            --g-b: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.7; color: var(--t0); background: var(--g-b); overflow-x: hidden; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 2rem; }
+        .section { padding: 4rem 0; }
+        a { color: var(--p); text-decoration: none; }
+        a:hover { color: var(--p-light); }
+
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(10,14,39,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--bd); padding: 1rem 2rem; }
+        .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.4rem; font-weight: 700; color: var(--warning); }
+        .nav-links { display: flex; gap: 2rem; list-style: none; }
+        .nav-links a { color: var(--t1); font-size: 0.95rem; }
+        .nav-links a:hover { color: var(--warning); }
+        .lang-switcher { background: var(--b2); border: 1px solid var(--bd); border-radius: 8px; padding: 0.4rem 0.8rem; cursor: pointer; color: var(--t0); font-size: 0.9rem; display: flex; align-items: center; gap: 0.4rem; }
+
+        .hero { min-height: 50vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 7rem 2rem 3rem; }
+        .hero h1 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; background: linear-gradient(135deg, var(--warning), #ffa07a); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem; line-height: 1.2; }
+        .hero .subtitle { font-size: clamp(1rem, 2vw, 1.2rem); color: var(--t1); max-width: 800px; margin-bottom: 1.5rem; }
+        .countdown { display: inline-block; background: rgba(255,107,107,0.15); border: 2px solid var(--warning); border-radius: 12px; padding: 0.8rem 1.5rem; margin-bottom: 1.5rem; font-size: 1.1rem; font-weight: 600; color: var(--warning); }
+
+        .section-header { margin-bottom: 2.5rem; }
+        .section-header h2 { font-size: clamp(1.6rem, 3.5vw, 2.2rem); margin-bottom: 0.75rem; color: var(--t0); }
+        .section-header p { color: var(--t1); font-size: 1.05rem; max-width: 750px; }
+
+        .migration-table-wrapper { overflow-x: auto; margin-top: 2rem; border-radius: 12px; }
+        .migration-table { width: 100%; border-collapse: collapse; background: var(--b1); }
+        .migration-table th { background: var(--warning); color: white; padding: 1rem; text-align: left; font-weight: 600; }
+        .migration-table td { padding: 0.9rem 1rem; border-bottom: 1px solid var(--bd); color: var(--t1); }
+        .migration-table tr:last-child td { border-bottom: none; }
+        .migration-table code { background: rgba(0,102,255,0.12); padding: 0.1rem 0.4rem; border-radius: 3px; font-size: 0.9em; color: var(--p-light); font-family: 'SF Mono', Menlo, Monaco, Consolas, monospace; }
+        .migration-table .old { color: #ff8c8c; }
+        .migration-table .new { color: #66dd99; font-weight: 600; }
+        .migration-table .same { color: var(--t1); opacity: 0.8; }
+
+        .code-block { background: #0d1117; border: 1px solid var(--bd); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; overflow-x: auto; }
+        .code-block pre { margin: 0; color: #c9d1d9; font-family: 'SF Mono', Menlo, Monaco, Consolas, monospace; font-size: 0.9rem; line-height: 1.5; }
+        .code-block .comment { color: #8b949e; }
+        .code-block .keyword { color: #ff7b72; }
+        .code-block .string { color: #a5d6ff; }
+        .code-block .func { color: #d2a8ff; }
+        .code-block .var { color: #ffa657; }
+
+        .checklist { list-style: none; padding: 0; margin-top: 1.5rem; }
+        .checklist li { background: var(--b1); border-left: 3px solid var(--p); padding: 1rem 1.25rem; margin-bottom: 0.75rem; border-radius: 0 8px 8px 0; }
+        .checklist li strong { color: var(--t0); }
+
+        .faq-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-top: 2rem; }
+        .faq-item { background: var(--b1); border: 1px solid var(--bd); border-radius: 12px; padding: 1.5rem; }
+        .faq-item h4 { color: var(--p); margin-bottom: 0.75rem; font-size: 1.1rem; }
+        .faq-item p { color: var(--t1); }
+        .faq-item code { background: rgba(0,102,255,0.12); padding: 0.05rem 0.3rem; border-radius: 3px; font-family: monospace; font-size: 0.9em; color: var(--p-light); }
+
+        .warning-box { background: linear-gradient(135deg, rgba(255,107,107,0.15), rgba(255,142,114,0.08)); border: 2px solid var(--warning); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; }
+        .warning-box h4 { color: var(--warning); margin-bottom: 0.5rem; }
+        .warning-box p { color: var(--t1); }
+
+        footer { background: rgba(0,0,0,0.5); padding: 3rem 2rem 2rem; margin-top: 4rem; text-align: center; }
+        footer p { color: var(--t1); font-size: 0.9rem; margin-bottom: 1rem; }
+        footer .links { display: flex; justify-content: center; flex-wrap: wrap; gap: 1.5rem; margin-bottom: 1rem; }
+        footer .links a { color: var(--t1); font-size: 0.9rem; }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .container { padding: 0 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-inner">
+            <a href="/" class="logo">V4 Migration</a>
+            <ul class="nav-links">
+                <li><a href="#timeline" data-zh="时间线" data-en="Timeline">Timeline</a></li>
+                <li><a href="#mapping" data-zh="模型名映射" data-en="Model Mapping">Model Mapping</a></li>
+                <li><a href="#base-url" data-zh="base_url 不变" data-en="Base URL">Base URL</a></li>
+                <li><a href="#code" data-zh="代码示例" data-en="Code Examples">Code Examples</a></li>
+                <li><a href="#thinking" data-zh="思考模式" data-en="Thinking Mode">Thinking Mode</a></li>
+                <li><a href="#checklist" data-zh="迁移清单" data-en="Checklist">Checklist</a></li>
+                <li><a href="#faq" data-en="FAQ">FAQ</a></li>
+            </ul>
+            <div class="lang-switcher" onclick="toggleLanguage()">
+                <span>🌐</span>
+                <span id="current-lang">English</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <h1 id="hero-title" data-zh="DeepSeek V3 → V4 迁移指南" data-en="DeepSeek V3 → V4 Migration Guide">DeepSeek V3 → V4 Migration Guide</h1>
+        <p class="subtitle" id="hero-subtitle" data-zh="deepseek-chat 与 deepseek-reasoner 将于 2026-07-24 15:59 UTC 停止使用。本文是迁移到 deepseek-v4-flash 与 deepseek-v4-pro 的完整步骤。" data-en="deepseek-chat and deepseek-reasoner will be deprecated on 2026-07-24 15:59 UTC. This guide walks through migrating to deepseek-v4-flash and deepseek-v4-pro.">deepseek-chat and deepseek-reasoner will be deprecated on 2026-07-24 15:59 UTC. This guide walks through migrating to deepseek-v4-flash and deepseek-v4-pro.</p>
+        <div class="countdown" id="countdown" data-zh="距 2026-07-24 还有 19 天" data-en="19 days until July 24, 2026">19 days until July 24, 2026</div>
+        <div style="display: flex; gap: 0.8rem; flex-wrap: wrap; justify-content: center;">
+            <a href="/deepseek-v4.html" class="btn" style="background: var(--p); color: white; padding: 0.7rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600;">
+                <span data-zh="V4 完整介绍" data-en="V4 Full Overview">V4 Full Overview</span>
+            </a>
+            <a href="/deepseek-v4-coding-benchmark.html" class="btn" style="background: var(--b2); color: var(--t0); padding: 0.7rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; border: 1px solid var(--bd);">
+                <span data-zh="编程评测" data-en="Coding Benchmark">Coding Benchmark</span>
+            </a>
+        </div>
+    </section>
+
+    <!-- Timeline -->
+    <section id="timeline" class="container section">
+        <div class="section-header">
+            <h2 data-zh="⏰ 关键日期" data-en="⏰ Key Dates">⏰ Key Dates</h2>
+            <p data-zh="从 V4 发布到 7-24 旧 API 弃用——三个月的过渡窗口正在收窄。" data-en="From V4 release to July 24 legacy API deprecation — the three-month migration window is closing.">From V4 release to July 24 legacy API deprecation — the three-month migration window is closing.</p>
+        </div>
+
+        <div class="warning-box">
+            <h4 data-zh="🔴 2026-07-24 15:59 UTC（旧 API 停止使用）" data-en="🔴 2026-07-24 15:59 UTC (legacy API deprecated)">🔴 2026-07-24 15:59 UTC (legacy API deprecated)</h4>
+            <p data-zh="之后任何使用 deepseek-chat 或 deepseek-reasoner 模型名的请求都会失败。请在此之前完成迁移。当前阶段这两个名字分别指向 V4-Flash 非思考模式与思考模式。" data-en="After this date, any request using deepseek-chat or deepseek-reasoner model names will fail. Currently they map to V4-Flash non-thinking and thinking modes respectively.">After this date, any request using deepseek-chat or deepseek-reasoner model names will fail. Currently they map to V4-Flash non-thinking and thinking modes respectively.</p>
+        </div>
+
+        <ul class="checklist">
+            <li><strong data-zh="2026-04-24：V4 预览版发布" data-en="2026-04-24: V4 preview released">2026-04-24: V4 preview released</strong> <span data-zh="—— V4-Pro (1.6T/49B) 与 V4-Flash (284B/13B) 同步发布，全系列 MIT 开源。" data-en="— V4-Pro (1.6T/49B) and V4-Flash (284B/13B) launched together, MIT open source.">— V4-Pro (1.6T/49B) and V4-Flash (284B/13B) launched together, MIT open source.</span></li>
+            <li><strong data-zh="现在：迁移窗口" data-en="Now: Migration window">Now: Migration window</strong> <span data-zh="—— 旧名仍可用，但官方明确建议尽早切换到新名以避免 7-24 截止日的部署压力。" data-en="— Legacy names still work, but the official guidance is to switch early to avoid last-minute deployment pressure.">— Legacy names still work, but the official guidance is to switch early to avoid last-minute deployment pressure.</span></li>
+            <li><strong style="color: var(--warning);" data-zh="2026-07-24 15:59 UTC：硬截止" data-en="2026-07-24 15:59 UTC: Hard deadline">2026-07-24 15:59 UTC: Hard deadline</strong> <span data-zh="—— deepseek-chat / deepseek-reasoner 停止使用。" data-en="— deepseek-chat / deepseek-reasoner deprecated.">— deepseek-chat / deepseek-reasoner deprecated.</span></li>
+        </ul>
+    </section>
+
+    <!-- Model Mapping -->
+    <section id="mapping" class="container section">
+        <div class="section-header">
+            <h2 data-zh="📋 模型名映射" data-en="📋 Model Name Mapping">📋 Model Name Mapping</h2>
+            <p data-zh="旧名 → 新名 直接替换。功能映射如下：" data-en="Replace old names with new ones. Function mapping below:">Replace old names with new ones. Function mapping below:</p>
+        </div>
+
+        <div class="migration-table-wrapper">
+            <table class="migration-table">
+                <thead>
+                    <tr>
+                        <th data-zh="旧模型名（弃用）" data-en="Old name (deprecated)">Old name (deprecated)</th>
+                        <th data-zh="新模型名" data-en="New name">New name</th>
+                        <th data-zh="对应能力" data-en="Capability mapping">Capability mapping</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code class="old">deepseek-chat</code></td>
+                        <td><code class="new">deepseek-v4-flash</code></td>
+                        <td data-zh="非思考模式（默认行为）" data-en="Non-thinking mode (default)">Non-thinking mode (default)</td>
+                    </tr>
+                    <tr>
+                        <td><code class="old">deepseek-reasoner</code></td>
+                        <td><code class="new">deepseek-v4-flash</code> <span data-zh="（启用思考模式）" data-en="(with thinking enabled)">(with thinking enabled)</span></td>
+                        <td data-zh="思考模式（需加 extra_body）" data-en="Thinking mode (add extra_body)">Thinking mode (add extra_body)</td>
+                    </tr>
+                    <tr>
+                        <td><code class="old">deepseek-chat</code> <span data-zh="（高负载）" data-en="(high-load)">(high-load)</span></td>
+                        <td><code class="new">deepseek-v4-pro</code></td>
+                        <td data-zh="需要旗舰性能时升级到 Pro" data-en="Upgrade to Pro for flagship performance">Upgrade to Pro for flagship performance</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p style="margin-top: 1.5rem; color: var(--t1); font-size: 0.95rem;" data-zh="Flash 与 Pro 的核心区别：Flash 走轻量级（284B/13B），并发上限 2500；Pro 是旗舰（1.6T/49B），并发上限 500，但编程与推理更强。日常问答用 Flash 足够；Agent 编程 / 长链推理用 Pro。" data-en="Flash vs Pro core difference: Flash is lightweight (284B/13B) with 2500 concurrency; Pro is flagship (1.6T/49B) with 500 concurrency but stronger coding and reasoning. Use Flash for daily Q&A; Pro for agent coding and long-chain reasoning.">Flash vs Pro core difference: Flash is lightweight (284B/13B) with 2500 concurrency; Pro is flagship (1.6T/49B) with 500 concurrency but stronger coding and reasoning. Use Flash for daily Q&A; Pro for agent coding and long-chain reasoning.</p>
+    </section>
+
+    <!-- Base URL -->
+    <section id="base-url" class="container section">
+        <div class="section-header">
+            <h2 data-zh="🔗 base_url 不变" data-en="🔗 Base URL Unchanged">🔗 Base URL Unchanged</h2>
+            <p data-zh="好消息：迁移不需要换域名或重写网络层。" data-en="Good news: migration doesn't require new domains or rewriting network layers.">Good news: migration doesn't require new domains or rewriting network layers.</p>
+        </div>
+
+        <div class="migration-table-wrapper">
+            <table class="migration-table">
+                <thead>
+                    <tr>
+                        <th data-zh="接口格式" data-en="Interface format">Interface format</th>
+                        <th>Base URL</th>
+                        <th data-zh="说明" data-en="Notes">Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>OpenAI 兼容</td>
+                        <td><code>https://api.deepseek.com</code></td>
+                        <td data-zh="路径 /v1/chat/completions 由 SDK 自动拼接" data-en="SDK auto-appends /v1/chat/completions">SDK auto-appends /v1/chat/completions</td>
+                    </tr>
+                    <tr>
+                        <td>Anthropic 兼容</td>
+                        <td><code>https://api.deepseek.com/anthropic</code></td>
+                        <td data-zh="路径 /v1/messages 由 SDK 自动拼接" data-en="SDK auto-appends /v1/messages">SDK auto-appends /v1/messages</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p style="margin-top: 1.5rem; color: var(--t1);" data-zh="换言之，迁移工作量 = 改 model 参数 + 适配思考模式参数（如果用旧 deepseek-reasoner）。其他都不动。" data-en="In other words, migration work = change model parameter + adapt thinking mode parameters (if coming from deepseek-reasoner). Everything else stays.">In other words, migration work = change model parameter + adapt thinking mode parameters (if coming from deepseek-reasoner). Everything else stays.</p>
+    </section>
+
+    <!-- Code Examples -->
+    <section id="code" class="container section">
+        <div class="section-header">
+            <h2 data-zh="💻 代码迁移示例" data-en="💻 Code Migration Examples">💻 Code Migration Examples</h2>
+            <p data-zh="最小改动：只动 model 参数。" data-en="Minimal change: only the model parameter.">Minimal change: only the model parameter.</p>
+        </div>
+
+        <h3 style="margin-top: 1.5rem; color: var(--p); font-size: 1.15rem;" data-zh="Python + OpenAI SDK（最常见）" data-en="Python + OpenAI SDK (most common)">Python + OpenAI SDK (most common)</h3>
+
+        <p style="margin-top: 1rem; color: var(--t1); font-weight: 600;" data-zh="迁移前" data-en="Before">Before</p>
+        <div class="code-block"><pre><span class="comment"># 迁移前</span>
+<span class="keyword">from</span> openai <span class="keyword">import</span> OpenAI
+
+client = OpenAI(
+    api_key=<span class="string">"&lt;DeepSeek API Key&gt;"</span>,
+    base_url=<span class="string">"https://api.deepseek.com"</span>
+)
+
+response = client.chat.completions.<span class="func">create</span>(
+    <span class="var">model</span>=<span class="string">"deepseek-chat"</span>,  <span class="comment"># ❌ 旧名</span>
+    <span class="var">messages</span>=[{<span class="string">"role"</span>: <span class="string">"user"</span>, <span class="string">"content"</span>: <span class="string">"Hello"</span>}],
+)</pre></div>
+
+        <p style="margin-top: 1rem; color: var(--t1); font-weight: 600;" data-zh="迁移后" data-en="After">After</p>
+        <div class="code-block"><pre><span class="comment"># 迁移后</span>
+<span class="keyword">from</span> openai <span class="keyword">import</span> OpenAI
+
+client = OpenAI(
+    api_key=<span class="string">"&lt;DeepSeek API Key&gt;"</span>,
+    base_url=<span class="string">"https://api.deepseek.com"</span>  <span class="comment"># 不变</span>
+)
+
+response = client.chat.completions.<span class="func">create</span>(
+    <span class="var">model</span>=<span class="string">"deepseek-v4-flash"</span>,  <span class="comment"># ✅ 新名</span>
+    <span class="var">messages</span>=[{<span class="string">"role"</span>: <span class="string">"user"</span>, <span class="string">"content"</span>: <span class="string">"Hello"</span>}],
+)</pre></div>
+
+        <h3 style="margin-top: 2.5rem; color: var(--p); font-size: 1.15rem;" data-zh="Anthropic SDK（Claude Code / Cursor 等工具）" data-en="Anthropic SDK (Claude Code / Cursor / etc.)">Anthropic SDK (Claude Code / Cursor / etc.)</h3>
+
+        <p style="margin-top: 1rem; color: var(--t1); font-weight: 600;" data-zh="迁移前" data-en="Before">Before</p>
+        <div class="code-block"><pre><span class="comment"># 迁移前（如果你之前用第三方中转接 DeepSeek）</span>
+<span class="comment"># Claude Code settings.json</span>
+{
+  <span class="string">"env"</span>: {
+    <span class="string">"ANTHROPIC_BASE_URL"</span>: <span class="string">"https://api.deepseek.com/anthropic"</span>,
+    <span class="string">"ANTHROPIC_API_KEY"</span>: <span class="string">"&lt;你的 Key&gt;"</span>
+  }
+}</pre></div>
+
+        <p style="margin-top: 1rem; color: var(--t1); font-weight: 600;" data-zh="迁移后" data-en="After">After</p>
+        <div class="code-block"><pre><span class="comment"># 迁移后：Claude Code 直接用 V4</span>
+{
+  <span class="string">"env"</span>: {
+    <span class="string">"ANTHROPIC_BASE_URL"</span>: <span class="string">"https://api.deepseek.com/anthropic"</span>,
+    <span class="string">"ANTHROPIC_API_KEY"</span>: <span class="string">"&lt;你的 Key&gt;"</span>,
+    <span class="string">"ANTHROPIC_MODEL"</span>: <span class="string">"deepseek-v4-flash"</span>  <span class="comment">// 或 deepseek-v4-pro</span>
+  }
+}</pre></div>
+    </section>
+
+    <!-- Thinking Mode -->
+    <section id="thinking" class="container section">
+        <div class="section-header">
+            <h2 data-zh="🧠 思考模式参数迁移" data-en="🧠 Thinking Mode Parameters">🧠 Thinking Mode Parameters</h2>
+            <p data-zh="旧 deepseek-reasoner 默认就是思考模式。迁移到 V4-Flash 时需要显式启用。reasoning_effort 控制强度。" data-en="Old deepseek-reasoner was thinking-mode by default. Migration to V4-Flash requires explicit enable. reasoning_effort controls intensity.">Old deepseek-reasoner was thinking-mode by default. Migration to V4-Flash requires explicit enable. reasoning_effort controls intensity.</p>
+        </div>
+
+        <div class="warning-box">
+            <h4 data-zh="⚠️ 思考模式下温度参数无效" data-en="⚠️ Temperature params ignored in thinking mode">⚠️ Temperature params ignored in thinking mode</h4>
+            <p data-zh="V4 思考模式不支持 temperature、top_p、presence_penalty、frequency_penalty 参数。设置这些参数不会报错，但完全无效——不会影响输出。" data-en="V4 thinking mode does not support temperature, top_p, presence_penalty, or frequency_penalty. Setting them doesn't error but has zero effect on output.">V4 thinking mode does not support temperature, top_p, presence_penalty, or frequency_penalty. Setting them doesn't error but has zero effect on output.</p>
+        </div>
+
+        <h3 style="margin-top: 1.5rem; color: var(--p); font-size: 1.15rem;" data-zh="OpenAI SDK：启用思考模式" data-en="OpenAI SDK: Enable thinking mode">OpenAI SDK: Enable thinking mode</h3>
+        <div class="code-block"><pre><span class="keyword">from</span> openai <span class="keyword">import</span> OpenAI
+
+client = OpenAI(
+    api_key=<span class="string">"&lt;DeepSeek API Key&gt;"</span>,
+    base_url=<span class="string">"https://api.deepseek.com"</span>
+)
+
+response = client.chat.completions.<span class="func">create</span>(
+    <span class="var">model</span>=<span class="string">"deepseek-v4-flash"</span>,
+    <span class="var">messages</span>=[{<span class="string">"role"</span>: <span class="string">"user"</span>, <span class="string">"content"</span>: <span class="string">"9.11 and 9.8, which is greater?"</span>}],
+    <span class="var">reasoning_effort</span>=<span class="string">"high"</span>,  <span class="comment"># high / max</span>
+    <span class="var">extra_body</span>={<span class="string">"thinking"</span>: {<span class="string">"type"</span>: <span class="string">"enabled"</span>}},
+)
+
+<span class="comment"># 思考过程在 reasoning_content，最终答案在 content</span>
+<span class="var">reasoning</span> = response.choices[<span class="func">0</span>].message.reasoning_content
+<span class="var">answer</span> = response.choices[<span class="func">0</span>].message.content</pre></div>
+
+        <h3 style="margin-top: 2.5rem; color: var(--p); font-size: 1.15rem;" data-zh="Anthropic SDK：思考强度" data-en="Anthropic SDK: Thinking intensity">Anthropic SDK: Thinking intensity</h3>
+        <div class="code-block"><pre><span class="comment"># Anthropic 兼容端点</span>
+{
+  <span class="string">"model"</span>: <span class="string">"deepseek-v4-flash"</span>,
+  <span class="string">"thinking"</span>: {<span class="string">"type"</span>: <span class="string">"enabled"</span>},
+  <span class="string">"output_config"</span>: {<span class="string">"effort"</span>: <span class="string">"high"</span>}
+}</pre></div>
+
+        <h3 style="margin-top: 2.5rem; color: var(--p); font-size: 1.15rem;" data-zh="多轮对话：reasoning_content 处理" data-en="Multi-turn: reasoning_content handling">Multi-turn: reasoning_content handling</h3>
+        <p style="color: var(--t1); margin-top: 0.5rem;" data-zh="V4 在多轮对话中有一个细节：没有工具调用时，前一轮的 reasoning_content 不用回传，API 会忽略；有工具调用时必须完整回传，否则会 400 错误。" data-en="V4 has a multi-turn detail: without tool calls, previous reasoning_content doesn't need to be passed back (API ignores it); with tool calls, it must be fully passed back, otherwise a 400 error.">V4 has a multi-turn detail: without tool calls, previous reasoning_content doesn't need to be passed back (API ignores it); with tool calls, it must be fully passed back, otherwise a 400 error.</p>
+        <div class="code-block"><pre><span class="comment"># 推荐写法：直接 append 整个 message 对象，reasoning_content 自动包含</span>
+messages.<span class="func">append</span>(response.choices[<span class="func">0</span>].message)
+<span class="comment"># 而不是手动复制 content / reasoning_content / tool_calls 字段</span></pre></div>
+    </section>
+
+    <!-- Context Window Migration -->
+    <section id="context" class="container section">
+        <div class="section-header">
+            <h2 data-zh="📏 上下文窗口：128K → 1M" data-en="📏 Context Window: 128K → 1M">📏 Context Window: 128K → 1M</h2>
+            <p data-zh="V3 的 128K 上限在 V4 直接拉到 100 万 token（1 本《三国演义》的体量）。这对长文档分析、整本代码仓库解析这类场景的迁移影响巨大——不再需要切片处理。" data-en="V3's 128K ceiling jumps to 1M tokens in V4 (about a Romance of the Three Kingdoms in volume). This dramatically changes long-document analysis and whole-repo parsing workflows — no more chunking required.">V3's 128K ceiling jumps to 1M tokens in V4 (about a Romance of the Three Kingdoms in volume). This dramatically changes long-document analysis and whole-repo parsing workflows — no more chunking required.</p>
+        </div>
+
+        <div class="migration-table-wrapper">
+            <table class="migration-table">
+                <thead>
+                    <tr>
+                        <th data-zh="指标" data-en="Metric">Metric</th>
+                        <th>DeepSeek V3</th>
+                        <th>DeepSeek V4-Flash</th>
+                        <th>DeepSeek V4-Pro</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong data-zh="上下文窗口" data-en="Context window">Context window</strong></td>
+                        <td>128K</td>
+                        <td class="highlight">1M</td>
+                        <td class="highlight">1M</td>
+                    </tr>
+                    <tr>
+                        <td><strong data-zh="最大输出" data-en="Max output">Max output</strong></td>
+                        <td>8K</td>
+                        <td>384K</td>
+                        <td>384K</td>
+                    </tr>
+                    <tr>
+                        <td><strong data-zh="MRCR 检索准确率" data-en="MRCR retrieval accuracy">MRCR retrieval accuracy</strong></td>
+                        <td>~50%</td>
+                        <td class="highlight">83.5%</td>
+                        <td class="highlight">83.5%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p style="margin-top: 1rem; color: var(--t1); font-size: 0.95rem;" data-zh="百万上下文应用实测 → <a href='/deepseek-v4-long-context.html'>长文本应用页</a>。" data-en="1M context application tests → <a href='/deepseek-v4-long-context.html'>long-context page</a>.">1M context application tests → <a href='/deepseek-v4-long-context.html'>long-context page</a>.</p>
+    </section>
+
+    <!-- Pricing -->
+    <section id="pricing" class="container section">
+        <div class="section-header">
+            <h2 data-zh="💰 新价格表（2026 年 7 月）" data-en="💰 New Pricing (July 2026)">💰 New Pricing (July 2026)</h2>
+            <p data-zh="V4 价格结构与 V3 类似但更细分——首次按 cache hit / miss 分开定价。" data-en="V4 pricing structure is similar to V3 but more granular — first time pricing split by cache hit / miss.">V4 pricing structure is similar to V3 but more granular — first time pricing split by cache hit / miss.</p>
+        </div>
+
+        <div class="migration-table-wrapper">
+            <table class="migration-table">
+                <thead>
+                    <tr>
+                        <th data-zh="模型" data-en="Model">Model</th>
+                        <th data-zh="输入（cache hit）" data-en="Input (cache hit)">Input (cache hit)</th>
+                        <th data-zh="输入（cache miss）" data-en="Input (cache miss)">Input (cache miss)</th>
+                        <th data-zh="输出" data-en="Output">Output</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>deepseek-v4-flash</td>
+                        <td>$0.0028 / MTok</td>
+                        <td>$0.14 / MTok</td>
+                        <td>$0.28 / MTok</td>
+                    </tr>
+                    <tr>
+                        <td>deepseek-v4-pro</td>
+                        <td>$0.003625 / MTok</td>
+                        <td>$0.435 / MTok</td>
+                        <td>$0.87 / MTok</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p style="margin-top: 1rem; color: var(--t1); font-size: 0.95rem;" data-zh="数据来源：<a href='https://api-docs.deepseek.com/quick_start/pricing' target='_blank' rel='noopener'>DeepSeek 官方 API 文档</a>，2026-07-05。Cache hit 适用于重复请求同一前缀的场景（如多轮对话、Agent 循环调用）。Flash 并发上限 2500，Pro 并发上限 500。" data-en="Source: <a href='https://api-docs.deepseek.com/quick_start/pricing' target='_blank' rel='noopener'>DeepSeek official API docs</a>, 2026-07-05. Cache hit applies to repeated prefix requests (multi-turn, agent loops). Flash concurrency limit 2500; Pro 500.">Source: <a href='https://api-docs.deepseek.com/quick_start/pricing' target='_blank' rel='noopener'>DeepSeek official API docs</a>, 2026-07-05. Cache hit applies to repeated prefix requests (multi-turn, agent loops). Flash concurrency limit 2500; Pro 500.</p>
+    </section>
+
+    <!-- Checklist -->
+    <section id="checklist" class="container section">
+        <div class="section-header">
+            <h2 data-zh="✅ 7-24 之前迁移清单" data-en="✅ Pre-7-24 Migration Checklist">✅ Pre-7-24 Migration Checklist</h2>
+            <p data-zh="按这个清单逐项打勾，确保 7-24 之前完成迁移。" data-en="Check off each item to ensure migration completes before July 24.">Check off each item to ensure migration completes before July 24.</p>
+        </div>
+
+        <ul class="checklist">
+            <li><strong data-zh="代码全局搜 deepseek-chat" data-en="Grep code for deepseek-chat">Grep code for deepseek-chat</strong> <span data-zh="—— 替换为 deepseek-v4-flash（非思考模式）或 deepseek-v4-pro（需要更强能力时）" data-en="— Replace with deepseek-v4-flash (non-thinking) or deepseek-v4-pro (when more capability is needed)">— Replace with deepseek-v4-flash (non-thinking) or deepseek-v4-pro (when more capability is needed)</span></li>
+            <li><strong data-zh="代码全局搜 deepseek-reasoner" data-en="Grep code for deepseek-reasoner">Grep code for deepseek-reasoner</strong> <span data-zh="—— 替换为 deepseek-v4-flash，并加 extra_body={'thinking': {'type': 'enabled'}} + reasoning_effort='high'" data-en="— Replace with deepseek-v4-flash, add extra_body={'thinking': {'type': 'enabled'}} + reasoning_effort='high'">— Replace with deepseek-v4-flash, add extra_body={'thinking': {'type': 'enabled'}} + reasoning_effort='high'</span></li>
+            <li><strong data-zh="测试温度参数是否被忽略" data-en="Verify temperature params are ignored">Verify temperature params are ignored</strong> <span data-zh="—— 思考模式下 temperature/top_p/presence_penalty/frequency_penalty 不生效。如果你的逻辑依赖这些参数，需要改用 Pro 或改写逻辑。" data-en="— In thinking mode, temperature/top_p/presence_penalty/frequency_penalty have no effect. If your logic depends on these, switch to Pro or rewrite logic.">— In thinking mode, temperature/top_p/presence_penalty/frequency_penalty have no effect. If your logic depends on these, switch to Pro or rewrite logic.</span></li>
+            <li><strong data-zh="测试 1M 上下文（如果需要）" data-en="Test 1M context (if needed)">Test 1M context (if needed)</strong> <span data-zh="—— 旧代码可能假设 128K 上限。如果有文档切片逻辑，可以简化或移除。" data-en="— Old code may assume 128K ceiling. If you have chunking logic, you can simplify or remove it.">— Old code may assume 128K ceiling. If you have chunking logic, you can simplify or remove it.</span></li>
+            <li><strong data-zh="测试多轮对话 reasoning_content" data-en="Test multi-turn reasoning_content">Test multi-turn reasoning_content</strong> <span data-zh="—— 工具调用流程中 reasoning_content 必须回传，否则 400 报错。" data-en="— Tool call flows must include reasoning_content, otherwise 400 error.">— Tool call flows must include reasoning_content, otherwise 400 error.</span></li>
+            <li><strong data-zh="更新监控和告警" data-en="Update monitoring and alerts">Update monitoring and alerts</strong> <span data-zh="—— 监控面板里搜 deepseek-chat / deepseek-reasoner 引用，全部改为 v4 模型名。" data-en="— Search your monitoring dashboards for deepseek-chat / deepseek-reasoner references, change to v4 model names.">— Search your monitoring dashboards for deepseek-chat / deepseek-reasoner references, change to v4 model names.</span></li>
+            <li><strong data-zh="回滚预案" data-en="Rollback plan">Rollback plan</strong> <span data-zh="—— 在生产灰度切换前，确保 V3 API Key 还在余额里（V4 不需要新 Key，沿用旧的）。如果 V4 出问题，临时回滚到 deepseek-chat 仍可工作到 7-24。" data-en="— Before production rollout, ensure V3 API key still has balance (V4 doesn't need a new key, uses old one). If V4 has issues, temporarily rolling back to deepseek-chat still works until 7-24.">— Before production rollout, ensure V3 API key still has balance (V4 doesn't need a new key, uses old one). If V4 has issues, temporarily rolling back to deepseek-chat still works until 7-24.</span></li>
+        </ul>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="container section">
+        <div class="section-header">
+            <h2 data-zh="❓ 迁移常见问题" data-en="❓ Migration FAQ">❓ Migration FAQ</h2>
+        </div>
+        <div class="faq-grid">
+            <div class="faq-item">
+                <h4 data-zh="我需要申请新的 API Key 吗？" data-en="Do I need a new API key?">Do I need a new API key?</h4>
+                <p data-zh="不需要。V4 沿用现有 DeepSeek API Key。如果你已有 deepseek-chat 在用，余额、Key、access 都直接复用。" data-en="No. V4 uses your existing DeepSeek API key. If you already use deepseek-chat, your balance, key, and access carry over directly.">No. V4 uses your existing DeepSeek API key. If you already use deepseek-chat, your balance, key, and access carry over directly.</p>
+            </div>
+            <div class="faq-item">
+                <h4 data-zh="迁移会不会导致服务中断？" data-en="Will migration cause service downtime?">Will migration cause service downtime?</h4>
+                <p data-zh="只要改 model 参数，不需要换 base_url、SDK 或网络层。切换瞬间生效，没有部署窗口。如果遇到问题，临时回滚到 <code>deepseek-chat</code> 仍可工作到 7-24。" data-en="Just change the model parameter, no base_url, SDK, or network changes needed. Switch takes effect instantly, no deployment window. If issues arise, temporarily rolling back to <code>deepseek-chat</code> still works until 7-24.">Just change the model parameter, no base_url, SDK, or network changes needed. Switch takes effect instantly, no deployment window. If issues arise, temporarily rolling back to <code>deepseek-chat</code> still works until 7-24.</p>
+            </div>
+            <div class="faq-item">
+                <h4 data-zh="我用了 vLLM / Ollama 本地部署，会受影响吗？" data-en="I use vLLM / Ollama for local deployment. Will I be affected?">I use vLLM / Ollama for local deployment. Will I be affected?</h4>
+                <p data-zh="本地部署跟 DeepSeek 官方 API 模型名弃用没关系——你用什么模型名完全取决于你的推理服务器。本指南的迁移是针对 DeepSeek 官方 API 的。" data-en="Local deployment doesn't relate to DeepSeek's official API model name deprecation — what model name you use depends entirely on your inference server. This guide targets the DeepSeek official API.">Local deployment doesn't relate to DeepSeek's official API model name deprecation — what model name you use depends entirely on your inference server. This guide targets the DeepSeek official API.</p>
+            </div>
+            <div class="faq-item">
+                <h4 data-zh="V3.2 用户需要注意什么？" data-en="What should V3.2 users watch out for?">What should V3.2 users watch out for?</h4>
+                <p data-zh="V3.2 (Speciale) 是 2025 年的中期版本，不在这次弃用名单里——但 DeepSeek 之前已经停止 V3.2 新用户注册。建议尽早迁移到 V4-Flash 或 V4-Pro，享受 1M 上下文与思考模式。" data-en="V3.2 (Speciale) is a 2025 mid-version, not on this deprecation list — but DeepSeek stopped V3.2 new-user registration earlier. Recommend migrating to V4-Flash or V4-Pro soon to enjoy 1M context and thinking mode.">V3.2 (Speciale) is a 2025 mid-version, not on this deprecation list — but DeepSeek stopped V3.2 new-user registration earlier. Recommend migrating to V4-Flash or V4-Pro soon to enjoy 1M context and thinking mode.</p>
+            </div>
+            <div class="faq-item">
+                <h4 data-zh="为什么分 Flash 和 Pro？我应该用哪个？" data-en="Why split Flash and Pro? Which should I use?">Why split Flash and Pro? Which should I use?</h4>
+                <p data-zh="Flash (284B / 13B) 走轻量路线，并发上限 2500，价格低，适合日常问答、批量任务。Pro (1.6T / 49B) 是旗舰，并发上限 500，编程与推理更强，适合 Agent 编程与长链推理。如果你不确定，先用 Flash——大多数场景够用。" data-en="Flash (284B / 13B) is lightweight, concurrency 2500, low price, suited for daily Q&A and batch tasks. Pro (1.6T / 49B) is flagship, concurrency 500, stronger coding and reasoning, suited for agent coding and long-chain reasoning. When in doubt, start with Flash — it's enough for most scenarios.">Flash (284B / 13B) is lightweight, concurrency 2500, low price, suited for daily Q&A and batch tasks. Pro (1.6T / 49B) is flagship, concurrency 500, stronger coding and reasoning, suited for agent coding and long-chain reasoning. When in doubt, start with Flash — it's enough for most scenarios.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 DeepSeek Technologies. All rights reserved.</p>
+        <div class="links">
+            <a href="/" data-zh="返回首页" data-en="Back to Home">Back to Home</a>
+            <a href="/deepseek-v4.html" data-zh="V4 专题" data-en="V4 Overview">V4 Overview</a>
+            <a href="/deepseek-v4-coding-benchmark.html" data-zh="编程评测" data-en="Coding Benchmark">Coding Benchmark</a>
+            <a href="/deepseek-v4-long-context.html" data-zh="百万上下文" data-en="1M Context">1M Context</a>
+            <a href="/deepseek-v4-vs-gpt5-vs-claude.html" data-zh="模型对比" data-en="Model Comparison">Model Comparison</a>
+            <a href="https://api-docs.deepseek.com/quick_start/pricing" target="_blank" rel="noopener">Official API Docs</a>
+            <a href="https://cursorhero.com/" target="_blank" rel="nofollow noopener" data-zh="AI 鼠标光标" data-en="AI Cursor Generator">Cursorhero</a>
+        </div>
+        <p style="margin-top: 2rem; font-size: 0.875rem;" data-zh="数据来源：DeepSeek 官方 API 文档，2026-07-05。价格与功能可能随版本变化，请以官方文档为准。" data-en="Source: DeepSeek official API docs, 2026-07-05. Pricing and features may change with version, please refer to official documentation.">Source: DeepSeek official API docs, 2026-07-05. Pricing and features may change with version, please refer to official documentation.</p>
+    </footer>
+
+    <script>
+        let currentLanguage = localStorage.getItem('preferredLanguage') || 'en';
+
+        if (currentLanguage === 'zh') {
+            document.documentElement.lang = 'zh-CN';
+        }
+
+        function updateCountdown() {
+            const target = new Date('2026-07-24T15:59:00Z').getTime();
+            const now = new Date().getTime();
+            const diff = target - now;
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const element = document.getElementById('countdown');
+            if (days > 0) {
+                element.textContent = currentLanguage === 'zh'
+                    ? `距 2026-07-24 还有 ${days} 天`
+                    : `${days} days until July 24, 2026`;
+            } else {
+                element.textContent = currentLanguage === 'zh'
+                    ? '旧 API 已停止使用'
+                    : 'Legacy API deprecated';
+                element.style.color = '#ff8c8c';
+            }
+        }
+
+        function toggleLanguage() {
+            currentLanguage = currentLanguage === 'en' ? 'zh' : 'en';
+            localStorage.setItem('preferredLanguage', currentLanguage);
+            document.documentElement.lang = currentLanguage === 'zh' ? 'zh-CN' : 'en';
+
+            const langDisplay = currentLanguage === 'en' ? 'English' : '中文';
+            document.getElementById('current-lang').textContent = langDisplay;
+
+            document.querySelectorAll('[data-zh][data-en]').forEach(element => {
+                const text = element.getAttribute(`data-${currentLanguage}`);
+                if (text) {
+                    element.textContent = text;
+                }
+            });
+
+            updateCountdown();
+
+            const titleEl = document.querySelector('title');
+            const metaDesc = document.getElementById('meta-description');
+            const ogTitle = document.getElementById('og-title');
+            const ogDesc = document.getElementById('og-description');
+            const twitterTitle = document.getElementById('twitter-title');
+            const twitterDesc = document.getElementById('twitter-description');
+
+            if (currentLanguage === 'zh') {
+                titleEl.textContent = 'DeepSeek V3 迁移 V4 指南：deepseek-chat 7-24 弃用';
+                metaDesc.content = 'DeepSeek V3 → V4 迁移指南：deepseek-chat 与 deepseek-reasoner 将于 2026-07-24 停止使用。迁移到 deepseek-v4-flash / deepseek-v4-pro，base_url 不变，含代码示例与思考模式参数说明。';
+                ogTitle.content = 'DeepSeek V3 迁移 V4 指南：deepseek-chat 7-24 弃用';
+                ogDesc.content = '迁移到 deepseek-v4-flash 或 deepseek-v4-pro，base_url 不变，OpenAI + Anthropic SDK 代码示例，思考模式 reasoning_effort 说明，1M 上下文迁移清单。';
+                twitterTitle.content = 'DeepSeek V3 迁移 V4 指南（2026-07-24）';
+                twitterDesc.content = '距 7-24 还有 19 天。迁移到 deepseek-v4-flash / v4-pro，base_url 不变，代码示例 + 思考模式参数 + 迁移清单。';
+            } else {
+                titleEl.textContent = 'DeepSeek V3 to V4 Migration Guide: deepseek-chat Deprecated July 24, 2026';
+                metaDesc.content = 'DeepSeek V3 to V4 migration guide: deepseek-chat and deepseek-reasoner deprecated July 24, 2026. Switch to deepseek-v4-flash or deepseek-v4-pro, base_url unchanged, code examples for OpenAI and Anthropic SDKs, thinking mode parameters reasoning_effort, 1M context window migration checklist.';
+                ogTitle.content = 'DeepSeek V3 to V4 Migration Guide: deepseek-chat Deprecated July 24, 2026';
+                ogDesc.content = 'Switch from deepseek-chat / deepseek-reasoner to deepseek-v4-flash or deepseek-v4-pro before July 24, 2026. Base URL unchanged, code examples for both SDKs, 1M context window ready.';
+                twitterTitle.content = 'DeepSeek V3 to V4 Migration Guide (July 24, 2026)';
+                twitterDesc.content = '19 days until deepseek-chat deprecated. Switch to deepseek-v4-flash or deepseek-v4-pro. Code examples + migration checklist inside.';
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', function() {
+            const langDisplay = currentLanguage === 'en' ? 'English' : '中文';
+            document.getElementById('current-lang').textContent = langDisplay;
+
+            document.querySelectorAll('[data-zh][data-en]').forEach(element => {
+                const text = element.getAttribute(`data-${currentLanguage}`);
+                if (text) {
+                    element.textContent = text;
+                }
+            });
+
+            updateCountdown();
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
