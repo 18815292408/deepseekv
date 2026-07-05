@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeepSeek V4 Coding Benchmark: LiveCodeBench 93.5%, Codeforces 3206, SWE-bench 80.6%</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" id="meta-description" content="DeepSeek V4 coding benchmark deep-dive: LiveCodeBench 93.5%, Codeforces Rating 3206, SWE-bench Verified 80.6%, HumanEval 90.8%, AIME 2026 99.4%. Includes real test cases (GTA6 webpage, distributed system, SQL injection defense) and head-to-head comparison with Claude Opus 4.6 / GPT-5.5.">
+    <meta name="keywords" id="meta-keywords" content="DeepSeek V4 coding, DeepSeek V4 benchmark, LiveCodeBench 93.5, Codeforces 3206, SWE-bench 80.6, HumanEval 90.8, AIME 99.4, DeepSeek coding test, Agentic coding, DeepSeek V4-Pro, DeepSeek V4-Flash, AI code generation, programming benchmark">
+    <meta name="author" content="DeepSeek V Pro">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+    <meta name="language" content="en">
+
+    <!-- Open Graph -->
+    <meta property="og:title" id="og-title" content="DeepSeek V4 Coding Benchmark: LiveCodeBench 93.5%, Codeforces 3206">
+    <meta property="og:description" id="og-description" content="V4-Pro-Max hits Codeforces 3206, surpassing Claude Opus 4.6 and Gemini-3.1-Pro. SWE-bench Verified 80.6% within 0.2% of Claude. Includes real test cases.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://deepseekv.pro/deepseek-v4-coding-benchmark.html">
+    <meta property="og:image" content="https://deepseekv.pro/images/deepseek-coding-og.jpg">
+    <meta property="og:site_name" content="DeepSeek V Pro">
+    <meta property="article:published_time" content="2026-04-24">
+    <meta property="article:modified_time" content="2026-07-05">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" id="twitter-title" content="DeepSeek V4 Coding Benchmark: Codeforces 3206 Surpasses Claude Opus 4.6">
+    <meta name="twitter:description" content="LiveCodeBench 93.5% · Codeforces 3206 · SWE-bench Verified 80.6% · AIME 2026 99.4%. Includes real test cases + best-practice scenarios.">
+
+    <meta name="theme-color" content="#0066FF">
+
+    <!-- Schema.org: TechArticle -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": "DeepSeek V4 Coding Benchmark Deep-Dive",
+      "description": "Comprehensive analysis of DeepSeek V4-Pro-Max coding capability: benchmark scores, real test cases, head-to-head comparison with Claude Opus 4.6 and GPT-5.5, and best-practice scenarios.",
+      "author": {"@type": "Organization", "name": "DeepSeek V Pro"},
+      "publisher": {"@type": "Organization", "name": "DeepSeek V Pro"},
+      "datePublished": "2026-04-24",
+      "dateModified": "2026-07-05",
+      "mainEntityOfPage": {"@type": "WebPage", "@id": "https://deepseekv.pro/deepseek-v4-coding-benchmark.html"},
+      "keywords": "DeepSeek V4 coding, LiveCodeBench, Codeforces, SWE-bench, AI coding benchmark",
+      "articleSection": "AI Coding",
+      "inLanguage": "en"
+    }
+    </script>
+
+    <!-- Schema.org: FAQPage -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How does DeepSeek V4 perform on coding benchmarks?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "DeepSeek V4-Pro-Max achieves LiveCodeBench 93.5%, Codeforces Rating 3206 (surpassing Claude Opus 4.6 ~3000 and Gemini-3.1-Pro), SWE-bench Verified 80.6% (within 0.2% of Claude Opus 4.6 80.8%), HumanEval pass@1 90.8%, and AIME 2026 99.4%. The full benchmark table is in this page's Coding Benchmark section."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is DeepSeek V4 better than Claude Opus 4.6 for Agent coding?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "V4 has higher average scores on coding benchmarks (LiveCodeBench 93.5% vs ~88%, Codeforces 3206 vs ~3000, SWE-bench 80.6% vs 80.8%), but one third-party 38-task test showed V4 completed 29/38 (76%) while Claude completed 38/38 (100%). V4 wins on daily coding tasks; Claude is more reliable on the hardest tail tasks like complex multi-file refactors."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "When should I use V4-Flash vs V4-Pro for coding?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "V4-Flash (284B/13B, $0.28/MTok output) for daily Q&A and code generation tasks. V4-Pro (1.6T/49B, $0.87/MTok output) for agent coding, multi-step reasoning, and complex refactors. Use reasoning_effort='high' for daily, 'max' for complex agent tasks."
+          }
+        }
+      ]
+    }
+    </script>
+
+    <link rel="canonical" href="https://deepseekv.pro/deepseek-v4-coding-benchmark.html">
+
+    <!-- Google tag -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PMY0EV67Q2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-PMY0EV67Q2');
+    </script>
+
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%230066FF;stop-opacity:1'/%3E%3Cstop offset='100%25' style='stop-color:%230044CC;stop-opacity:1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='6' fill='url(%23bg)'/%3E%3Cg transform='translate(16,16)'%3E%3Ctext x='16' y='20' font-family='Arial,sans-serif' font-size='7' font-weight='bold' text-anchor='middle' fill='%23FFFFFF'%3EC%3C/text%3E%3C/g%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+
+    <style>
+        :root {
+            --p: #0066FF;
+            --p-light: #3385FF;
+            --accent: #00d4ff;
+            --t0: #ffffff;
+            --t1: rgba(255,255,255,0.85);
+            --b1: rgba(255,255,255,0.05);
+            --b2: rgba(255,255,255,0.08);
+            --bd: rgba(255,255,255,0.1);
+            --g-b: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.7; color: var(--t0); background: var(--g-b); overflow-x: hidden; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+        .section { padding: 4rem 0; }
+        a { color: var(--p); text-decoration: none; }
+        a:hover { color: var(--p-light); }
+
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(10,14,39,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--bd); padding: 1rem 2rem; }
+        .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.4rem; font-weight: 700; color: var(--p); }
+        .nav-links { display: flex; gap: 2rem; list-style: none; }
+        .nav-links a { color: var(--t1); font-size: 0.95rem; }
+        .nav-links a:hover { color: var(--p); }
+        .lang-switcher { background: var(--b2); border: 1px solid var(--bd); border-radius: 8px; padding: 0.4rem 0.8rem; cursor: pointer; color: var(--t0); font-size: 0.9rem; display: flex; align-items: center; gap: 0.4rem; }
+
+        .hero { min-height: 50vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 7rem 2rem 3rem; }
+        .hero h1 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; background: linear-gradient(135deg, var(--p), var(--accent)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem; line-height: 1.2; }
+        .hero .subtitle { font-size: clamp(1rem, 2vw, 1.2rem); color: var(--t1); max-width: 850px; margin-bottom: 1.5rem; }
+
+        .hero-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; max-width: 900px; margin: 1.5rem 0; }
+        .hero-stat { background: var(--b1); border: 1px solid var(--accent); border-radius: 12px; padding: 1rem; }
+        .hero-stat .value { font-size: 1.8rem; font-weight: 800; color: var(--accent); }
+        .hero-stat .label { font-size: 0.85rem; color: var(--t1); }
+
+        .section-header { margin-bottom: 2.5rem; text-align: center; }
+        .section-header h2 { font-size: clamp(1.6rem, 3.5vw, 2.2rem); margin-bottom: 0.75rem; color: var(--t0); }
+        .section-header p { color: var(--t1); font-size: 1.05rem; max-width: 750px; margin: 0 auto; }
+
+        .benchmark-table-wrapper { overflow-x: auto; margin: 2rem 0; border-radius: 12px; }
+        .benchmark-table { width: 100%; border-collapse: collapse; background: var(--b1); }
+        .benchmark-table th { background: var(--p); color: white; padding: 0.9rem 1rem; text-align: left; font-weight: 600; font-size: 0.95rem; }
+        .benchmark-table td { padding: 0.85rem 1rem; border-bottom: 1px solid var(--bd); color: var(--t1); font-size: 0.95rem; }
+        .benchmark-table tr:last-child td { border-bottom: none; }
+        .benchmark-table tr:hover { background: rgba(0,102,255,0.06); }
+        .benchmark-table .v4 { color: var(--accent); font-weight: 600; }
+        .benchmark-table .winner { background: rgba(0,212,255,0.08); }
+
+        .testcase { background: var(--b1); border-left: 3px solid var(--accent); padding: 1.25rem 1.5rem; margin: 1.5rem 0; border-radius: 0 12px 12px 0; }
+        .testcase h4 { color: var(--accent); margin-bottom: 0.5rem; font-size: 1.1rem; }
+        .testcase p { color: var(--t1); margin-bottom: 0.5rem; }
+        .testcase .verdict { display: inline-block; padding: 0.25rem 0.7rem; border-radius: 4px; font-size: 0.85rem; font-weight: 600; margin-top: 0.5rem; }
+        .testcase .pass { background: rgba(0,212,255,0.2); color: var(--accent); }
+        .testcase .partial { background: rgba(255,193,7,0.2); color: #ffc107; }
+        .testcase .fail { background: rgba(255,107,107,0.2); color: #ff6b6b; }
+
+        .insight-box { background: linear-gradient(135deg, rgba(0,102,255,0.15), rgba(0,212,255,0.08)); border: 1px solid var(--p); border-radius: 12px; padding: 1.5rem; margin: 2rem 0; }
+        .insight-box h4 { color: var(--p-light); margin-bottom: 0.75rem; }
+        .insight-box p { color: var(--t1); }
+
+        .scenario-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+        .scenario-card { background: var(--b1); border: 1px solid var(--bd); border-radius: 12px; padding: 1.5rem; }
+        .scenario-card .icon { font-size: 2rem; margin-bottom: 0.5rem; }
+        .scenario-card h4 { color: var(--t0); margin-bottom: 0.5rem; }
+        .scenario-card p { color: var(--t1); font-size: 0.95rem; line-height: 1.5; }
+
+        .faq-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-top: 2rem; }
+        .faq-item { background: var(--b1); border: 1px solid var(--bd); border-radius: 12px; padding: 1.5rem; }
+        .faq-item h4 { color: var(--p); margin-bottom: 0.75rem; font-size: 1.1rem; }
+        .faq-item p { color: var(--t1); }
+        .faq-item code { background: rgba(0,102,255,0.12); padding: 0.05rem 0.3rem; border-radius: 3px; font-family: monospace; font-size: 0.9em; color: var(--p-light); }
+
+        footer { background: rgba(0,0,0,0.5); padding: 3rem 2rem 2rem; margin-top: 4rem; text-align: center; }
+        footer p { color: var(--t1); font-size: 0.9rem; margin-bottom: 1rem; }
+        footer .links { display: flex; justify-content: center; flex-wrap: wrap; gap: 1.5rem; margin-bottom: 1rem; }
+        footer .links a { color: var(--t1); font-size: 0.9rem; }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .container { padding: 0 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-inner">
+            <a href="/" class="logo">Coding Bench</a>
+            <ul class="nav-links">
+                <li><a href="#hero-stats" data-zh="核心数据" data-en="Key Scores">Key Scores</a></li>
+                <li><a href="#benchmarks" data-zh="基准对比" data-en="Benchmarks">Benchmarks</a></li>
+                <li><a href="#test-cases" data-zh="实测案例" data-en="Test Cases">Test Cases</a></li>
+                <li><a href="#tail-risk" data-zh="尾部稳定性" data-en="Tail Stability">Tail Stability</a></li>
+                <li><a href="#scenarios" data-zh="场景建议" data-en="Scenarios">Scenarios</a></li>
+                <li><a href="#faq" data-en="FAQ">FAQ</a></li>
+            </ul>
+            <div class="lang-switcher" onclick="toggleLanguage()">
+                <span>🌐</span>
+                <span id="current-lang">English</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <h1 data-zh="DeepSeek V4 编程能力深度评测" data-en="DeepSeek V4 Coding Benchmark Deep-Dive">DeepSeek V4 Coding Benchmark Deep-Dive</h1>
+        <p class="subtitle" data-zh="V4-Pro-Max 在 5 项主流编程基准上的表现 + 实测案例 + 场景建议。" data-en="V4-Pro-Max performance on 5 mainstream coding benchmarks + real test cases + scenario recommendations.">V4-Pro-Max performance on 5 mainstream coding benchmarks + real test cases + scenario recommendations.</p>
+
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <div class="value">93.5%</div>
+                <div class="label" data-zh="LiveCodeBench" data-en="LiveCodeBench">LiveCodeBench</div>
+            </div>
+            <div class="hero-stat">
+                <div class="value">3206</div>
+                <div class="label" data-zh="Codeforces Rating" data-en="Codeforces Rating">Codeforces Rating</div>
+            </div>
+            <div class="hero-stat">
+                <div class="value">80.6%</div>
+                <div class="label" data-zh="SWE-bench Verified" data-en="SWE-bench Verified">SWE-bench Verified</div>
+            </div>
+            <div class="hero-stat">
+                <div class="value">90.8%</div>
+                <div class="label" data-zh="HumanEval pass@1" data-en="HumanEval pass@1">HumanEval pass@1</div>
+            </div>
+            <div class="hero-stat">
+                <div class="value">99.4%</div>
+                <div class="label" data-zh="AIME 2026" data-en="AIME 2026">AIME 2026</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benchmarks Detail -->
+    <section id="benchmarks" class="container section">
+        <div class="section-header">
+            <h2 data-zh="📊 编程基准详细解读" data-en="📊 Coding Benchmark Deep-Dive">📊 Coding Benchmark Deep-Dive</h2>
+            <p data-zh="5 项主流基准 + 真实测试案例 + V4 vs 竞品对比。" data-en="5 mainstream benchmarks + real test cases + V4 vs competitors.">5 mainstream benchmarks + real test cases + V4 vs competitors.</p>
+        </div>
+
+        <div class="benchmark-table-wrapper">
+            <table class="benchmark-table">
+                <thead>
+                    <tr>
+                        <th data-zh="基准" data-en="Benchmark">Benchmark</th>
+                        <th data-zh="测什么" data-en="What it tests">What it tests</th>
+                        <th>V4-Pro-Max</th>
+                        <th data-zh="对比" data-en="Comparison">Comparison</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>LiveCodeBench</strong></td>
+                        <td data-zh="实时编程竞赛题（防数据污染）" data-en="Real-time competitive coding (anti-leak)">Real-time competitive coding (anti-leak)</td>
+                        <td class="v4 winner">93.5%</td>
+                        <td data-zh="开源 SOTA，超 GPT-5.5（~90%）" data-en="Open-source SOTA, above GPT-5.5 (~90%)">Open-source SOTA, above GPT-5.5 (~90%)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Codeforces Rating</strong></td>
+                        <td data-zh="算法竞赛评级（与人类选手对比）" data-en="Algorithmic contest rating (vs human players)">Algorithmic contest rating (vs human players)</td>
+                        <td class="v4 winner">3206</td>
+                        <td data-zh="超 Gemini-3.1-Pro 与 Claude Opus-4.6" data-en="Above Gemini-3.1-Pro and Claude Opus-4.6">Above Gemini-3.1-Pro and Claude Opus-4.6</td>
+                    </tr>
+                    <tr>
+                        <td><strong>SWE-bench Verified</strong></td>
+                        <td data-zh="真实 GitHub Issue 修复" data-en="Real GitHub Issue fixes">Real GitHub Issue fixes</td>
+                        <td class="v4">80.6%</td>
+                        <td data-zh="逼近 Claude Opus 4.6（80.8%），领先 GPT-5.5（~80%）" data-en="Close to Claude Opus 4.6 (80.8%), ahead of GPT-5.5 (~80%)">Close to Claude Opus 4.6 (80.8%), ahead of GPT-5.5 (~80%)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>HumanEval pass@1</strong></td>
+                        <td data-zh="Python 函数一次性生成" data-en="Python function generation (one-shot)">Python function generation (one-shot)</td>
+                        <td class="v4 winner">90.8%</td>
+                        <td data-zh="超 Claude 3.5 Sonnet，打平 GPT-4o" data-en="Above Claude 3.5 Sonnet, ties GPT-4o">Above Claude 3.5 Sonnet, ties GPT-4o</td>
+                    </tr>
+                    <tr>
+                        <td><strong>AIME 2026</strong></td>
+                        <td data-zh="美国数学邀请赛（数学编程）" data-en="American Invitational Math Exam">American Invitational Math Exam</td>
+                        <td class="v4 winner">99.4%</td>
+                        <td data-zh="近满分，与 GPT-5 系列持平" data-en="Near-perfect, ties GPT-5 series">Near-perfect, ties GPT-5 series</td>
+                    </tr>
+                    <tr>
+                        <td><strong>IMO-AnswerBench</strong></td>
+                        <td data-zh="数学奥林匹克" data-en="Math Olympiad">Math Olympiad</td>
+                        <td class="v4 winner">89.8%</td>
+                        <td data-zh="开源领先" data-en="Open-source leading">Open-source leading</td>
+                    </tr>
+                    <tr>
+                        <td><strong>HMMT 2026</strong></td>
+                        <td data-zh="哈佛-MIT 数学竞赛" data-en="Harvard-MIT Math Tournament">Harvard-MIT Math Tournament</td>
+                        <td class="v4 winner">95.2%</td>
+                        <td data-zh="开源领先" data-en="Open-source leading">Open-source leading</td>
+                    </tr>
+                    <tr>
+                        <td><strong>MMLU-Pro</strong></td>
+                        <td data-zh="多学科综合推理" data-en="Multi-subject reasoning">Multi-subject reasoning</td>
+                        <td class="v4">87.5%</td>
+                        <td data-zh="开源领先，逼近 GPT-5.5（~89%）" data-en="Open-source leading, close to GPT-5.5 (~89%)">Open-source leading, close to GPT-5.5 (~89%)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p style="margin-top: 1rem; color: var(--t1); font-size: 0.9rem;" data-zh="数据来源：DeepSeek V4 官方技术报告，2026 年 4 月。" data-en="Source: DeepSeek V4 official technical report, April 2026.">Source: DeepSeek V4 official technical report, April 2026.</p>
+    </section>
+
+    <!-- Real Test Cases -->
+    <section id="test-cases" class="container section">
+        <div class="section-header">
+            <h2 data-zh="🧪 真实测试案例" data-en="🧪 Real Test Cases">🧪 Real Test Cases</h2>
+            <p data-zh="公开测评里的真实案例，看 V4 在具体场景下的表现。" data-en="Real cases from public tests to see V4's behavior in specific scenarios.">Real cases from public tests to see V4's behavior in specific scenarios.</p>
+        </div>
+
+        <div class="testcase">
+            <h4 data-zh="📌 案例 1：赛博朋克风格 GTA6 介绍网页" data-en="📌 Case 1: Cyberpunk-style GTA6 intro webpage">📌 Case 1: Cyberpunk-style GTA6 intro webpage</h4>
+            <p data-zh="任务：写一个交互式 HTML 网页，包含霓虹灯特效、粒子故障动画、悬停效果。V4-Pro 仅思考 7 秒就输出了可运行代码，包含完整动画与响应式布局。" data-en="Task: Write an interactive HTML page with neon light effects, particle glitch animations, hover effects. V4-Pro thought for only 7 seconds and outputted working code with full animations and responsive layout.">Task: Write an interactive HTML page with neon light effects, particle glitch animations, hover effects. V4-Pro thought for only 7 seconds and outputted working code with full animations and responsive layout.</p>
+            <span class="verdict pass" data-zh="✓ 一次通过" data-en="✓ Pass on first try">✓ Pass on first try</span>
+        </div>
+
+        <div class="testcase">
+            <h4 data-zh="📌 案例 2：带物理拖拽的 3D 纸质小票" data-en="📌 Case 2: 3D physics-draggable paper receipt">📌 Case 2: 3D physics-draggable paper receipt</h4>
+            <p data-zh="任务：实现带物理引擎的 3D 纸质小票，鼠标拖拽 + 倾斜视角 + 翻转动画。V4 首次生成空白页面，需要 2-3 轮修正才能完成。复杂前端审美细节弱于 GPT-5.5 与 Claude Opus。" data-en="Task: Implement 3D paper receipt with physics engine, mouse drag + tilt perspective + flip animation. V4's first generation came back blank, requiring 2-3 rounds of correction. Complex frontend aesthetic details are weaker than GPT-5.5 and Claude Opus.">Task: Implement 3D paper receipt with physics engine, mouse drag + tilt perspective + flip animation. V4's first generation came back blank, requiring 2-3 rounds of correction. Complex frontend aesthetic details are weaker than GPT-5.5 and Claude Opus.</p>
+            <span class="verdict partial" data-zh="△ 部分通过（需 2-3 轮修正）" data-en="△ Partial (2-3 rounds)">△ Partial (2-3 rounds)</span>
+        </div>
+
+        <div class="testcase">
+            <h4 data-zz="" data-zh="📌 案例 3：并发 Bug 定位与修复" data-en="📌 Case 3: Concurrent bug localization and fix">📌 Case 3: Concurrent bug localization and fix</h4>
+            <p data-zh="任务：经典多线程计数器 counter += 1 非原子操作 bug 定位与修复。V4 给出 threading.Lock 方案，并分析了 GIL 为什么不保护这个操作。GPT-4o 也用 Lock 但侧重数据冒险解释。Claude 给出 Lock / 原子操作 / concurrent.futures 三种方案对比。V4 工程师思维最直接，给出 Python/Java/Go 三语言修复示例。" data-en="Task: Localize and fix classic multithreaded counter counter += 1 non-atomic bug. V4 provided threading.Lock solution and analyzed why GIL doesn't protect this operation. GPT-4o also used Lock but emphasized data hazard explanation. Claude gave three-option comparison (Lock, atomic operations, concurrent.futures). V4's engineer-thinking was most direct, with Python/Java/Go fix examples.">Task: Localize and fix classic multithreaded counter counter += 1 non-atomic bug. V4 provided threading.Lock solution and analyzed why GIL doesn't protect this operation. GPT-4o also used Lock but emphasized data hazard explanation. Claude gave three-option comparison (Lock, atomic operations, concurrent.futures). V4's engineer-thinking was most direct, with Python/Java/Go fix examples.</p>
+            <span class="verdict pass" data-zh="✓ 一次通过（强项）" data-en="✓ Pass on first try (strong)">✓ Pass on first try (strong)</span>
+        </div>
+
+        <div class="testcase">
+            <h4 data-zh="📌 案例 4：分布式 ID 生成器" data-en="📌 Case 4: Distributed ID generator">📌 Case 4: Distributed ID generator</h4>
+            <p data-zh="任务：实现全局唯一、趋势递增、高性能、能处理时钟回拨的分布式 ID 生成器。GPT-4o 给出标准雪花算法变种，时钟回拨处理抛异常。Claude 方案更完整（备用号段 + Redis 号段缓存），附架构图。V4 输出最具落地感——直接给数据库号段 + 本地缓存的 Spring Boot 示例，代码量大，适合 Java 技术栈团队直接使用。" data-en="Task: Implement globally unique, monotonically increasing, high-performance distributed ID generator that handles clock rollback. GPT-4o gave a standard snowflake variant with exception on clock rollback. Claude's solution was more complete (backup segments + Redis segment caching) with architecture diagram. V4's output was the most production-ready — direct Spring Boot example with database segments + local caching, large code volume, suited for direct use by Java tech teams.">Task: Implement globally unique, monotonically increasing, high-performance distributed ID generator that handles clock rollback. GPT-4o gave a standard snowflake variant with exception on clock rollback. Claude's solution was more complete (backup segments + Redis segment caching) with architecture diagram. V4's output was the most production-ready — direct Spring Boot example with database segments + local caching, large code volume, suited for direct use by Java tech teams.</p>
+            <span class="verdict pass" data-zh="✓ 一次通过（强项：落地感）" data-en="✓ Pass on first try (strong: production-ready)">✓ Pass on first try (strong: production-ready)</span>
+        </div>
+
+        <div class="testcase">
+            <h4 data-zh="📌 案例 5：SQL 注入防护" data-en="📌 Case 5: SQL injection defense">📌 Case 5: SQL injection defense</h4>
+            <p data-zh="任务：识别拼接 SQL 代码的注入风险。Claude 第一次回答就给出参数化查询改进版本，强调"永远不要信任用户输入"。GPT-4o 同样识别问题但回答更偏科普。V4 最直接：给出 Python / Java / Go 三语言防注入写法示例，工程师思维拉满。" data-en="Task: Identify SQL injection risk in concatenated SQL code. Claude's first response included parameterized query improvements, emphasizing "never trust user input". GPT-4o also identified the issue but its response was more educational. V4 was most direct: gave Python/Java/Go injection-prevention examples, full engineer-thinking.">Task: Identify SQL injection risk in concatenated SQL code. Claude's first response included parameterized query improvements, emphasizing "never trust user input". GPT-4o also identified the issue but its response was more educational. V4 was most direct: gave Python/Java/Go injection-prevention examples, full engineer-thinking.</p>
+            <span class="verdict pass" data-zh="✓ 一次通过（强项：三语言示例）" data-en="✓ Pass on first try (strong: three-language)">✓ Pass on first try (strong: three-language)</span>
+        </div>
+
+        <div class="testcase">
+            <h4 data-zh="📌 案例 6：性能重构" data-en="📌 Case 6: Performance refactoring">📌 Case 6: Performance refactoring</h4>
+            <p data-zh="任务：优化低效数据处理代码。V4 使用生成器、原地操作和向量化思路，内存占用降 60%。GPT-4o 优化方向正确但改动保守。Claude 给出 pandas vs 原生 Python 性能对比表。V4 在「激进重构」方向最果断。" data-en="Task: Optimize inefficient data processing code. V4 used generators, in-place operations, and vectorized thinking, reducing memory usage by 60%. GPT-4o's optimization direction was correct but changes were conservative. Claude gave a pandas vs native Python performance comparison table. V4 is the most decisive on aggressive refactoring.">Task: Optimize inefficient data processing code. V4 used generators, in-place operations, and vectorized thinking, reducing memory usage by 60%. GPT-4o's optimization direction was correct but changes were conservative. Claude gave a pandas vs native Python performance comparison table. V4 is the most decisive on aggressive refactoring.</p>
+            <span class="verdict pass" data-zh="✓ 一次通过（强项：性能优化）" data-en="✓ Pass on first try (strong: perf)">✓ Pass on first try (strong: perf)</span>
+        </div>
+    </section>
+
+    <!-- Tail Risk -->
+    <section id="tail-risk" class="container section">
+        <div class="section-header">
+            <h2 data-zh="⚠️ 尾部任务稳定性：V4 的弱点" data-en="⚠️ Tail Task Stability: V4's Weak Spot">⚠️ Tail Task Stability: V4's Weak Spot</h2>
+            <p data-zh="公开数据不只说好的。一个 38 项任务的第三方实测揭示了 V4 的真实短板。" data-en="Public data doesn't only tell the good story. A third-party 38-task test reveals V4's real weak spot.">Public data doesn't only tell the good story. A third-party 38-task test reveals V4's real weak spot.</p>
+        </div>
+
+        <div class="insight-box" style="background: linear-gradient(135deg, rgba(255,193,7,0.15), rgba(255,142,114,0.08)); border-color: #ffc107;">
+            <h4 style="color: #ffc107;">📊 38 项任务实测对比（2026 年第三方研究）</h4>
+            <p data-zh="V4-Pro（Thinking 模式）平均分 8.90，略高于 Claude Opus 4.7 的 8.87。但完成率方面：V4 完成 29/38（76%），Claude 完成 38/38（100%）。剩下 9 项 V4 因超时中断，恰恰是最难的编码与推理任务。结论：V4 在「中等难度」任务与顶尖模型平起平坐，但在「最难的尾部任务」上 Claude 更稳。" data-en="V4-Pro (Thinking mode) averaged 8.90, slightly above Claude Opus 4.7's 8.87. But completion rate: V4 completed 29/38 (76%), Claude completed 38/38 (100%). The remaining 9 V4 tasks timed out — exactly the hardest coding and reasoning tasks. Conclusion: V4 ties top models on "medium difficulty" tasks, but Claude is more stable on the hardest tail tasks.">V4-Pro (Thinking mode) averaged 8.90, slightly above Claude Opus 4.7's 8.87. But completion rate: V4 completed 29/38 (76%), Claude completed 38/38 (100%). The remaining 9 V4 tasks timed out — exactly the hardest coding and reasoning tasks. Conclusion: V4 ties top models on "medium difficulty" tasks, but Claude is more stable on the hardest tail tasks.</p>
+        </div>
+
+        <h3 style="color: var(--p); margin-top: 2rem; font-size: 1.2rem;" data-zh="什么场景应该避开 V4？" data-en="When should you avoid V4?">When should you avoid V4?</h3>
+        <div class="scenario-grid">
+            <div class="scenario-card">
+                <div class="icon">🎨</div>
+                <h4 data-zh="强审美前端 UI" data-en="High-Aesthetic Frontend UI">High-Aesthetic Frontend UI</h4>
+                <p data-zh="动画细节、视觉层级、风格统一性弱于 Claude Opus 与 GPT-5.5。建议主用 V4 生成逻辑 + Claude/GPT 出视觉。" data-en="Animation details, visual hierarchy, style consistency weaker than Claude Opus and GPT-5.5. Recommend using V4 for logic + Claude/GPT for visuals.">Animation details, visual hierarchy, style consistency weaker than Claude Opus and GPT-5.5. Recommend using V4 for logic + Claude/GPT for visuals.</p>
+            </div>
+            <div class="scenario-card">
+                <div class="icon">⏱️</div>
+                <h4 data-zh="超复杂多文件重构" data-en="Ultra-Complex Multi-File Refactoring">Ultra-Complex Multi-File Refactoring</h4>
+                <p data-zh="V4 在 38 项实测中 9 项超时。涉及多个文件、跨模块依赖重构、保持向后兼容的任务，Claude Opus 更稳。" data-en="V4 timed out on 9 of 38 tasks. Tasks involving multiple files, cross-module dependencies, maintaining backward compatibility — Claude Opus is more reliable.">V4 timed out on 9 of 38 tasks. Tasks involving multiple files, cross-module dependencies, maintaining backward compatibility — Claude Opus is more reliable.</p>
+            </div>
+            <div class="scenario-card">
+                <div class="icon">🧬</div>
+                <h4 data-zh="竞赛级纯数学" data-en="Competition-Level Pure Math">Competition-Level Pure Math</h4>
+                <p data-zh="AIME 2026 99.4% 看着很强，但 IMO/IOI 等真正竞赛级纯数学推理，开 Think Max 模式也不如 GPT-5.5 稳定。" data-en="AIME 2026 at 99.4% looks strong, but for true competition-level pure math reasoning (IMO/IOI), even with Think Max mode it's less stable than GPT-5.5.">AIME 2026 at 99.4% looks strong, but for true competition-level pure math reasoning (IMO/IOI), even with Think Max mode it's less stable than GPT-5.5.</p>
+            </div>
+        </div>
+
+        <h3 style="color: var(--p); margin-top: 2.5rem; font-size: 1.2rem;" data-zh="V4 的真正强项场景" data-en="Where V4 truly shines">Where V4 truly shines</h3>
+        <div class="scenario-grid">
+            <div class="scenario-card">
+                <div class="icon">📦</div>
+                <h4 data-zh="仓库级代码理解" data-en="Repo-Level Code Understanding">Repo-Level Code Understanding</h4>
+                <p data-zh="V4 用 1M 上下文能一次性吃完整套代码仓库。仓库级问答、跨文件依赖梳理、批量重构建议是 V4 的强项。" data-en="V4's 1M context can ingest an entire code repo at once. Repo-level Q&A, cross-file dependency mapping, batch refactor suggestions are V4's strengths.">V4's 1M context can ingest an entire code repo at once. Repo-level Q&A, cross-file dependency mapping, batch refactor suggestions are V4's strengths.</p>
+            </div>
+            <div class="scenario-card">
+                <div class="icon">⚙️</div>
+                <h4 data-zh="后端逻辑与算法" data-en="Backend Logic & Algorithms">Backend Logic & Algorithms</h4>
+                <p data-zh="Java Spring Boot、Python 后端、Go 微服务——V4 给出的实现最贴合生产环境，工程师思维拉满（见分布式 ID 案例）。" data-en="Java Spring Boot, Python backend, Go microservices — V4's output is the most production-ready, full engineer-thinking (see distributed ID case).">Java Spring Boot, Python backend, Go microservices — V4's output is the most production-ready, full engineer-thinking (see distributed ID case).</p>
+            </div>
+            <div class="scenario-card">
+                <div class="icon">🤖</div>
+                <h4 data-zh="Agent 编程工作流" data-en="Agent Coding Workflows">Agent Coding Workflows</h4>
+                <p data-zh="DeepSeek 官方 DeepCode 工具基于 V4 深度优化。在 Agent 工作流里 V4 + reasoning_effort=high 性价比最高。" data-en="DeepSeek's official DeepCode tool is optimized for V4. V4 + reasoning_effort=high is the best price-performance for Agent workflows.">DeepSeek's official DeepCode tool is optimized for V4. V4 + reasoning_effort=high is the best price-performance for Agent workflows.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Best Practices -->
+    <section id="scenarios" class="container section">
+        <div class="section-header">
+            <h2 data-zh="🎯 V4 编程最佳实践" data-en="🎯 V4 Coding Best Practices">🎯 V4 Coding Best Practices</h2>
+        </div>
+
+        <div class="insight-box">
+            <h4 data-zh="推荐配置" data-en="Recommended configuration">Recommended configuration</h4>
+            <p data-zh="日常编程：model=deepseek-v4-flash + reasoning_effort=high（响应快 + 思考够用，单价 $0.28/MTok 输出）；Agent / 复杂任务：model=deepseek-v4-pro + reasoning_effort=max（深度推理，单价 $0.87/MTok 输出）。思考模式默认开启，无需额外配置。" data-en="Daily coding: model=deepseek-v4-flash + reasoning_effort=high (fast + sufficient reasoning, $0.28/MTok output); Agent / complex tasks: model=deepseek-v4-pro + reasoning_effort=max (deep reasoning, $0.87/MTok output). Thinking mode is on by default, no extra config needed.">Daily coding: model=deepseek-v4-flash + reasoning_effort=high (fast + sufficient reasoning, $0.28/MTok output); Agent / complex tasks: model=deepseek-v4-pro + reasoning_effort=max (deep reasoning, $0.87/MTok output). Thinking mode is on by default, no extra config needed.</p>
+        </div>
+
+        <div class="insight-box">
+            <h4 data-zh="上下文管理" data-en="Context management">Context management</h4>
+            <p data-zh="V4 1M 上下文可以吃完整套代码仓库，但多轮对话超过 15 轮后会出现上下文遗忘——重要决策与已确认的接口签名放在 messages 列表头部，减少尾部信息被遗忘的概率。" data-en="V4's 1M context can ingest an entire codebase, but multi-turn conversations beyond 15 rounds show context forgetting — put important decisions and confirmed interface signatures at the head of the messages list to reduce tail information being forgotten.">V4's 1M context can ingest an entire codebase, but multi-turn conversations beyond 15 rounds show context forgetting — put important decisions and confirmed interface signatures at the head of the messages list to reduce tail information being forgotten.</p>
+        </div>
+
+        <div class="insight-box">
+            <h4 data-zh="混合 Agent 路由" data-en="Hybrid Agent routing">Hybrid Agent routing</h4>
+            <p data-zh="生产环境最佳实践：日常编程任务用 V4（省钱），最难的尾部 5%-10% 任务切 Claude Opus（保稳定）。一个 Agent 路由器按任务复杂度自动分发——CLAUDE 订阅户 + V4 API 组合比纯 Claude 便宜 70%。" data-en="Production best practice: use V4 for daily coding (save money), route the hardest 5%-10% tasks to Claude Opus (ensure stability). An Agent router automatically dispatches by task complexity — Claude subscription + V4 API combo is 70% cheaper than pure Claude.">Production best practice: use V4 for daily coding (save money), route the hardest 5%-10% tasks to Claude Opus (ensure stability). An Agent router automatically dispatches by task complexity — Claude subscription + V4 API combo is 70% cheaper than pure Claude.</p>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="container section">
+        <div class="section-header">
+            <h2 data-zh="❓ 编程评测常见问题" data-en="❓ Coding FAQ">❓ Coding FAQ</h2>
+        </div>
+        <div class="faq-grid">
+            <div class="faq-item">
+                <h4 data-zh="LiveCodeBench 93.5% 是什么水平？" data-en="What level is LiveCodeBench 93.5%?">What level is LiveCodeBench 93.5%?</h4>
+                <p data-zh="LiveCodeBench 是 2024 年起的实时编程评测（每月更新题目防止数据污染）。93.5% 意味着 V4-Pro-Max 能答对 93.5% 的 LeetCode 难度新题——开源模型第一，且超过 GPT-5.5（~90%）。" data-en="LiveCodeBench is a real-time coding evaluation started in 2024 (monthly updated problems to prevent data contamination). 93.5% means V4-Pro-Max can solve 93.5% of new LeetCode-difficulty problems — first among open-source models, and exceeding GPT-5.5 (~90%).">LiveCodeBench is a real-time coding evaluation started in 2024 (monthly updated problems to prevent data contamination). 93.5% means V4-Pro-Max can solve 93.5% of new LeetCode-difficulty problems — first among open-source models, and exceeding GPT-5.5 (~90%).</p>
+            </div>
+            <div class="faq-item">
+                <h4 data-zh="Codeforces 3206 是什么概念？" data-en="What does Codeforces 3206 mean?">What does Codeforces 3206 mean?</h4>
+                <p data-zh="Codeforces Rating 3000+ 是「国际大师」（International Master）级别，全球仅有 ~500 人达到。3206 意味着 V4-Pro-Max 在算法竞赛水平上超过了绝大多数人类顶级选手。" data-en="Codeforces Rating 3000+ is "International Master" tier, achieved by only ~500 people globally. 3206 means V4-Pro-Max exceeds most top human competitive programmers.">Codeforces Rating 3000+ is "International Master" tier, achieved by only ~500 people globally. 3206 means V4-Pro-Max exceeds most top human competitive programmers.</p>
+            </div>
+            <div class="faq-item">
+                <h4 data-zh="SWE-bench Verified 80.6% 在行业里算什么水平？" data-en="How does SWE-bench Verified 80.6% compare to industry?">How does SWE-bench Verified 80.6% compare to industry?</h4>
+                <p data-zh="SWE-bench Verified 是目前最接近真实工程场景的编程评测——测试模型解决 GitHub 上真实 Issue 的能力。80.6% 意味着 V4 能独立完成 80% 以上的真实工程任务——Claude Opus 4.6 的 80.8% 几乎并列，行业天花板。" data-en="SWE-bench Verified is the closest benchmark to real engineering — testing the model's ability to solve real GitHub Issues. 80.6% means V4 can independently complete over 80% of real engineering tasks — practically tied with Claude Opus 4.6's 80.8%, at the industry ceiling.">SWE-bench Verified is the closest benchmark to real engineering — testing the model's ability to solve real GitHub Issues. 80.6% means V4 can independently complete over 80% of real engineering tasks — practically tied with Claude Opus 4.6's 80.8%, at the industry ceiling.</p>
+            </div>
+            <div class="faq-item">
+                <h4 data-zh="V4 在多文件重构上为什么不如 Claude？" data-en="Why is V4 worse than Claude on multi-file refactoring?">Why is V4 worse than Claude on multi-file refactoring?</h4>
+                <p data-zh="38 项任务实测里 V4 在 9 项超时任务上的共同特征：跨 5+ 文件、需要保持向后兼容、涉及复杂模块依赖。这些任务需要持续的全局注意力，V4 在长程推理稳定性上还有提升空间。" data-en="The 9 V4-timed-out tasks share features: spanning 5+ files, needing backward compatibility, involving complex module dependencies. These tasks require sustained global attention; V4 still has room to improve on long-range reasoning stability.">The 9 V4-timed-out tasks share features: spanning 5+ files, needing backward compatibility, involving complex module dependencies. These tasks require sustained global attention; V4 still has room to improve on long-range reasoning stability.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 DeepSeek Technologies. All rights reserved.</p>
+        <div class="links">
+            <a href="/" data-zh="返回首页" data-en="Back to Home">Back to Home</a>
+            <a href="/deepseek-v4.html" data-zh="V4 专题" data-en="V4 Overview">V4 Overview</a>
+            <a href="/deepseek-v4-vs-gpt5-vs-claude.html" data-zh="模型对比" data-en="Model Comparison">Model Comparison</a>
+            <a href="/deepseek-v4-long-context.html" data-zh="百万上下文" data-en="1M Context">1M Context</a>
+            <a href="/deepseek-v3-to-v4-migration.html" data-zh="迁移指南" data-en="Migration Guide">Migration Guide</a>
+            <a href="https://cursorhero.com/" target="_blank" rel="nofollow noopener" data-zh="AI 鼠标光标" data-en="AI Cursor Generator">Cursorhero</a>
+        </div>
+        <p style="margin-top: 2rem; font-size: 0.875rem;" data-zh="数据来源：DeepSeek V4 官方技术报告、CSDN/掘金/腾讯云第三方测评、benchlm.ai，2026 年 4-5 月数据。" data-en="Source: DeepSeek V4 official technical report, third-party tests from CSDN/Juejin/Tencent Cloud, benchlm.ai — April-May 2026 data.">Source: DeepSeek V4 official technical report, third-party tests from CSDN/Juejin/Tencent Cloud, benchlm.ai — April-May 2026 data.</p>
+    </footer>
+
+    <script>
+        let currentLanguage = localStorage.getItem('preferredLanguage') || 'en';
+
+        if (currentLanguage === 'zh') {
+            document.documentElement.lang = 'zh-CN';
+        }
+
+        function toggleLanguage() {
+            currentLanguage = currentLanguage === 'en' ? 'zh' : 'en';
+            localStorage.setItem('preferredLanguage', currentLanguage);
+            document.documentElement.lang = currentLanguage === 'zh' ? 'zh-CN' : 'en';
+
+            const langDisplay = currentLanguage === 'en' ? 'English' : '中文';
+            document.getElementById('current-lang').textContent = langDisplay;
+
+            document.querySelectorAll('[data-zh][data-en]').forEach(element => {
+                const text = element.getAttribute(`data-${currentLanguage}`);
+                if (text) {
+                    element.textContent = text;
+                }
+            });
+
+            const titleEl = document.querySelector('title');
+            const metaDesc = document.getElementById('meta-description');
+            const ogTitle = document.getElementById('og-title');
+            const ogDesc = document.getElementById('og-description');
+            const twitterTitle = document.getElementById('twitter-title');
+            const twitterDesc = document.getElementById('twitter-description');
+
+            if (currentLanguage === 'zh') {
+                titleEl.textContent = 'DeepSeek V4 编程能力评测：LiveCodeBench 93.5% / Codeforces 3206 / SWE-bench 80.6%';
+                metaDesc.content = 'DeepSeek V4 编程深度评测：LiveCodeBench 93.5%、Codeforces Rating 3206（超 Claude Opus 4.6 与 Gemini-3.1-Pro）、SWE-bench Verified 80.6%、HumanEval 90.8%、AIME 2026 99.4%。含 6 个真实测试案例与场景建议。';
+                ogTitle.content = 'DeepSeek V4 编程能力评测：LiveCodeBench 93.5% / Codeforces 3206';
+                ogDesc.content = 'V4-Pro-Max 在 LiveCodeBench / Codeforces / SWE-bench 全面领先开源，含 6 个真实测试案例（赛博朋克 GTA6 网页 / 分布式 ID / SQL 注入防护）。';
+                twitterTitle.content = 'DeepSeek V4 编程能力评测：Codeforces 3206 超越 Claude Opus 4.6';
+                twitterDesc.content = 'LiveCodeBench 93.5% · Codeforces 3206 · SWE-bench Verified 80.6% · AIME 2026 99.4%。含实测案例 + 最佳实践。';
+            } else {
+                titleEl.textContent = 'DeepSeek V4 Coding Benchmark: LiveCodeBench 93.5%, Codeforces 3206, SWE-bench 80.6%';
+                metaDesc.content = 'DeepSeek V4 coding benchmark deep-dive: LiveCodeBench 93.5%, Codeforces Rating 3206, SWE-bench Verified 80.6%, HumanEval 90.8%, AIME 2026 99.4%. Includes real test cases (GTA6 webpage, distributed system, SQL injection defense) and head-to-head comparison with Claude Opus 4.6 / GPT-5.5.';
+                ogTitle.content = 'DeepSeek V4 Coding Benchmark: LiveCodeBench 93.5%, Codeforces 3206';
+                ogDesc.content = 'V4-Pro-Max leads open-source on LiveCodeBench / Codeforces / SWE-bench. Includes 6 real test cases (cyberpunk GTA6 page, distributed ID, SQL injection defense).';
+                twitterTitle.content = 'DeepSeek V4 Coding Benchmark: Codeforces 3206 Surpasses Claude Opus 4.6';
+                twitterDesc.content = 'LiveCodeBench 93.5% · Codeforces 3206 · SWE-bench Verified 80.6% · AIME 2026 99.4%. Includes real test cases + best-practice scenarios.';
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', function() {
+            const langDisplay = currentLanguage === 'en' ? 'English' : '中文';
+            document.getElementById('current-lang').textContent = langDisplay;
+
+            document.querySelectorAll('[data-zh][data-en]').forEach(element => {
+                const text = element.getAttribute(`data-${currentLanguage}`);
+                if (text) {
+                    element.textContent = text;
+                }
+            });
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
