@@ -1,37 +1,46 @@
-# deepseek 3.2 robots.txt
-# 生成时间: 2024年
+# deepseekv.pro robots.txt
+# Last updated: 2026-07-06
 
+# --- General crawler ---
 User-agent: *
 Allow: /
-Allow: /deepseek32-landing.html
 Allow: /images/
-Allow: /css/
-Allow: /js/
-
-# 禁止访问敏感文件和目录
 Disallow: /admin/
 Disallow: /private/
-Disallow: /logs/
 Disallow: /config/
-Disallow: /temp/
 Disallow: /*.log$
 Disallow: /*.tmp$
 Disallow: /*.bak$
 
-# 禁止访问开发相关文件
-Disallow: /node_modules/
-Disallow: /src/
-Disallow: /.git/
-Disallow: /package.json
-Disallow: /package-lock.json
+# --- AI / LLM crawlers — allow indexing for visibility ---
+User-agent: GPTBot
+Allow: /
 
-# 搜索引擎爬取频率建议
-Crawl-delay: 1
+User-agent: ChatGPT-User
+Allow: /
 
-# 站点地图位置
-Sitemap: https://deepseekv.pro/sitemap.xml
+User-agent: Google-Extended
+Allow: /
 
-# 特殊搜索引擎处理
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Anthropic-ai
+Allow: /
+
+User-agent: Cohere-ai
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+# --- Traditional search engines ---
 User-agent: Googlebot
 Allow: /
 
@@ -44,23 +53,26 @@ Allow: /
 User-agent: YandexBot
 Allow: /
 
-# 社交媒体爬虫
+# --- Social media crawlers ---
 User-agent: FacebookBot
 Allow: /
 
 User-agent: TwitterBot
 Allow: /
 
-# SEO工具爬虫
+# --- SEO tool crawlers — rate-limit ---
 User-agent: AhrefsBot
 Crawl-delay: 5
 
 User-agent: SemrushBot
 Crawl-delay: 5
 
-# 屏蔽恶意爬虫
+# --- Block malicious bots ---
 User-agent: MJ12bot
 Disallow: /
 
 User-agent: DotBot
 Disallow: /
+
+# --- Sitemap ---
+Sitemap: https://www.deepseekv.pro/sitemap.xml

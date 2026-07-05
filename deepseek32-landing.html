@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="page-title">deepseekv3.2 - 开源AI模型 | GPT-5级推理能力</title>
+    <title id="page-title">DeepSeek V Pro - 开源AI评测与指南 | V3.2/V4 基准数据</title>
     
     <!-- SEO Meta Tags -->
-    <meta name="description" id="meta-description" content="DeepSeek 开源大模型生态站：V3.2 推理对标 GPT-5（128K 上下文），V4 已发布（V4-Pro 1.6T/49B + V4-Flash 284B/13B，1M 上下文标配，LiveCodeBench 93.5% / Codeforces 3206）。2026-07-24 旧 deepseek-chat API 停止使用，迁移指南与对比评测全套。" >
+    <meta name="description" id="meta-description" content="DeepSeek V3.2: 开源AI模型，GPT-5级推理，128K上下文，DSA机制降本60%。V4已发布1M上下文，LiveCodeBench 93.5%。独立评测站。" >
     <meta name="keywords" id="meta-keywords" content="DeepSeek, deepseek 3.2, DeepSeek V4, V4-Pro, V4-Flash, 1M token context, deepseek-chat migration, deepseek-v4 vs gpt-5, deepseek v4 coding benchmark, LiveCodeBench, Codeforces 3206, MIT 开源, 7-24 API 弃用, 多模态识图, AI 编程">
-    <meta name="author" content="DeepSeek Technologies">
+    <meta name="author" content="DeepSeek V Pro">
     <meta name="robots" content="index, follow">
     <meta name="language" content="en">
     
@@ -16,18 +16,18 @@
     <meta property="og:title" id="og-title" content="deepseek 3.2 - 开源大语言模型 | GPT-5级别推理能力">
     <meta property="og:description" id="og-description" content="deepseek 3.2 开源大语言模型，推理能力对标GPT-5，成本降低60%。DSA机制创新，支持128K上下文和深度思考模式。Speciale版国际竞赛金牌，性价比革命。">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://deepseekv.pro">
-    <meta property="og:image" content="https://deepseek.com/images/og-image.jpg">
-    <meta property="og:site_name" content="DeepSeek">
+    <meta property="og:url" content="https://www.deepseekv.pro">
+    <meta property="og:image" content="https://www.deepseekv.pro/images/og-default.png">
+    <meta property="og:site_name" content="DeepSeek V Pro">
     <meta property="og:locale" content="en_US">
     
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" id="twitter-title" content="deepseek 3.2 - 开源大语言模型 | GPT-5级别推理 | 性价比革命">
     <meta name="twitter:description" id="twitter-description" content="deepseek 3.2 开源大语言模型，推理能力对标GPT-5，DSA创新降本60%，支持深度思考模式。立即免费体验deepseek 3.2！">
-    <meta name="twitter:image" content="https://deepseek.com/images/twitter-card.jpg">
-    <meta name="twitter:site" content="@deepseek_ai">
-    <meta name="twitter:creator" content="@deepseek_ai">
+    <meta name="twitter:image" content="https://www.deepseekv.pro/images/og-default.png">
+    <meta name="twitter:site" content="@deepseekvpro">
+    <meta name="twitter:creator" content="@deepseekvpro">
     
     <!-- Additional Meta Tags -->
     <meta name="theme-color" content="#0066FF">
@@ -52,7 +52,7 @@
     </script>
     
     <!-- Canonical URL -->
-    <link rel="canonical" href="https://deepseekv.pro/">
+    <link rel="canonical" href="https://www.deepseekv.pro/">
 
     <!-- Schema.org: FAQPage -->
     <script type="application/ld+json">
@@ -95,10 +95,45 @@
       ]
     }
     </script>
+
+    <!-- Schema.org: Organization + WebSite -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "DeepSeek V Pro",
+      "url": "https://www.deepseekv.pro/",
+      "logo": "https://www.deepseekv.pro/logo.png",
+      "description": "Independent publisher providing DeepSeek AI model analysis, benchmarks, and migration guides.",
+      "sameAs": []
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "DeepSeek V Pro",
+      "url": "https://www.deepseekv.pro/",
+      "description": "DeepSeek AI model reviews, benchmarks, migration guides, and comparisons.",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://www.deepseekv.pro/?q={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
     
     <!-- Robots and Sitemap -->
     <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
     <link rel="sitemap" type="application/xml" href="/sitemap.xml">
+    
+    <!-- Hreflang: Chinese (client-side toggle) + English (default) -->
+    <link rel="alternate" hreflang="zh" href="https://www.deepseekv.pro/">
+    <link rel="alternate" hreflang="en" href="https://www.deepseekv.pro/">
+    <link rel="alternate" hreflang="x-default" href="https://www.deepseekv.pro/">
     
     <!-- Favicon - 内联SVG数据，确保图标存在 -->
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%230066FF;stop-opacity:1'/%3E%3Cstop offset='100%25' style='stop-color:%230044CC;stop-opacity:1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='6' fill='url(%23bg)'/%3E%3Cg transform='translate(16,16)'%3E%3Ccircle cx='0' cy='-2' r='6' fill='%23FFFFFF' opacity='0.9'/%3E%3Ccircle cx='-2' cy='-2' r='1' fill='%230066FF'/%3E%3Ccircle cx='2' cy='-2' r='1' fill='%230066FF'/%3E%3Cpath d='M -2,0 Q 0,2 2,0' stroke='%230066FF' stroke-width='0.8' fill='none' stroke-linecap='round'/%3E%3Crect x='-4' y='4' width='8' height='6' rx='2' fill='%23FFFFFF' opacity='0.9'/%3E%3Cline x1='0' y1='-8' x2='0' y2='-10' stroke='%23FFFFFF' stroke-width='1' stroke-linecap='round'/%3E%3Ccircle cx='0' cy='-11' r='1' fill='%2300D4FF'/%3E%3C/g%3E%3Ctext x='16' y='28' font-family='Arial,sans-serif' font-size='6' font-weight='bold' text-anchor='middle' fill='%23FFFFFF'%3ED3.2%3C/text%3E%3C/svg%3E">
@@ -113,8 +148,6 @@
     <link rel="manifest" href="/site.webmanifest">
     <!-- 预连接关键资源 -->
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     
     <!-- 优化字体加载 -->
     <link rel="preload" as="font" type="font/woff2" crossorigin href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.woff2?t=1690542014099">
@@ -978,8 +1011,14 @@
     </style>
 </head>
 <body>
+    <!-- 独立声明：非 DeepSeek 官方站点 -->
+    <div style="background: rgba(255, 107, 107, 0.1); border-bottom: 1px solid rgba(255, 107, 107, 0.3); padding: 0.5rem; text-align: center; font-size: 0.85rem; color: #ff6b6b; position: fixed; top: 0; left: 0; right: 0; z-index: 1001;">
+        ⚡ <strong>Independent Publisher</strong>: Not affiliated with DeepSeek (深度求索) · 
+        <a href="/advertising-disclosure.html" style="color: #ff6b6b; text-decoration: underline;">Disclosure</a>
+    </div>
+    
     <!-- 导航栏 -->
-    <nav>
+    <nav style="top: 36px;">
         <div class="nav-container">
             <a href="#" class="logo">
                 <i class="ri-robot-2-line"></i>
@@ -1009,7 +1048,7 @@
         <div class="decoration-circle" style="position: absolute; width: 300px; height: 300px; background: radial-gradient(circle, rgba(0,102,255,0.05) 0%, transparent 70%); border-radius: 50%; bottom: -150px; left: -150px; animation: float 8s ease-in-out infinite reverse;"></div>
         <div class="container">
             <header class="hero-content">
-                <h1 id="hero-heading">Deepseekv3.2</h1>
+                <h1 id="hero-heading">DeepSeek V Pro</h1>
                 <div class="hero-subtitle">
                     <h2 id="hero-subtitle" data-zh="推理能力对标GPT-5的开源大语言模型" data-en="Open Source Large Language Model with GPT-5 Level Reasoning">推理能力对标GPT-5的开源大语言模型</h2>
                     <p class="hero-tagline" id="hero-tagline" data-zh="🚀 性价比革命 · DSA机制创新 · 成本降低60%" data-en="🚀 Cost Revolution · DSA Innovation · 60% Cost Reduction">🚀 性价比革命 · DSA机制创新 · 成本降低60%</p>
@@ -1255,7 +1294,7 @@ Thinking process:
                 <div class="faq-item fade-in">
                     <h3 data-zh="普通用户有哪些具体使用场景？" data-en="What specific use cases for ordinary users?">普通用户有哪些具体使用场景？</h3>
                     <p data-zh="学习与知识：解题辅导、文书写作润色、知识问答。工作与效率：编程辅助、文档分析总结、头脑风暴。生活与娱乐：旅行规划、创意写作、日常解惑。支持128K超长上下文，可处理整本书、长篇报告。支持多种文件上传：图像、PDF、PPT、Word、Excel等。完全免费，中文优化更亲切。" data-en="Learning & Knowledge: Problem-solving tutoring, document writing & polishing, knowledge Q&A. Work & Efficiency: Programming assistance, document analysis & summarization, brainstorming. Life & Entertainment: Travel planning, creative writing, daily problem solving. Supports 128K ultra-long context for processing entire books, long reports. Supports multiple file uploads: images, PDFs, PPTs, Word, Excel, etc. Completely free, optimized for Chinese with natural interaction.">学习与知识：解题辅导、文书写作润色、知识问答。工作与效率：编程辅助、文档分析总结、头脑风暴。生活与娱乐：旅行规划、创意写作、日常解惑。支持128K超长上下文，可处理整本书、长篇报告。支持多种文件上传：图像、PDF、PPT、Word、Excel等。完全免费，中文优化更亲切。</p>
-                    <p style="margin-top: 0.75rem;">个性化扩展 · Personalization beyond content: AI 还能直接生成专属鼠标光标（赛博朋克 / 水彩 / 像素风等风格），Windows 可直接安装试用 — Generate custom mouse cursors with AI, directly installable on Windows. 详见 <a href="https://cursorhero.com/" target="_blank" rel="nofollow noopener" style="color: var(--p); font-weight: 600;">Cursorhero</a>。</p>
+                    <p style="margin-top: 0.75rem;">个性化扩展 · Personalization beyond content: AI 还能直接生成专属鼠标光标（赛博朋克 / 水彩 / 像素风等风格），Windows 可直接安装试用 — Generate custom mouse cursors with AI, directly installable on Windows. 详见 <a href="https://cursorhero.com/" target="_blank" rel="sponsored nofollow noopener" style="color: var(--p); font-weight: 600;">Cursorhero</a>。</p>
                 </div>
             </div>
         </div>
@@ -1502,20 +1541,21 @@ Thinking process:
                     <i class="ri-rocket-line" style="color: var(--p); font-size: 1.2rem;"></i>
                     <span data-zh="DeepSeek V4专题" data-en="DeepSeek V4 Feature">DeepSeek V4专题</span>
                 </a>
-                <a href="https://www.engagement-photos.net/" target="_blank" rel="nofollow noopener" 
+                <a href="https://www.engagement-photos.net/" target="_blank" rel="sponsored nofollow noopener" 
                    style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--bd); border-radius: 12px; 
                           padding: 1rem 1.5rem; text-decoration: none; color: var(--t1); transition: all 0.3s ease;
                           display: flex; align-items: center; gap: 0.5rem;">
                     <i class="ri-camera-line" style="color: var(--p); font-size: 1.2rem;"></i>
                     <span data-zh="订婚摄影" data-en="Engagement Photos">订婚摄影</span>
                 </a>
-                <a href="https://cursorhero.com/" target="_blank" rel="nofollow noopener"
+                <a href="https://cursorhero.com/" target="_blank" rel="sponsored nofollow noopener"
                    style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--bd); border-radius: 12px;
                           padding: 1rem 1.5rem; text-decoration: none; color: var(--t1); transition: all 0.3s ease;
                           display: flex; align-items: center; gap: 0.5rem;">
                     <i class="ri-cursor-line" style="color: var(--p); font-size: 1.2rem;"></i>
                     <span data-zh="AI 鼠标光标" data-en="AI Cursor Generator">AI 鼠标光标</span>
                 </a>
+                <a href="/deepseek-v3-to-v4-migration.html" rel="noopener"
                    style="background: rgba(255, 107, 107, 0.08); border: 1px solid #ff6b6b; border-radius: 12px;
                           padding: 1rem 1.5rem; text-decoration: none; color: var(--t0); transition: all 0.3s ease;
                           display: flex; align-items: center; gap: 0.5rem;">
@@ -1566,7 +1606,7 @@ Thinking process:
         const translations = {
             zh: {
                 // 页面标题和meta
-                'page-title': 'deepseekv3.2 - 开源AI模型 | GPT-5级推理能力',
+                'page-title': 'DeepSeek V Pro - 开源AI评测与指南 | V3.2/V4 基准数据',
                 'meta-description': 'deepseek 3.2开源AI模型，推理能力对标GPT-5。DSA机制成本降60%，速度提升3.5倍。Speciale版国际竞赛金牌，完全开源性价比高。',
                 'meta-keywords': 'deepseek 3.2, 开源大语言模型, GPT-5替代, AI助手, 深度思考模式, DSA机制, 128K上下文',
                 'og-title': 'deepseek 3.2 - 开源大语言模型 | GPT-5级别推理能力',
@@ -1575,7 +1615,7 @@ Thinking process:
                 'twitter-description': 'deepseek 3.2 开源大语言模型，推理能力对标GPT-5，DSA创新降本60%，支持深度思考模式。立即免费体验deepseek 3.2！',
                 
                 // Hero区域
-                'hero-heading': 'Deepseekv3.2',
+                'hero-heading': 'DeepSeek V Pro',
                 'hero-subtitle': '推理能力对标GPT-5的开源大语言模型',
                 'hero-tagline': '🚀 性价比革命 · DSA机制创新 · 成本降低60%',
                 'hero-description': 'deepseek 3.2 标准版达到GPT-5级别推理能力，Speciale增强版在IMO、ICPC等国际顶级竞赛中获得金牌。作为新一代开源大语言模型，deepseek 3.2 采用DSA稀疏注意力机制，长文本处理成本降低60%，推理速度提升3.5倍，支持128K超长上下文和深度思考模式，彻底改变AI应用成本格局。deepseek 3.2 的技术创新让开源模型首次具备与闭源顶级模型竞争的实力，deepseek 3.2 为全球用户提供了极致性价比的AI解决方案。',
@@ -1611,7 +1651,7 @@ Thinking process:
                 'twitter-description': 'deepseek 3.2 open source LLM with GPT-5 level reasoning, DSA innovation cuts costs by 60%, supports deep thinking mode. Try deepseek 3.2 for free now!',
                 
                 // Hero区域
-                'hero-heading': 'Deepseekv3.2',
+                'hero-heading': 'DeepSeek V Pro',
                 'hero-subtitle': 'Open Source Large Language Model with GPT-5 Level Reasoning',
                 'hero-tagline': '🚀 Cost Revolution · DSA Innovation · 60% Cost Reduction',
                 'hero-description': 'deepseek 3.2 Standard Edition achieves GPT-5 level reasoning capabilities, with the Speciale Enhanced Edition winning gold medals in top international competitions like IMO and ICPC. As a new generation open source LLM, deepseek 3.2 utilizes DSA sparse attention mechanism, reducing long text processing costs by 60%, boosting inference speed by 3.5x, supporting 128K ultra-long context and deep thinking mode, completely transforming the AI application cost landscape. deepseek 3.2\'s technological innovations enable open source models to compete with top closed-source models for the first time, deepseek 3.2 provides users worldwide with extremely cost-effective AI solutions.',
@@ -1876,9 +1916,9 @@ Thinking process:
     <!-- Ads: Popunder + Smartlink + Social Bar (effectivecpmnetwork.com) -->
     <!-- Popunder — disabled by user request (2026-07-05).
      Zone (pl30213816) was Adsterra-configured but not desired; see disclosure. -->
-<script src="https://www.effectivecpmnetwork.com/k6mwpc8t?key=ee4176418ab78a252d7b97ece931a5fa"></script>
+<script async src="https://www.effectivecpmnetwork.com/k6mwpc8t?key=ee4176418ab78a252d7b97ece931a5fa"></script>
     <!-- Ad: Social Bar (effectivecpmnetwork.com — Adsterra's CDN)
      SocialBar_1 (id=30113319) retrieved from beta.publishers.adsterra.com dashboard (2026-07-05). -->
-<script src="https://pl30213818.effectivecpmnetwork.com/74/61/a5/7461a528560e86fb15b2e286cd2dbeff.js"></script><!-- /Ads -->
+<script async src="https://pl30213818.effectivecpmnetwork.com/74/61/a5/7461a528560e86fb15b2e286cd2dbeff.js"></script><!-- /Ads -->
 </body>
 </html>

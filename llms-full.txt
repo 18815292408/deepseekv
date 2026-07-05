@@ -1,0 +1,145 @@
+# DeepSeek V Pro — Full Site Content
+> Independent publisher, not affiliated with DeepSeek (深度求索).
+
+## Homepage — DeepSeek V3.2 Overview
+URL: https://www.deepseekv.pro/
+
+DeepSeek V3.2 is an open source LLM with GPT-5 level reasoning capabilities. Key features:
+- DSA (DeepSeek Sparse Attention) mechanism: reduces long text processing cost by 60%, boosts inference speed 3.5x
+- 128K ultra-long context window
+- Deep Thinking Mode for complex reasoning
+- Speciale Enhanced Edition won gold medals in IMO, ICPC international competitions
+- Apache 2.0 open source license, commercial use allowed
+
+### Core Benchmarks (V3.2 Standard)
+- MMLU-Pro: 85.0
+- Cost reduction: 60% vs comparable models
+- Inference speed: 3.5x boost
+
+## DeepSeek V4
+URL: https://www.deepseekv.pro/deepseek-v4.html
+
+Released April 24, 2026. Two variants:
+- **V4-Pro**: 1.6T total / 49B activated parameters, MoE architecture
+- **V4-Flash**: 284B / 13B activated parameters, MoE architecture
+- Both: 1M token context standard, MIT license
+
+### Key Benchmarks (V4-Pro-Max)
+| Benchmark | Score |
+|---|---|
+| LiveCodeBench | 93.5% |
+| Codeforces Rating | 3206 |
+| SWE-bench Verified | 80.6% |
+| HumanEval pass@1 | 90.8% |
+| AIME 2026 | 99.4% |
+| MMLU-Pro | 87.5% |
+| MRCR 1M (long-context) | 83.5% |
+| Chinese understanding | 94.25% |
+
+### Three Architectural Breakthroughs
+1. **Hybrid Attention (CSA + HCA + SWA)**: CSA 4:1 compression, HCA 128:1 extreme compression, SWA tracks recent 128 tokens. 1M context FLOPs = 27% of V3.2, KV cache = 10% of V3.2.
+2. **mHC (Manifold-Constrained Hyperconnection)**: Maps inter-layer residuals to doubly-stochastic matrix manifold, preventing numerical explosion in ultra-large MoE training.
+3. **Muon Optimizer + 32T+ pre-training data**: Aggressive early convergence with precise late-stage refinement.
+
+### Pricing
+- V4-Pro: $0.435/MTok input, $0.87/MTok output
+- V4-Flash: $0.14/MTok input, $0.28/MTok output
+
+## V3 to V4 Migration Guide
+URL: https://www.deepseekv.pro/deepseek-v3-to-v4-migration.html
+
+### Key Date
+**July 24, 2026 15:59 UTC** — deepseek-chat / deepseek-reasoner deprecated.
+
+### Model Name Mapping
+| Old (deprecated) | New | Notes |
+|---|---|---|
+| `deepseek-chat` | `deepseek-v4-flash` | Non-thinking mode |
+| `deepseek-reasoner` | `deepseek-v4-flash` + thinking params | Thinking mode |
+| (high-load) | `deepseek-v4-pro` | Flagship |
+
+### Migration Steps
+1. Replace `deepseek-chat` → `deepseek-v4-flash` or `deepseek-v4-pro`
+2. Replace `deepseek-reasoner` → `deepseek-v4-flash` + `extra_body={"thinking": {"type": "enabled"}}` + `reasoning_effort="high"`
+3. Base URL unchanged: `https://api.deepseek.com` (OpenAI) or `https://api.deepseek.com/anthropic` (Anthropic)
+4. Context window expands from 128K to 1M — consider simplifying chunking logic
+5. Multi-turn: with tool calls, reasoning_content must be passed back fully
+
+### Legacy-to-V4 Pricing
+| Model | Input (cache miss) | Output |
+|---|---|---|
+| deepseek-v4-flash | $0.14/MTok | $0.28/MTok |
+| deepseek-v4-pro | $0.435/MTok | $0.87/MTok |
+
+## V4 vs GPT-5.5 vs Claude Opus 4.6
+URL: https://www.deepseekv.pro/deepseek-v4-vs-gpt5-vs-claude.html
+
+### One-Line Conclusion
+V4 leads open-source coding + Chinese + price (1/10 of Claude); GPT-5.5 wins on math + multimodal; Claude leads long-chain reasoning stability.
+
+### Coding Benchmarks
+| Benchmark | V4-Pro-Max | GPT-5.5 | Claude Opus 4.6 |
+|---|---|---|---|
+| LiveCodeBench | 93.5% | ~90% | ~88% |
+| Codeforces Rating | 3206 | 3168 | ~3000 |
+| SWE-bench Verified | 80.6% | ~80% | 80.8% |
+| HumanEval pass@1 | 90.8% | 90.2% | ~88% |
+
+### Pricing Comparison
+| Model | Output per MTok | vs V4-Pro |
+|---|---|---|
+| V4-Flash | $0.28 | 0.32x |
+| V4-Pro | $0.87 | 1.0x |
+| GPT-5.5 | $10.00 | 11.5x |
+| Claude Opus 4.6 | $75.00 | 86.2x |
+
+## Coding Benchmark Deep-Dive
+URL: https://www.deepseekv.pro/deepseek-v4-coding-benchmark.html
+
+### Real Test Cases
+1. **GTA6 intro webpage** (Cyberpunk) — Pass, animated + responsive
+2. **3D physics receipt** — Partial, needed corrections
+3. **Concurrent bug fix** — Strong, threaded solution with GIL analysis
+4. **Distributed ID generator** — Strong, Spring Boot + DB segments
+5. **SQL injection defense** — Strong, Python/Java/Go examples
+6. **Performance refactoring** — Strong, memory usage down 60%
+
+### Tail Task Stability
+- 38-task test: V4 average 8.90 (slightly above Claude 4.7's 8.87)
+- But: V4 completed 29/38 (76%), Claude 38/38 (100%) — hardest tasks timed out
+
+## 1M Long Context Deep-Dive
+URL: https://www.deepseekv.pro/deepseek-v4-long-context.html
+
+### Benchmark
+- MRCR 1M: 83.5% (beats GPT-5.5 69.8% at 128K)
+- 1M tokens ≈ 1.5M Chinese chars ≈ 750K English words
+- Inference FLOPs: only 27% of V3.2
+- KV cache: only 10% of V3.2
+
+### Real Cases
+1. **970K character mixed-material Q&A** — 7-second response with cross-source pinpointing
+2. **240K novel anomaly detection** — Seconds-level style mismatch detection
+3. **Financial report analysis** — 5-year cross-period comparison
+4. **Contract review** — 100-200 page clause extraction
+5. **Code repo understanding** — 50K-100K LoC at once
+6. **Medical literature review** — 200+ papers, trend summary
+
+### Caveats
+- Multi-turn context forgetting after 15+ rounds
+- MRCR 83.5% is retrieval, not necessarily complex multi-step reasoning
+- 1M tokens ≈ 1.5M Chinese chars or 750K English words
+
+---
+
+## Advertising Disclosure
+URL: https://www.deepseekv.pro/advertising-disclosure.html
+
+deepseekv.pro displays ads served by Adsterra (effectivecpmnetwork.com):
+- Native Banner — in-content card-style ads
+- Smartlink — outbound clicks may redirect to advertiser
+- Social Bar — fixed bar at page bottom
+
+All V4 editorial content independently created. Technical data based on publicly available information.
+
+*Last updated: 2026-07-05*

@@ -1,0 +1,22 @@
+# DeepSeek V Pro — AI Model Analysis & Comparison
+
+> DeepSeek V Pro is an independent publisher providing in-depth analysis, benchmarks, migration guides, and comparisons of DeepSeek AI models. **Not affiliated with DeepSeek (深度求索).**
+
+## Site Structure
+
+- Homepage: https://www.deepseekv.pro/ — DeepSeek V3.2 overview, features, FAQ
+- DeepSeek V4: https://www.deepseekv.pro/deepseek-v4.html — V4-Pro & V4-Flash specs, benchmarks, architecture
+- Migration Guide: https://www.deepseekv.pro/deepseek-v3-to-v4-migration.html — deepseek-chat deprecation July 24, 2026
+- V4 vs GPT-5 vs Claude: https://www.deepseekv.pro/deepseek-v4-vs-gpt5-vs-claude.html — head-to-head comparison
+- Coding Benchmark: https://www.deepseekv.pro/deepseek-v4-coding-benchmark.html — LiveCodeBench 93.5%, Codeforces 3206
+- Long Context: https://www.deepseekv.pro/deepseek-v4-long-context.html — 1M token context, MRCR 83.5%
+- Advertising Disclosure: https://www.deepseekv.pro/advertising-disclosure.html
+
+## Key Topics
+
+- DeepSeek V4 (V4-Pro, V4-Flash) — MIT open source, 1M context, hybrid attention architecture
+- DeepSeek V3.2 — GPT-5 level reasoning, DSA sparse attention, 128K context
+- deepseek-chat API deprecation (July 24, 2026) — migration to v4-flash / v4-pro
+- LLM comparison: DeepSeek V4 vs GPT-5.5 vs Claude Opus 4.6
+- Coding benchmarks: LiveCodeBench, Codeforces, SWE-bench, HumanEval
+- Long-context AI: MRCR 1M, document analysis, codebase understanding

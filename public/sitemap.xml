@@ -4,81 +4,17 @@
         xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 
         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 
-    <!-- 首页 - deepseek 3.2 落地页 -->
+    <!-- 首页 -->
     <url>
-        <loc>https://deepseekv.pro/</loc>
+        <loc>https://www.deepseekv.pro/</loc>
         <lastmod>2026-07-05</lastmod>
         <changefreq>weekly</changefreq>
         <priority>1.0</priority>
     </url>
 
-    <!-- deepseek 3.2 落地页 -->
-    <url>
-        <loc>https://deepseekv.pro/deepseek32-landing.html</loc>
-        <lastmod>2026-07-05</lastmod>
-        <changefreq>daily</changefreq>
-        <priority>0.9</priority>
-    </url>
-    
-    <!-- 功能特性页面锚点 -->
-    <url>
-        <loc>https://deepseekv.pro/deepseek32-landing.html#features</loc>
-        <lastmod>2025-12-10</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    
-    <!-- 价格方案页面锚点 -->
-    <url>
-        <loc>https://deepseekv.pro/deepseek32-landing.html#pricing</loc>
-        <lastmod>2025-12-10</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    
-    <!-- 常见问题页面锚点 -->
-    <url>
-        <loc>https://deepseekv.pro/deepseek32-landing.html#faq</loc>
-        <lastmod>2025-12-10</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.7</priority>
-    </url>
-    
-    <!-- 技术详情页面锚点 -->
-    <url>
-        <loc>https://deepseekv.pro/deepseek32-landing.html#technical</loc>
-        <lastmod>2025-12-10</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-    
-    <!-- 行业解决方案页面锚点 -->
-    <url>
-        <loc>https://deepseekv.pro/deepseek32-landing.html#solutions</loc>
-        <lastmod>2025-12-10</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-    
-    <!-- 竞品对比分析页面锚点 -->
-    <url>
-        <loc>https://deepseekv.pro/deepseek32-landing.html#comparison</loc>
-        <lastmod>2025-12-10</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.6</priority>
-    </url>
-    
-    <!-- 客户案例页面锚点 -->
-    <url>
-        <loc>https://deepseekv.pro/deepseek32-landing.html#cases</loc>
-        <lastmod>2025-12-10</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.6</priority>
-    </url>
-    
     <!-- DeepSeek V4 专题页面 -->
     <url>
-        <loc>https://deepseekv.pro/deepseek-v4.html</loc>
+        <loc>https://www.deepseekv.pro/deepseek-v4.html</loc>
         <lastmod>2026-07-05</lastmod>
         <changefreq>daily</changefreq>
         <priority>1.0</priority>
@@ -86,7 +22,7 @@
 
     <!-- DeepSeek V3 → V4 迁移指南 -->
     <url>
-        <loc>https://deepseekv.pro/deepseek-v3-to-v4-migration.html</loc>
+        <loc>https://www.deepseekv.pro/deepseek-v3-to-v4-migration.html</loc>
         <lastmod>2026-07-05</lastmod>
         <changefreq>daily</changefreq>
         <priority>1.0</priority>
@@ -94,7 +30,7 @@
 
     <!-- DeepSeek V4 vs GPT-5 vs Claude 对比 -->
     <url>
-        <loc>https://deepseekv.pro/deepseek-v4-vs-gpt5-vs-claude.html</loc>
+        <loc>https://www.deepseekv.pro/deepseek-v4-vs-gpt5-vs-claude.html</loc>
         <lastmod>2026-07-05</lastmod>
         <changefreq>daily</changefreq>
         <priority>1.0</priority>
@@ -102,7 +38,7 @@
 
     <!-- DeepSeek V4 编程能力深度评测 -->
     <url>
-        <loc>https://deepseekv.pro/deepseek-v4-coding-benchmark.html</loc>
+        <loc>https://www.deepseekv.pro/deepseek-v4-coding-benchmark.html</loc>
         <lastmod>2026-07-05</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.9</priority>
@@ -110,10 +46,18 @@
 
     <!-- DeepSeek V4 1M 上下文长文档分析 -->
     <url>
-        <loc>https://deepseekv.pro/deepseek-v4-long-context.html</loc>
+        <loc>https://www.deepseekv.pro/deepseek-v4-long-context.html</loc>
         <lastmod>2026-07-05</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.9</priority>
+    </url>
+
+    <!-- 广告披露页面 -->
+    <url>
+        <loc>https://www.deepseekv.pro/advertising-disclosure.html</loc>
+        <lastmod>2026-07-05</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.3</priority>
     </url>
 
 </urlset>
