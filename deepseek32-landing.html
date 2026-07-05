@@ -1547,15 +1547,16 @@ Thinking process:
         </div>
     </section>
 
-    <!-- Ad slot: Native Banner — awaiting Adsterra dashboard code
-     Note: Adsterra API confirms NativeBanner_1 (id=30113316) has empty direct_url,
-     meaning Adsterra serves it via their own CDN (profitabledisplaynetwork.com).
-     Need to retrieve the proper code from beta.publishers.adsterra.com dashboard. -->
+    <!-- Ad: Native Banner (effectivecpmnetwork.com — Adsterra's CDN)
+     NativeBanner_1 (id=30113316) retrieved from beta.publishers.adsterra.com dashboard (2026-07-05).
+     Adsterra uses effectivecpmnetwork.com as the CDN for Native Banner, Social Bar, Popunder,
+     Smartlink across all publisher accounts. -->
 <div class="ad-native-banner" style="background: rgba(0,0,0,0.03); border: 1px dashed rgba(0,0,0,0.1); padding: 0.5rem; margin: 2rem auto; max-width: 1200px; border-radius: 8px;">
     <div style="font-size: 0.7rem; color: #888; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0; text-align: center;">
         SPONSORED · <a href="/advertising-disclosure.html" style="color: #888; text-decoration: underline;">Advertising Disclosure</a>
     </div>
-    <div style="min-height: 60px;"></div>
+    <script async="async" data-cfasync="false" src="https://pl30213815.effectivecpmnetwork.com/ebe954634f6c78466c5e14609e5dd149/invoke.js"></script>
+    <div id="container-ebe954634f6c78466c5e14609e5dd149" style="min-height: 60px;"></div>
 </div>
 
     <script>
@@ -1876,9 +1877,8 @@ Thinking process:
     <!-- Popunder — disabled by user request (2026-07-05).
      Zone (pl30213816) was Adsterra-configured but not desired; see disclosure. -->
 <script src="https://www.effectivecpmnetwork.com/k6mwpc8t?key=ee4176418ab78a252d7b97ece931a5fa"></script>
-    <!-- Social Bar (effectivecpmnetwork.com) — REMOVED.
-       Adsterra API shows SocialBar_1 (id=30113319) has empty direct_url,
-       meaning Adsterra serves it via profitabledisplaynetwork.com CDN.
-       The pl30213818 zone script belonged to a different (incorrect) zone assignment. --><!-- /Ads -->
+    <!-- Ad: Social Bar (effectivecpmnetwork.com — Adsterra's CDN)
+     SocialBar_1 (id=30113319) retrieved from beta.publishers.adsterra.com dashboard (2026-07-05). -->
+<script src="https://pl30213818.effectivecpmnetwork.com/74/61/a5/7461a528560e86fb15b2e286cd2dbeff.js"></script><!-- /Ads -->
 </body>
 </html>
