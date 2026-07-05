@@ -6,8 +6,8 @@
     <title id="page-title">deepseekv3.2 - 开源AI模型 | GPT-5级推理能力</title>
     
     <!-- SEO Meta Tags -->
-    <meta name="description" id="meta-description" content="deepseek 3.2开源AI模型，推理能力对标GPT-5。DSA机制成本降60%，速度提升3.5倍。Speciale版国际竞赛金牌，完全开源性价比高。">
-    <meta name="keywords" id="meta-keywords" content="deepseek 3.2, 开源大语言模型, GPT-5替代, AI助手, 深度思考模式, DSA机制, 128K上下文">
+    <meta name="description" id="meta-description" content="DeepSeek 开源大模型生态站：V3.2 推理对标 GPT-5（128K 上下文），V4 已发布（V4-Pro 1.6T/49B + V4-Flash 284B/13B，1M 上下文标配，LiveCodeBench 93.5% / Codeforces 3206）。2026-07-24 旧 deepseek-chat API 停止使用，迁移指南与对比评测全套。" >
+    <meta name="keywords" id="meta-keywords" content="DeepSeek, deepseek 3.2, DeepSeek V4, V4-Pro, V4-Flash, 1M token context, deepseek-chat migration, deepseek-v4 vs gpt-5, deepseek v4 coding benchmark, LiveCodeBench, Codeforces 3206, MIT 开源, 7-24 API 弃用, 多模态识图, AI 编程">
     <meta name="author" content="DeepSeek Technologies">
     <meta name="robots" content="index, follow">
     <meta name="language" content="en">
@@ -53,6 +53,48 @@
     
     <!-- Canonical URL -->
     <link rel="canonical" href="https://deepseekv.pro/">
+
+    <!-- Schema.org: FAQPage -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is DeepSeek V4?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "DeepSeek V4 is the latest flagship open-source LLM released April 24, 2026 by DeepSeek (深度求索). It comes in two versions: V4-Pro (1.6T total / 49B activated parameters) and V4-Flash (284B / 13B). Both ship with 1M token context standard, MIT open source license, and hybrid attention architecture (CSA + HCA + SWA). V4-Pro-Max achieves LiveCodeBench 93.5%, Codeforces Rating 3206 (surpassing Claude Opus 4.6 and Gemini-3.1-Pro), and SWE-bench Verified 80.6%."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "When does deepseek-chat get deprecated?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "deepseek-chat and deepseek-reasoner are deprecated on 2026-07-24 15:59 UTC. They currently map to V4-Flash non-thinking and thinking modes. Migration only requires changing the model parameter (to deepseek-v4-flash or deepseek-v4-pro), base_url stays the same (https://api.deepseek.com for OpenAI, https://api.deepseek.com/anthropic for Anthropic). See the full migration guide."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is DeepSeek V4 open source?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. V4 series is MIT licensed — both model weights and technical report are published on Hugging Face. Developers can freely commercialize, modify, and deploy. Native support for Ascend and Cambricon domestic chips makes V4 especially suited for compliance-sensitive industries (finance, healthcare, government-enterprise) in China."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does DeepSeek V4 compare to GPT-5 and Claude Opus 4.6?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "On coding benchmarks: V4-Pro leads with LiveCodeBench 93.5% and Codeforces 3206 (above both). GPT-5.5 leads on math (MATH-500 ~92%) and multimodal (native audio/video). Claude Opus 4.6 ties V4 on SWE-bench (80.8% vs 80.6%) and is more stable on the hardest tail tasks. V4 wins on Chinese (94.25% vs ~91-92%) and price ($0.87/MTok output vs GPT-5.5's $10 and Claude's $75). For long-context (1M tokens), V4 and Gemini 3.1 Pro are in the same tier, but V4 is about 1/12 the price of Gemini."
+          }
+        }
+      ]
+    }
+    </script>
     
     <!-- Robots and Sitemap -->
     <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
@@ -1003,6 +1045,48 @@
         </div>
     </section>
 
+    <!-- Latest Insights: V4 7-24 迁移 + V4 各主题深度页 -->
+    <section class="section" style="background: linear-gradient(135deg, rgba(0,102,255,0.05) 0%, rgba(0,82,204,0.02) 100%);">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2 data-zh="📌 最新洞察" data-en="📌 Latest Insights">📌 Latest Insights</h2>
+                <p class="section-subtitle" data-zh="DeepSeek V4 已发布 + 2026-07-24 旧 API 弃用倒计时：迁移指南、对比评测、编程与长上下文深度。" data-en="DeepSeek V4 released + 2026-07-24 legacy API deprecation countdown: migration guide, comparison, coding and long-context deep-dives.">DeepSeek V4 released + 2026-07-24 legacy API deprecation countdown: migration guide, comparison, coding and long-context deep-dives.</p>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
+                <a href="/deepseek-v3-to-v4-migration.html" style="display: block; background: rgba(255,107,107,0.08); border: 2px solid #ff6b6b; border-radius: 12px; padding: 1.5rem; text-decoration: none; color: inherit; transition: all 0.3s;">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">⏰</div>
+                    <h3 style="color: #ff6b6b; font-size: 1.1rem; margin-bottom: 0.5rem;" data-zh="迁移指南（19 天倒计时）" data-en="Migration Guide (19 days)">Migration Guide (19 days)</h3>
+                    <p style="color: var(--t1); font-size: 0.9rem;" data-zh="deepseek-chat / deepseek-reasoner 2026-07-24 停止使用。代码示例 + 迁移清单。" data-en="deepseek-chat / deepseek-reasoner deprecated 2026-07-24. Code examples + migration checklist.">deepseek-chat / deepseek-reasoner deprecated 2026-07-24. Code examples + migration checklist.</p>
+                </a>
+                <a href="/deepseek-v4.html" style="display: block; background: var(--b1); border: 1px solid var(--bd); border-radius: 12px; padding: 1.5rem; text-decoration: none; color: inherit; transition: all 0.3s;">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🚀</div>
+                    <h3 style="color: var(--p); font-size: 1.1rem; margin-bottom: 0.5rem;" data-zh="V4 已发布专题" data-en="V4 Released Overview">V4 Released Overview</h3>
+                    <p style="color: var(--t1); font-size: 0.9rem;" data-zh="V4-Pro 与 V4-Flash 双版本，1M 上下文，LiveCodeBench 93.5%，MIT 开源。" data-en="V4-Pro and V4-Flash, 1M context, LiveCodeBench 93.5%, MIT open source.">V4-Pro and V4-Flash, 1M context, LiveCodeBench 93.5%, MIT open source.</p>
+                </a>
+                <a href="/deepseek-v4-coding-benchmark.html" style="display: block; background: var(--b1); border: 1px solid var(--bd); border-radius: 12px; padding: 1.5rem; text-decoration: none; color: inherit; transition: all 0.3s;">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">💻</div>
+                    <h3 style="color: var(--p); font-size: 1.1rem; margin-bottom: 0.5rem;" data-zh="编程能力深度评测" data-en="Coding Benchmark Deep-Dive">Coding Benchmark Deep-Dive</h3>
+                    <p style="color: var(--t1); font-size: 0.9rem;" data-zh="Codeforces 3206 超 Claude Opus 4.6。6 个真实测试案例。" data-en="Codeforces 3206 surpasses Claude Opus 4.6. 6 real test cases.">Codeforces 3206 surpasses Claude Opus 4.6. 6 real test cases.</p>
+                </a>
+                <a href="/deepseek-v4-vs-gpt5-vs-claude.html" style="display: block; background: var(--b1); border: 1px solid var(--bd); border-radius: 12px; padding: 1.5rem; text-decoration: none; color: inherit; transition: all 0.3s;">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">⚖️</div>
+                    <h3 style="color: var(--p); font-size: 1.1rem; margin-bottom: 0.5rem;" data-zh="V4 vs GPT-5 vs Claude" data-en="V4 vs GPT-5 vs Claude">V4 vs GPT-5 vs Claude</h3>
+                    <p style="color: var(--t1); font-size: 0.9rem;" data-zh="三大前沿模型横向对比：编程 / 推理 / 中文 / 价格。" data-en="Three frontier models compared: coding, reasoning, Chinese, pricing.">Three frontier models compared: coding, reasoning, Chinese, pricing.</p>
+                </a>
+                <a href="/deepseek-v4-long-context.html" style="display: block; background: var(--b1); border: 1px solid var(--bd); border-radius: 12px; padding: 1.5rem; text-decoration: none; color: inherit; transition: all 0.3s;">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">📏</div>
+                    <h3 style="color: var(--p); font-size: 1.1rem; margin-bottom: 0.5rem;" data-zh="1M 上下文长文档" data-en="1M Context Long Docs">1M Context Long Docs</h3>
+                    <p style="color: var(--t1); font-size: 0.9rem;" data-zh="百万 token 检索 83.5%。97 万字 7 秒响应。" data-en="1M token retrieval 83.5%. 970K chars in 7 seconds.">1M token retrieval 83.5%. 970K chars in 7 seconds.</p>
+                </a>
+                <a href="/deepseek-v3-to-v4-migration.html#pricing" style="display: block; background: var(--b1); border: 1px solid var(--bd); border-radius: 12px; padding: 1.5rem; text-decoration: none; color: inherit; transition: all 0.3s;">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">💰</div>
+                    <h3 style="color: var(--p); font-size: 1.1rem; margin-bottom: 0.5rem;" data-zh="V4 价格表" data-en="V4 Pricing">V4 Pricing</h3>
+                    <p style="color: var(--t1); font-size: 0.9rem;" data-zh="Flash \$0.28 / Pro \$0.87 输出每 MTok，仅 Claude 1/86。" data-en="Flash $0.28 / Pro $0.87 output per MTok, only 1/86 of Claude.">Flash $0.28 / Pro $0.87 output per MTok, only 1/86 of Claude.</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
     <!-- 核心优势 -->
     <section id="features" class="section">
         <div class="container">
@@ -1432,12 +1516,40 @@ Thinking process:
                     <i class="ri-camera-line" style="color: var(--p); font-size: 1.2rem;"></i>
                     <span data-zh="订婚摄影" data-en="Engagement Photos">订婚摄影</span>
                 </a>
-                <a href="https://cursorhero.com/" target="_blank" rel="nofollow noopener" 
-                   style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--bd); border-radius: 12px; 
+                <a href="https://cursorhero.com/" target="_blank" rel="nofollow noopener"
+                   style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--bd); border-radius: 12px;
                           padding: 1rem 1.5rem; text-decoration: none; color: var(--t1); transition: all 0.3s ease;
                           display: flex; align-items: center; gap: 0.5rem;">
                     <i class="ri-cursor-line" style="color: var(--p); font-size: 1.2rem;"></i>
                     <span data-zh="AI 鼠标光标" data-en="AI Cursor Generator">AI 鼠标光标</span>
+                </a>
+                <a href="/deepseek-v3-to-v4-migration.html" rel="noopener"
+                   style="background: rgba(255, 107, 107, 0.08); border: 1px solid #ff6b6b; border-radius: 12px;
+                          padding: 1rem 1.5rem; text-decoration: none; color: var(--t0); transition: all 0.3s ease;
+                          display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="ri-arrow-right-circle-line" style="color: #ff6b6b; font-size: 1.2rem;"></i>
+                    <span data-zh="V3→V4 迁移指南" data-en="V3→V4 Migration Guide">V3→V4 迁移指南</span>
+                </a>
+                <a href="/deepseek-v4-vs-gpt5-vs-claude.html" rel="noopener"
+                   style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--bd); border-radius: 12px;
+                          padding: 1rem 1.5rem; text-decoration: none; color: var(--t1); transition: all 0.3s ease;
+                          display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="ri-scales-3-line" style="color: var(--p); font-size: 1.2rem;"></i>
+                    <span data-zh="V4 vs GPT-5 vs Claude" data-en="V4 vs GPT-5 vs Claude">V4 vs GPT-5 vs Claude</span>
+                </a>
+                <a href="/deepseek-v4-coding-benchmark.html" rel="noopener"
+                   style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--bd); border-radius: 12px;
+                          padding: 1rem 1.5rem; text-decoration: none; color: var(--t1); transition: all 0.3s ease;
+                          display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="ri-code-s-slash-line" style="color: var(--p); font-size: 1.2rem;"></i>
+                    <span data-zh="V4 编程能力评测" data-en="V4 Coding Benchmark">V4 编程能力评测</span>
+                </a>
+                <a href="/deepseek-v4-long-context.html" rel="noopener"
+                   style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--bd); border-radius: 12px;
+                          padding: 1rem 1.5rem; text-decoration: none; color: var(--t1); transition: all 0.3s ease;
+                          display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="ri-text-spacing" style="color: var(--p); font-size: 1.2rem;"></i>
+                    <span data-zh="V4 1M 长文档" data-en="V4 1M Long Context">V4 1M 长文档</span>
                 </a>
             </div>
         </div>
