@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeepSeek V4 vs GPT-5 vs Claude Opus 4.6: 2026 LLM Comparison</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" id="meta-description" content="DeepSeek V4 vs GPT-5.5 vs Claude Opus 4.6: coding benchmark (LiveCodeBench 93.5%, Codeforces 3206, SWE-bench 80.6%), 1M token context, Chinese capability, pricing per million tokens ($0.14 vs $1.25 vs $15), and real test cases compared.">
+    <meta name="keywords" id="meta-keywords" content="DeepSeek V4 vs GPT-5, DeepSeek vs Claude Opus 4.6, LLM comparison 2026, DeepSeek V4 benchmark, GPT-5.5 vs Claude 4.6, AI coding comparison, 1M token context, open source LLM, Chinese AI model, DeepSeek V4-Pro, DeepSeek V4-Flash">
+    <meta name="author" content="DeepSeek V Pro">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+    <meta name="language" content="en">
+
+    <!-- Open Graph -->
+    <meta property="og:title" id="og-title" content="DeepSeek V4 vs GPT-5 vs Claude Opus 4.6: 2026 LLM Comparison">
+    <meta property="og:description" id="og-description" content="V4-Pro hits LiveCodeBench 93.5% and Codeforces 3206. GPT-5.5 leads on math, Claude on long-context. V4 wins on Chinese + price. Full benchmark + real test cases.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://deepseekv.pro/deepseek-v4-vs-gpt5-vs-claude.html">
+    <meta property="og:image" content="https://deepseekv.pro/images/deepseek-comparison-og.jpg">
+    <meta property="og:site_name" content="DeepSeek V Pro">
+    <meta property="article:published_time" content="2026-04-24">
+    <meta property="article:modified_time" content="2026-07-05">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" id="twitter-title" content="DeepSeek V4 vs GPT-5 vs Claude Opus 4.6">
+    <meta name="twitter:description" content="LiveCodeBench 93.5% vs GPT-5.5 ~90% vs Claude 4.6 ~88%. 1M context. Open source MIT. Price 1/10 of Claude.">
+
+    <meta name="theme-color" content="#0066FF">
+
+    <!-- Schema.org: TechArticle -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": "DeepSeek V4 vs GPT-5 vs Claude Opus 4.6: 2026 LLM Comparison",
+      "description": "Comprehensive 2026 comparison of DeepSeek V4, GPT-5.5, and Claude Opus 4.6 across coding benchmarks, math reasoning, long-context, Chinese capability, pricing, and response speed.",
+      "author": {"@type": "Organization", "name": "DeepSeek V Pro"},
+      "publisher": {"@type": "Organization", "name": "DeepSeek V Pro"},
+      "datePublished": "2026-04-24",
+      "dateModified": "2026-07-05",
+      "mainEntityOfPage": {"@type": "WebPage", "@id": "https://deepseekv.pro/deepseek-v4-vs-gpt5-vs-claude.html"},
+      "keywords": "DeepSeek V4, GPT-5, Claude Opus 4.6, LLM comparison, LiveCodeBench, Codeforces, 1M context",
+      "articleSection": "AI Model Comparison",
+      "inLanguage": "en"
+    }
+    </script>
+
+    <!-- Schema.org: FAQPage -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is DeepSeek V4 better than GPT-5?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It depends on the task. DeepSeek V4-Pro beats GPT-5.4 on LiveCodeBench (93.5% vs ~90%) and Codeforces Rating (3206 vs 3168), ties on SWE-bench (80.6% vs ~80%), but GPT-5.5 leads on math reasoning (93.25% vs 88.25% comprehensive). For Chinese tasks, V4 is clearly stronger. For cost-sensitive production deployment, V4 wins by 5-10x on price."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is DeepSeek V4 better than Claude Opus 4.6?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "On coding benchmarks V4-Pro-Max ties Claude Opus 4.6 (SWE-bench 80.6% vs 80.8%) and exceeds it on Codeforces (3206 vs ~3000). Claude leads on multi-step reasoning stability (V4 completed 29/38 tasks, Claude 38/38 in one study). Claude's API costs ~10x more ($75/MTok output vs $0.87 for V4-Pro). V4 is MIT open source, Claude is closed."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which has the longest context window?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "DeepSeek V4 (both Pro and Flash) and Claude Opus 4.7 all support 1M tokens. GPT-5.5 supports 400K. Gemini 3.1 Pro also supports 1M. For 1M-token retrieval accuracy (MRCR benchmark), V4 scores 83.5%, surpassing GPT-5.5 at 69.8%."
+          }
+        }
+      ]
+    }
+    </script>
+
+    <link rel="canonical" href="https://deepseekv.pro/deepseek-v4-vs-gpt5-vs-claude.html">
+
+    <!-- Google tag -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PMY0EV67Q2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-PMY0EV67Q2');
+    </script>
+
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%230066FF;stop-opacity:1'/%3E%3Cstop offset='100%25' style='stop-color:%230044CC;stop-opacity:1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='6' fill='url(%23bg)'/%3E%3Cg transform='translate(16,16)'%3E%3Ctext x='16' y='20' font-family='Arial,sans-serif' font-size='7' font-weight='bold' text-anchor='middle' fill='%23FFFFFF'%3EVS%3C/text%3E%3C/g%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+
+    <style>
+        :root {
+            --p: #0066FF;
+            --p-light: #3385FF;
+            --t0: #ffffff;
+            --t1: rgba(255,255,255,0.85);
+            --b1: rgba(255,255,255,0.05);
+            --b2: rgba(255,255,255,0.08);
+            --bd: rgba(255,255,255,0.1);
+            --g-b: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.7; color: var(--t0); background: var(--g-b); overflow-x: hidden; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+        .section { padding: 4rem 0; }
+        a { color: var(--p); text-decoration: none; }
+        a:hover { color: var(--p-light); }
+
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(10,14,39,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--bd); padding: 1rem 2rem; }
+        .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.4rem; font-weight: 700; color: var(--p); }
+        .nav-links { display: flex; gap: 2rem; list-style: none; }
+        .nav-links a { color: var(--t1); font-size: 0.95rem; }
+        .nav-links a:hover { color: var(--p); }
+        .lang-switcher { background: var(--b2); border: 1px solid var(--bd); border-radius: 8px; padding: 0.4rem 0.8rem; cursor: pointer; color: var(--t0); font-size: 0.9rem; display: flex; align-items: center; gap: 0.4rem; }
+
+        .hero { min-height: 50vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 7rem 2rem 3rem; }
+        .hero h1 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; background: linear-gradient(135deg, var(--p), #00d4ff); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem; line-height: 1.2; }
+        .hero .subtitle { font-size: clamp(1rem, 2vw, 1.2rem); color: var(--t1); max-width: 850px; margin-bottom: 1.5rem; }
+        .quick-answer { background: var(--b1); border: 1px solid var(--p); border-radius: 12px; padding: 1.25rem 1.5rem; margin: 1.5rem 0; max-width: 800px; text-align: left; }
+        .quick-answer strong { color: var(--p); }
+
+        .section-header { margin-bottom: 2.5rem; text-align: center; }
+        .section-header h2 { font-size: clamp(1.6rem, 3.5vw, 2.2rem); margin-bottom: 0.75rem; color: var(--t0); }
+        .section-header p { color: var(--t1); font-size: 1.05rem; max-width: 750px; margin: 0 auto; }
+
+        .comparison-table-wrapper { overflow-x: auto; margin: 2rem 0; border-radius: 12px; }
+        .comparison-table { width: 100%; border-collapse: collapse; background: var(--b1); }
+        .comparison-table th { background: var(--p); color: white; padding: 0.9rem 1rem; text-align: left; font-weight: 600; font-size: 0.95rem; }
+        .comparison-table td { padding: 0.85rem 1rem; border-bottom: 1px solid var(--bd); color: var(--t1); font-size: 0.95rem; }
+        .comparison-table tr:last-child td { border-bottom: none; }
+        .comparison-table tr:hover { background: rgba(0,102,255,0.06); }
+        .comparison-table .v4 { color: var(--p); font-weight: 600; }
+        .comparison-table .winner { background: rgba(0,212,255,0.1); }
+        .comparison-table code { background: rgba(0,102,255,0.12); padding: 0.1rem 0.4rem; border-radius: 3px; font-family: monospace; font-size: 0.9em; color: var(--p-light); }
+
+        .scenario-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+        .scenario-card { background: var(--b1); border: 1px solid var(--bd); border-radius: 12px; padding: 1.5rem; }
+        .scenario-card .icon { font-size: 2rem; margin-bottom: 0.5rem; }
+        .scenario-card h4 { color: var(--t0); margin-bottom: 0.5rem; }
+        .scenario-card p { color: var(--t1); font-size: 0.95rem; line-height: 1.5; }
+        .scenario-card .winner-tag { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600; margin-top: 0.5rem; }
+        .scenario-card .v4-wins { background: rgba(0,212,255,0.2); color: var(--p-light); }
+        .scenario-card .gpt-wins { background: rgba(16,163,127,0.2); color: #10a37f; }
+        .scenario-card .claude-wins { background: rgba(204,102,51,0.2); color: #cc6633; }
+        .scenario-card .tied { background: rgba(128,128,128,0.2); color: #888; }
+
+        .faq-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-top: 2rem; }
+        .faq-item { background: var(--b1); border: 1px solid var(--bd); border-radius: 12px; padding: 1.5rem; }
+        .faq-item h4 { color: var(--p); margin-bottom: 0.75rem; font-size: 1.1rem; }
+        .faq-item p { color: var(--t1); }
+        .faq-item code { background: rgba(0,102,255,0.12); padding: 0.05rem 0.3rem; border-radius: 3px; font-family: monospace; font-size: 0.9em; color: var(--p-light); }
+
+        .insight-box { background: linear-gradient(135deg, rgba(0,102,255,0.15), rgba(0,212,255,0.08)); border: 1px solid var(--p); border-radius: 12px; padding: 1.5rem; margin: 2rem 0; }
+        .insight-box h4 { color: var(--p-light); margin-bottom: 0.75rem; }
+        .insight-box p { color: var(--t1); }
+
+        footer { background: rgba(0,0,0,0.5); padding: 3rem 2rem 2rem; margin-top: 4rem; text-align: center; }
+        footer p { color: var(--t1); font-size: 0.9rem; margin-bottom: 1rem; }
+        footer .links { display: flex; justify-content: center; flex-wrap: wrap; gap: 1.5rem; margin-bottom: 1rem; }
+        footer .links a { color: var(--t1); font-size: 0.9rem; }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .container { padding: 0 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-inner">
+            <a href="/" class="logo">DeepSeek V4</a>
+            <ul class="nav-links">
+                <li><a href="#specs" data-zh="规格对比" data-en="Specs">Specs</a></li>
+                <li><a href="#coding" data-zh="编程能力" data-en="Coding">Coding</a></li>
+                <li><a href="#reasoning" data-zh="推理与中文" data-en="Reasoning">Reasoning</a></li>
+                <li><a href="#context" data-zh="长文本" data-en="Long Context">Long Context</a></li>
+                <li><a href="#price" data-zh="价格" data-en="Pricing">Pricing</a></li>
+                <li><a href="#scenarios" data-zh="适用场景" data-en="Scenarios">Scenarios</a></li>
+                <li><a href="#faq" data-en="FAQ">FAQ</a></li>
+            </ul>
+            <div class="lang-switcher" onclick="toggleLanguage()">
+                <span>🌐</span>
+                <span id="current-lang">English</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <h1 data-zh="DeepSeek V4 vs GPT-5 vs Claude Opus 4.6（2026）" data-en="DeepSeek V4 vs GPT-5 vs Claude Opus 4.6 (2026)">DeepSeek V4 vs GPT-5 vs Claude Opus 4.6 (2026)</h1>
+        <p class="subtitle" data-zh="三大前沿模型横向对比：编程 / 推理 / 长文本 / 中文 / 价格。" data-en="Three frontier models compared head-to-head: coding, reasoning, long-context, Chinese, pricing.">Three frontier models compared head-to-head: coding, reasoning, long-context, Chinese, pricing.</p>
+
+        <div class="quick-answer">
+            <p style="margin: 0; line-height: 1.7;"><strong data-zh="一句话结论：" data-en="One-line conclusion:">One-line conclusion:</strong> <span data-zh="V4 编程开源领先、中文最强、价格仅 Claude 1/10；GPT-5.5 在数学与多模态最强；Claude 在长链推理稳定性与生态成熟度领先。三者不是替代关系，是不同分工。" data-en="V4 leads open-source coding + Chinese + price (1/10 of Claude); GPT-5.5 wins on math + multimodal; Claude leads long-chain reasoning stability + ecosystem maturity. These three complement rather than replace each other.">V4 leads open-source coding + Chinese + price (1/10 of Claude); GPT-5.5 wins on math + multimodal; Claude leads long-chain reasoning stability + ecosystem maturity. These three complement rather than replace each other.</span></p>
+        </div>
+
+        <div style="display: flex; gap: 0.8rem; flex-wrap: wrap; justify-content: center; margin-top: 1rem;">
+            <a href="/deepseek-v4.html" class="btn" style="background: var(--p); color: white; padding: 0.7rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600;" data-zh="V4 完整介绍" data-en="V4 Full Overview">V4 Full Overview</a>
+            <a href="/deepseek-v4-coding-benchmark.html" class="btn" style="background: var(--b2); color: var(--t0); padding: 0.7rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; border: 1px solid var(--bd);" data-zh="编程深度评测" data-en="Coding Deep-Dive">Coding Deep-Dive</a>
+        </div>
+    </section>
+
+    <!-- Core Specs -->
+    <section id="specs" class="container section">
+        <div class="section-header">
+            <h2 data-zh="📋 核心规格对比" data-en="📋 Core Specification Comparison">📋 Core Specification Comparison</h2>
+            <p data-zh="含 2026 年最新公开数据。" data-en="Latest public data as of 2026.">Latest public data as of 2026.</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th data-zh="维度" data-en="Dimension">Dimension</th>
+                        <th>DeepSeek V4-Pro</th>
+                        <th>GPT-5.5</th>
+                        <th>Claude Opus 4.6</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong data-zh="厂商" data-en="Vendor">Vendor</strong></td>
+                        <td class="v4">DeepSeek（中国）</td>
+                        <td>OpenAI（美国）</td>
+                        <td>Anthropic（美国）</td>
+                    </tr>
+                    <tr>
+                        <td><strong data-zh="总参数 / 激活" data-en="Total / Activated">Total / Activated</strong></td>
+                        <td class="v4">1.6T / 49B</td>
+                        <td data-zh="未公开" data-en="Undisclosed">Undisclosed</td>
+                        <td data-zh="未公开" data-en="Undisclosed">Undisclosed</td>
+                    </tr>
+                    <tr>
+                        <td><strong data-zh="上下文窗口" data-en="Context window">Context window</strong></td>
+                        <td class="v4 winner">1,000,000 tokens</td>
+                        <td>400,000 tokens</td>
+                        <td>200,000 tokens (4.7: 1M)</td>
+                    </tr>
+                    <tr>
+                        <td><strong data-zh="最大输出" data-en="Max output">Max output</strong></td>
+                        <td class="v4 winner">384K</td>
+                        <td>128K</td>
+                        <td>128K</td>
+                    </tr>
+                    <tr>
+                        <td><strong data-zh="多模态" data-en="Multimodal">Multimodal</strong></td>
+                        <td data-zh="文本 + 识图" data-en="Text + Image">Text + Image</td>
+                        <td class="winner" data-zh="文本 + 图 + 音 + 视频" data-en="Text + Image + Audio + Video">Text + Image + Audio + Video</td>
+                        <td data-zh="文本 + 图" data-en="Text + Image">Text + Image</td>
+                    </tr>
+                    <tr>
+                        <td><strong data-zh="协议" data-en="License">License</strong></td>
+                        <td class="v4 winner" data-zh="MIT 开源" data-en="MIT open source">MIT open source</td>
+                        <td data-zh="闭源" data-en="Closed">Closed</td>
+                        <td data-zh="闭源" data-en="Closed">Closed</td>
+                    </tr>
+                    <tr>
+                        <td><strong data-zh="输入价格 / MTok" data-en="Input price / MTok">Input price / MTok</strong></td>
+                        <td class="v4 winner">$0.435</td>
+                        <td>$1.25</td>
+                        <td>$15.00</td>
+                    </tr>
+                    <tr>
+                        <td><strong data-zh="输出价格 / MTok" data-en="Output price / MTok">Output price / MTok</strong></td>
+                        <td class="v4 winner">$0.87</td>
+                        <td>$10.00</td>
+                        <td>$75.00</td>
+                    </tr>
+                    <tr>
+                        <td><strong data-zh="思考模式" data-en="Thinking mode">Thinking mode</strong></td>
+                        <td class="v4" data-zh="支持（high/max）" data-en="Yes (high/max)">Yes (high/max)</td>
+                        <td data-zh="支持（路由）" data-en="Yes (router)">Yes (router)</td>
+                        <td data-zh="支持（extended thinking）" data-en="Yes (extended)">Yes (extended)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p style="margin-top: 1rem; color: var(--t1); font-size: 0.9rem;" data-zh="数据来源：DeepSeek 官方 API 文档、Anthropic、OpenAI、pricepertoken.com、benchlm.ai，2026 年 5 月数据。V4 走 MIT 开源协议，本地部署零授权费。" data-en="Source: DeepSeek official docs, Anthropic, OpenAI, pricepertoken.com, benchlm.ai — May 2026 data. V4 is MIT licensed; local deployment has zero license cost.">Source: DeepSeek official docs, Anthropic, OpenAI, pricepertoken.com, benchlm.ai — May 2026 data. V4 is MIT licensed; local deployment has zero license cost.</p>
+    </section>
+
+    <!-- Coding -->
+    <section id="coding" class="container section">
+        <div class="section-header">
+            <h2 data-zh="💻 编程能力对比" data-en="💻 Coding Capability Comparison">💻 Coding Capability Comparison</h2>
+            <p data-zh="V4 在开源阵营领先；GPT-5.5 与 Claude 4.6 在闭源侧各有强项。" data-en="V4 leads the open-source camp; GPT-5.5 and Claude 4.6 each have their strengths on the closed-source side.">V4 leads the open-source camp; GPT-5.5 and Claude 4.6 each have their strengths on the closed-source side.</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th data-zh="基准" data-en="Benchmark">Benchmark</th>
+                        <th data-zh="类别" data-en="Category">Category</th>
+                        <th>DeepSeek V4-Pro-Max</th>
+                        <th>GPT-5.5</th>
+                        <th>Claude Opus 4.6</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>LiveCodeBench</td>
+                        <td data-zh="实时编程" data-en="Live Coding">Live Coding</td>
+                        <td class="v4 winner">93.5%</td>
+                        <td>~90%</td>
+                        <td>~88%</td>
+                    </tr>
+                    <tr>
+                        <td>Codeforces Rating</td>
+                        <td data-zh="竞赛编程" data-en="Competitive Programming">Competitive Programming</td>
+                        <td class="v4 winner">3206</td>
+                        <td>3168</td>
+                        <td>~3000</td>
+                    </tr>
+                    <tr>
+                        <td>SWE-bench Verified</td>
+                        <td data-zh="真实软件工程" data-en="Real Software Engineering">Real Software Engineering</td>
+                        <td>80.6%</td>
+                        <td>~80%</td>
+                        <td class="winner">80.8%</td>
+                    </tr>
+                    <tr>
+                        <td>HumanEval pass@1</td>
+                        <td data-zh="代码生成" data-en="Code Generation">Code Generation</td>
+                        <td class="v4 winner">90.8%</td>
+                        <td>90.2%</td>
+                        <td>~88%</td>
+                    </tr>
+                    <tr>
+                        <td>AIME 2026</td>
+                        <td data-zh="数学竞赛" data-en="Math Competition">Math Competition</td>
+                        <td class="v4">99.4%</td>
+                        <td class="winner">~99%</td>
+                        <td data-zh="接近" data-en="Near">~98%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="insight-box">
+            <h4 data-zh="💡 关键洞察" data-en="💡 Key insight">💡 Key insight</h4>
+            <p data-zh="V4-Pro-Max 在 LiveCodeBench、Codeforces、HumanEval 三项编程基准上领先开源模型（也超过部分闭源模型），SWE-bench 与 Claude 4.6 仅差 0.2 个百分点。但一项第三方实测（38 项任务）显示：V4 完成 29/38（76%），Claude 完成 38/38（100%）——V4 平均分高，但最难的尾部任务 Claude 更稳。日常编程任务 V4 够用，复杂多文件重构建议 Claude 兜底。" data-en="V4-Pro-Max leads on LiveCodeBench, Codeforces, and HumanEval among open-source models (and exceeds some closed-source models), with SWE-bench just 0.2 points behind Claude 4.6. But one third-party test (38 tasks) showed V4 completed 29/38 (76%) while Claude completed 38/38 (100%) — V4 averages higher but Claude is more reliable on the hardest tail tasks. V4 handles daily coding; Claude is the safety net for complex multi-file refactors.">V4-Pro-Max leads on LiveCodeBench, Codeforces, and HumanEval among open-source models (and exceeds some closed-source models), with SWE-bench just 0.2 points behind Claude 4.6. But one third-party test (38 tasks) showed V4 completed 29/38 (76%) while Claude completed 38/38 (100%) — V4 averages higher but Claude is more reliable on the hardest tail tasks. V4 handles daily coding; Claude is the safety net for complex multi-file refactors.</p>
+        </div>
+
+        <p style="color: var(--t1); margin-top: 1rem;" data-zh="看 V4 编程详细评测（含更多实测案例）→ <a href='/deepseek-v4-coding-benchmark.html'>编程能力深度评测</a>" data-en="V4 coding detailed test (with more case studies) → <a href='/deepseek-v4-coding-benchmark.html'>coding benchmark page</a>">V4 coding detailed test (with more case studies) → <a href='/deepseek-v4-coding-benchmark.html'>coding benchmark page</a></p>
+    </section>
+
+    <!-- Reasoning & Chinese -->
+    <section id="reasoning" class="container section">
+        <div class="section-header">
+            <h2 data-zh="🧠 推理能力 + 中文" data-en="🧠 Reasoning + Chinese Capability">🧠 Reasoning + Chinese Capability</h2>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th data-zh="维度" data-en="Dimension">Dimension</th>
+                        <th>DeepSeek V4-Pro</th>
+                        <th>GPT-5.5</th>
+                        <th>Claude Opus 4.6</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>MMLU-Pro</strong> <span data-zh="（多学科推理）" data-en="(multi-subject)">(multi-subject)</span></td>
+                        <td>87.5%</td>
+                        <td class="winner">~89%</td>
+                        <td>~88%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>MATH-500</strong> <span data-zh="（数学综合）" data-en="(math)">(math)</span></td>
+                        <td>~88%</td>
+                        <td class="winner">~92%</td>
+                        <td>~90%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>GPQA</strong> <span data-zh="（博士级科学推理）" data-en="(PhD-level science)">(PhD-level science)</span></td>
+                        <td>~72%</td>
+                        <td class="winner">~78%</td>
+                        <td>~75%</td>
+                    </tr>
+                    <tr>
+                        <td><strong data-zh="中文理解与生成" data-en="Chinese understanding">Chinese understanding</strong></td>
+                        <td class="v4 winner">94.25%</td>
+                        <td>92.25%</td>
+                        <td>91.0%</td>
+                    </tr>
+                    <tr>
+                        <td><strong data-zh="响应速度（首字延迟）" data-en="Response speed (TTFT)">Response speed (TTFT)</strong></td>
+                        <td class="v4 winner">0.6s</td>
+                        <td>0.8s</td>
+                        <td>2.4s</td>
+                    </tr>
+                    <tr>
+                        <td><strong data-zh="稳定性（72h）" data-en="Stability (72h)">Stability (72h)</strong></td>
+                        <td class="v4 winner">99.5%</td>
+                        <td>99.2%</td>
+                        <td>96.8%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="insight-box">
+            <h4 data-zh="💡 中文能力的隐性优势" data-en="💡 Chinese capability's hidden advantage">💡 Chinese capability's hidden advantage</h4>
+            <p data-zh="V4 中文评测 94.25% 领先 GPT-5.5 与 Claude 4.6 约 2-3 个百分点——但更重要的是，V4 在中文指令遵循、口语化表达、本土化场景理解上明显优于两个美国模型。这一点对做国内市场的开发者是隐性优势：很多边缘 case（方言、本地习俗、特定行业术语）只有中文团队训练的模型才能稳定处理。" data-en="V4's Chinese score of 94.25% leads GPT-5.5 and Claude 4.6 by 2-3 percentage points — but more importantly, V4 is significantly better at Chinese instruction following, colloquial expression, and localized scenario understanding. This is a hidden advantage for developers in the Chinese market: many edge cases (dialects, local customs, specific industry terminology) are only stable in models trained by Chinese teams.">V4's Chinese score of 94.25% leads GPT-5.5 and Claude 4.6 by 2-3 percentage points — but more importantly, V4 is significantly better at Chinese instruction following, colloquial expression, and localized scenario understanding. This is a hidden advantage for developers in the Chinese market: many edge cases (dialects, local customs, specific industry terminology) are only stable in models trained by Chinese teams.</p>
+        </div>
+    </section>
+
+    <!-- Long Context -->
+    <section id="context" class="container section">
+        <div class="section-header">
+            <h2 data-zh="📏 长上下文对比" data-en="📏 Long Context Comparison">📏 Long Context Comparison</h2>
+            <p data-zh="V4 在百万上下文第一梯队，价格仅 Gemini 的 1/20。" data-en="V4 is in the 1M context first tier, priced at only 1/20 of Gemini.">V4 is in the 1M context first tier, priced at only 1/20 of Gemini.</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th data-zh="指标" data-en="Metric">Metric</th>
+                        <th>DeepSeek V4</th>
+                        <th>GPT-5.5</th>
+                        <th>Claude Opus 4.7</th>
+                        <th>Gemini 3.1 Pro</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong data-zh="最大上下文" data-en="Max context">Max context</strong></td>
+                        <td class="v4 winner">1M</td>
+                        <td>400K</td>
+                        <td>1M</td>
+                        <td class="winner">1M</td>
+                    </tr>
+                    <tr>
+                        <td><strong>MRCR 1M</strong> <span data-zh="（百万上下文检索）" data-en="(1M retrieval)">(1M retrieval)</span></td>
+                        <td class="v4 winner">83.5%</td>
+                        <td>69.8%</td>
+                        <td data-zh="未公开" data-en="N/A">N/A</td>
+                        <td data-zh="未公开" data-en="N/A">N/A</td>
+                    </tr>
+                    <tr>
+                        <td><strong data-zh="输出价格（每 MTok）" data-en="Output price (per MTok)">Output price (per MTok)</strong></td>
+                        <td class="v4 winner">$0.87</td>
+                        <td>$10</td>
+                        <td>$75</td>
+                        <td>$15-30</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p style="color: var(--t1); margin-top: 1rem;" data-zh="V4 与 Gemini 3.1 同属百万上下文第一梯队，但 V4-Pro 输出价格仅 $0.87/MTok，是 Gemini 3.1 的约 1/12、Claude Opus 4.7 的 1/86。完整百万上下文实测 → <a href='/deepseek-v4-long-context.html'>长文本应用页</a>。" data-en="V4 and Gemini 3.1 are in the same 1M-context first tier, but V4-Pro output is just $0.87/MTok — about 1/12 of Gemini 3.1 and 1/86 of Claude Opus 4.7. Full 1M context tests → <a href='/deepseek-v4-long-context.html'>long-context page</a>.">V4 and Gemini 3.1 are in the same 1M-context first tier, but V4-Pro output is just $0.87/MTok — about 1/12 of Gemini 3.1 and 1/86 of Claude Opus 4.7. Full 1M context tests → <a href='/deepseek-v4-long-context.html'>long-context page</a>.</p>
+    </section>
+
+    <!-- Pricing -->
+    <section id="price" class="container section">
+        <div class="section-header">
+            <h2 data-zh="💰 价格对比" data-en="💰 Pricing Comparison">💰 Pricing Comparison</h2>
+            <p data-zh="V4 走极致性价比路线。Claude 是 V4 的 ~17 倍价。" data-en="V4 takes the extreme price-performance route. Claude is ~17x the price of V4.">V4 takes the extreme price-performance route. Claude is ~17x the price of V4.</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th data-zh="模型" data-en="Model">Model</th>
+                        <th data-zh="输入价格" data-en="Input">Input</th>
+                        <th data-zh="输出价格" data-en="Output">Output</th>
+                        <th data-zh="vs V4-Pro 输出倍数" data-en="vs V4-Pro output">vs V4-Pro output</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="v4">DeepSeek V4-Flash</td>
+                        <td>$0.14 / MTok</td>
+                        <td>$0.28 / MTok</td>
+                        <td>0.32x</td>
+                    </tr>
+                    <tr>
+                        <td class="v4"><strong>DeepSeek V4-Pro</strong></td>
+                        <td>$0.435 / MTok</td>
+                        <td><strong>$0.87 / MTok</strong></td>
+                        <td>1.0x</td>
+                    </tr>
+                    <tr>
+                        <td>GPT-5.5 Standard</td>
+                        <td>$1.25 / MTok</td>
+                        <td>$10.00 / MTok</td>
+                        <td>11.5x</td>
+                    </tr>
+                    <tr>
+                        <td>Claude Opus 4.6</td>
+                        <td>$15.00 / MTok</td>
+                        <td>$75.00 / MTok</td>
+                        <td>86.2x</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="insight-box">
+            <h4 data-zh="💡 价格之外的成本" data-en="💡 Costs beyond the API price">💡 Costs beyond the API price</h4>
+            <p data-zh="API 价格不是唯一成本。Claude 与 GPT 都依赖云端，敏感数据出境是合规问题。V4 MIT 开源，本地部署零授权费，特别适合金融、医疗、政企场景——这一类场景的隐性合规成本往往远超 API 差价。" data-en="API price isn't the only cost. Claude and GPT both rely on cloud, and sensitive data leaving the country is a compliance issue. V4 is MIT open source; local deployment has zero license cost, ideal for finance, healthcare, and government-enterprise scenarios — where the hidden compliance cost usually exceeds the API price difference.">API price isn't the only cost. Claude and GPT both rely on cloud, and sensitive data leaving the country is a compliance issue. V4 is MIT open source; local deployment has zero license cost, ideal for finance, healthcare, and government-enterprise scenarios — where the hidden compliance cost usually exceeds the API price difference.</p>
+        </div>
+    </section>
+
+    <!-- Scenarios -->
+    <section id="scenarios" class="container section">
+        <div class="section-header">
+            <h2 data-zh="🎯 适用场景" data-en="🎯 Scenario Recommendations">🎯 Scenario Recommendations</h2>
+            <p data-zh="三个模型不是替代关系，是不同分工。" data-en="These three complement rather than replace each other.">These three complement rather than replace each other.</p>
+        </div>
+
+        <div class="scenario-grid">
+            <div class="scenario-card">
+                <div class="icon">💻</div>
+                <h4 data-zh="日常编程 / Code Review" data-en="Daily Coding / Code Review">Daily Coding / Code Review</h4>
+                <p data-zh="V4 性价比最高，单价 $0.28-$0.87/MTok，编程基准开源领先。" data-en="V4 is most cost-effective, $0.28-$0.87/MTok, open-source coding leader.">V4 is most cost-effective, $0.28-$0.87/MTok, open-source coding leader.</p>
+                <span class="winner-tag v4-wins" data-zh="选 V4" data-en="Pick V4">Pick V4</span>
+            </div>
+            <div class="scenario-card">
+                <div class="icon">🧮</div>
+                <h4 data-zh="复杂数学 / 科学推理" data-en="Complex Math / Scientific Reasoning">Complex Math / Scientific Reasoning</h4>
+                <p data-zh="GPT-5.5 在 MMLU-Pro / GPQA / MATH 三个推理基准全面领先。" data-en="GPT-5.5 leads MMLU-Pro / GPQA / MATH benchmarks comprehensively.">GPT-5.5 leads MMLU-Pro / GPQA / MATH benchmarks comprehensively.</p>
+                <span class="winner-tag gpt-wins" data-zh="选 GPT-5.5" data-en="Pick GPT-5.5">Pick GPT-5.5</span>
+            </div>
+            <div class="scenario-card">
+                <div class="icon">📚</div>
+                <h4 data-zh="百万字长文档分析" data-en="Million-Token Document Analysis">Million-Token Document Analysis</h4>
+                <p data-zh="V4 与 Gemini 同梯队，价格 1/12-1/20。Claude Opus 4.7 也支持 1M 但价格是 V4 的 ~17 倍。" data-en="V4 and Gemini are in the same tier; V4 is 1/12-1/20 the price. Claude Opus 4.7 also supports 1M but ~17x V4's price.">V4 and Gemini are in the same tier; V4 is 1/12-1/20 the price. Claude Opus 4.7 also supports 1M but ~17x V4's price.</p>
+                <span class="winner-tag v4-wins" data-zh="选 V4" data-en="Pick V4">Pick V4</span>
+            </div>
+            <div class="scenario-card">
+                <div class="icon">🏗️</div>
+                <h4 data-zh="复杂多文件重构" data-en="Complex Multi-File Refactoring">Complex Multi-File Refactoring</h4>
+                <p data-zh="Claude 在 38 项实测中完成 38/38，V4 完成 29/38。复杂 Agent 任务 Claude 更稳。" data-en="Claude completed 38/38 in a 38-task test; V4 completed 29/38. Claude is more reliable for complex agent tasks.">Claude completed 38/38 in a 38-task test; V4 completed 29/38. Claude is more reliable for complex agent tasks.</p>
+                <span class="winner-tag claude-wins" data-zh="选 Claude" data-en="Pick Claude">Pick Claude</span>
+            </div>
+            <div class="scenario-card">
+                <div class="icon">🇨🇳</div>
+                <h4 data-zh="中文项目 / 国内市场" data-en="Chinese Projects / Domestic Market">Chinese Projects / Domestic Market</h4>
+                <p data-zh="V4 中文评测 94.25% 第一，本土场景理解、口语化表达强；国产芯片原生适配。" data-en="V4 Chinese score 94.25% is first, with strong local scenario understanding; native domestic chip adaptation.">V4 Chinese score 94.25% is first, with strong local scenario understanding; native domestic chip adaptation.</p>
+                <span class="winner-tag v4-wins" data-zh="选 V4" data-en="Pick V4">Pick V4</span>
+            </div>
+            <div class="scenario-card">
+                <div class="icon">🎬</div>
+                <h4 data-zh="多模态创作（视频/音频）" data-en="Multimodal Creation (Video/Audio)">Multimodal Creation (Video/Audio)</h4>
+                <p data-zh="GPT-5.5 唯一支持音频 + 视频原生输入。V4 仅文本 + 图像。" data-en="GPT-5.5 is the only one supporting native audio + video. V4 is text + image only.">GPT-5.5 is the only one supporting native audio + video. V4 is text + image only.</p>
+                <span class="winner-tag gpt-wins" data-zh="选 GPT-5.5" data-en="Pick GPT-5.5">Pick GPT-5.5</span>
+            </div>
+            <div class="scenario-card">
+                <div class="icon">🏦</div>
+                <h4 data-zh="合规敏感行业（金融/医疗/政企）" data-en="Compliance-Sensitive Industries (Finance/Healthcare/Gov)">Compliance-Sensitive Industries (Finance/Healthcare/Gov)</h4>
+                <p data-zh="V4 MIT 开源 + 本地部署，国产芯片适配。Claude / GPT 必须云端 + 出境合规。" data-en="V4 is MIT open source + local deployable, domestic chip adapted. Claude/GPT require cloud + cross-border compliance.">V4 is MIT open source + local deployable, domestic chip adapted. Claude/GPT require cloud + cross-border compliance.</p>
+                <span class="winner-tag v4-wins" data-zh="选 V4" data-en="Pick V4">Pick V4</span>
+            </div>
+            <div class="scenario-card">
+                <div class="icon">🔄</div>
+                <h4 data-zh="混合使用" data-en="Hybrid Usage">Hybrid Usage</h4>
+                <p data-zh="日常用 V4（省钱），最难的尾部任务切 Claude（保稳定）。一个 Agent 路由两个模型。" data-en="Use V4 for daily work (save money), Claude for the hardest tail tasks (ensure stability). One agent routing two models.">Use V4 for daily work (save money), Claude for the hardest tail tasks (ensure stability). One agent routing two models.</p>
+                <span class="winner-tag tied" data-zh="V4 + Claude 组合" data-en="V4 + Claude combo">V4 + Claude combo</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="container section">
+        <div class="section-header">
+            <h2 data-zh="❓ 模型对比常见问题" data-en="❓ Model Comparison FAQ">❓ Model Comparison FAQ</h2>
+        </div>
+        <div class="faq-grid">
+            <div class="faq-item">
+                <h4 data-zh="DeepSeek V4 真的超过 GPT-5 吗？" data-en="Does DeepSeek V4 actually beat GPT-5?">Does DeepSeek V4 actually beat GPT-5?</h4>
+                <p data-zh="看任务。V4-Pro 在编程（LiveCodeBench 93.5% / Codeforces 3206）和中文（94.25%）领先 GPT-5.5；GPT-5.5 在数学推理（MATH-500 ~92%）和多模态（原生音视频输入）领先。两者不是简单替代关系。" data-en="Depends on the task. V4-Pro leads GPT-5.5 on coding (LiveCodeBench 93.5% / Codeforces 3206) and Chinese (94.25%); GPT-5.5 leads on math reasoning (MATH-500 ~92%) and multimodal (native audio/video). They're not simple replacements.">Depends on the task. V4-Pro leads GPT-5.5 on coding (LiveCodeBench 93.5% / Codeforces 3206) and Chinese (94.25%); GPT-5.5 leads on math reasoning (MATH-500 ~92%) and multimodal (native audio/video). They're not simple replacements.</p>
+            </div>
+            <div class="faq-item">
+                <h4 data-zh="Claude Opus 4.6 与 V4 哪个更适合 Agent 编程？" data-en="Which is better for agent coding: Claude Opus 4.6 or V4?">Which is better for agent coding: Claude Opus 4.6 or V4?</h4>
+                <p data-zh="V4 在 SWE-bench Verified 与 Claude 4.6 只差 0.2%（80.6% vs 80.8%），平均分几乎并列。但 38 项任务实测显示：Claude 完成 38/38（100%），V4 完成 29/38（76%）。日常任务 V4 够用，复杂多文件 Agent 任务建议 Claude。" data-en="V4 in SWE-bench Verified is just 0.2% behind Claude 4.6 (80.6% vs 80.8%); averages are nearly tied. But a 38-task test showed Claude completed 38/38 (100%) vs V4 29/38 (76%). V4 handles daily work; Claude for complex multi-file agent tasks.">V4 in SWE-bench Verified is just 0.2% behind Claude 4.6 (80.6% vs 80.8%); averages are nearly tied. But a 38-task test showed Claude completed 38/38 (100%) vs V4 29/38 (76%). V4 handles daily work; Claude for complex multi-file agent tasks.</p>
+            </div>
+            <div class="faq-item">
+                <h4 data-zh="V4 是开源的吗？能商用吗？" data-en="Is V4 open source? Can I use it commercially?">Is V4 open source? Can I use it commercially?</h4>
+                <p data-zh="V4 全系列采用 MIT 协议开源，模型权重和技术报告同步发布在 Hugging Face。商用、二次开发、修改分发都不受限。原生支持昇腾、寒武纪等国产芯片——这两个组合让 V4 在合规敏感行业（金融、医疗、政企）有结构性优势。" data-en="V4 series is MIT licensed, with model weights and technical report both published on Hugging Face. Commercial use, modification, and redistribution are unrestricted. Native support for Ascend, Cambricon domestic chips — this combination gives V4 structural advantages in compliance-sensitive industries (finance, healthcare, government-enterprise).">V4 series is MIT licensed, with model weights and technical report both published on Hugging Face. Commercial use, modification, and redistribution are unrestricted. Native support for Ascend, Cambricon domestic chips — this combination gives V4 structural advantages in compliance-sensitive industries (finance, healthcare, government-enterprise).</p>
+            </div>
+            <div class="faq-item">
+                <h4 data-zh="应该选 V4-Pro 还是 V4-Flash？" data-en="Should I pick V4-Pro or V4-Flash?">Should I pick V4-Pro or V4-Flash?</h4>
+                <p data-zh="并发需求高（>500 QPS）、成本敏感、日常问答用 Flash（$0.28/MTok 输出）。Agent 编程、长链推理、复杂多文件任务用 Pro（$0.87/MTok 输出，但能力更强）。两种可以混用，按任务难度路由。" data-en="High concurrency (>500 QPS) + cost-sensitive + daily Q&A → Flash ($0.28/MTok output). Agent coding, long-chain reasoning, complex multi-file tasks → Pro ($0.87/MTok but stronger). The two can be mixed; route by task difficulty.">High concurrency (>500 QPS) + cost-sensitive + daily Q&A → Flash ($0.28/MTok output). Agent coding, long-chain reasoning, complex multi-file tasks → Pro ($0.87/MTok but stronger). The two can be mixed; route by task difficulty.</p>
+            </div>
+            <div class="faq-item">
+                <h4 data-zh="GPT-5.5 跟 GPT-5 什么区别？" data-en="What's the difference between GPT-5.5 and GPT-5?">What's the difference between GPT-5.5 and GPT-5?</h4>
+                <p data-zh="GPT-5.5 是 2026 年的迭代版，定位「专业工作场景」。长上下文连贯性更好，医学/法律/金融等专业领域幻觉率降低 52.5%。响应速度比 GPT-5 略慢，但多轮对话稳定性更强。" data-en="GPT-5.5 is the 2026 iteration aimed at "professional work scenarios". Better long-context coherence, with hallucination rates reduced by 52.5% in medical/legal/financial domains. Slightly slower than GPT-5 but more stable across multi-turn conversations.">GPT-5.5 is the 2026 iteration aimed at "professional work scenarios". Better long-context coherence, with hallucination rates reduced by 52.5% in medical/legal/financial domains. Slightly slower than GPT-5 but more stable across multi-turn conversations.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 DeepSeek Technologies. All rights reserved.</p>
+        <div class="links">
+            <a href="/" data-zh="返回首页" data-en="Back to Home">Back to Home</a>
+            <a href="/deepseek-v4.html" data-zh="V4 专题" data-en="V4 Overview">V4 Overview</a>
+            <a href="/deepseek-v4-coding-benchmark.html" data-zh="编程评测" data-en="Coding Benchmark">Coding Benchmark</a>
+            <a href="/deepseek-v4-long-context.html" data-zh="百万上下文" data-en="1M Context">1M Context</a>
+            <a href="/deepseek-v3-to-v4-migration.html" data-zh="迁移指南" data-en="Migration Guide">Migration Guide</a>
+            <a href="https://api-docs.deepseek.com/" target="_blank" rel="noopener">DeepSeek API Docs</a>
+            <a href="https://cursorhero.com/" target="_blank" rel="nofollow noopener" data-zh="AI 鼠标光标" data-en="AI Cursor Generator">Cursorhero</a>
+        </div>
+        <p style="margin-top: 2rem; font-size: 0.875rem;" data-zh="数据来源：DeepSeek V4 官方技术报告、Anthropic、OpenAI、benchlm.ai、pricepertoken.com，2026 年 5 月数据。benchmark 数据可能随版本更新变化。" data-en="Source: DeepSeek V4 official report, Anthropic, OpenAI, benchlm.ai, pricepertoken.com — May 2026 data. Benchmark scores may vary with future updates.">Source: DeepSeek V4 official report, Anthropic, OpenAI, benchlm.ai, pricepertoken.com — May 2026 data. Benchmark scores may vary with future updates.</p>
+    </footer>
+
+    <script>
+        let currentLanguage = localStorage.getItem('preferredLanguage') || 'en';
+
+        if (currentLanguage === 'zh') {
+            document.documentElement.lang = 'zh-CN';
+        }
+
+        function toggleLanguage() {
+            currentLanguage = currentLanguage === 'en' ? 'zh' : 'en';
+            localStorage.setItem('preferredLanguage', currentLanguage);
+            document.documentElement.lang = currentLanguage === 'zh' ? 'zh-CN' : 'en';
+
+            const langDisplay = currentLanguage === 'en' ? 'English' : '中文';
+            document.getElementById('current-lang').textContent = langDisplay;
+
+            document.querySelectorAll('[data-zh][data-en]').forEach(element => {
+                const text = element.getAttribute(`data-${currentLanguage}`);
+                if (text) {
+                    element.textContent = text;
+                }
+            });
+
+            const titleEl = document.querySelector('title');
+            const metaDesc = document.getElementById('meta-description');
+            const ogTitle = document.getElementById('og-title');
+            const ogDesc = document.getElementById('og-description');
+            const twitterTitle = document.getElementById('twitter-title');
+            const twitterDesc = document.getElementById('twitter-description');
+
+            if (currentLanguage === 'zh') {
+                titleEl.textContent = 'DeepSeek V4 vs GPT-5 vs Claude Opus 4.6：2026 大模型对比';
+                metaDesc.content = 'DeepSeek V4 vs GPT-5.5 vs Claude Opus 4.6 横向对比：编程基准（LiveCodeBench 93.5% / Codeforces 3206 / SWE-bench 80.6%）、1M 上下文、中文能力、价格（V4 输出 $0.87 vs GPT-5 $10 vs Claude $75/MTok）实测对比。';
+                ogTitle.content = 'DeepSeek V4 vs GPT-5 vs Claude Opus 4.6：2026 大模型对比';
+                ogDesc.content = 'V4-Pro 编程开源领先、中文最强、价格仅 Claude 1/86；GPT-5.5 数学与多模态领先；Claude 长链推理最稳。';
+                twitterTitle.content = 'DeepSeek V4 vs GPT-5 vs Claude Opus 4.6（2026）';
+                twitterDesc.content = 'LiveCodeBench 93.5% vs GPT-5.5 ~90% vs Claude 4.6 ~88%。V4 中文 94.25% 第一。价格 1/86 vs Claude。';
+            } else {
+                titleEl.textContent = 'DeepSeek V4 vs GPT-5 vs Claude Opus 4.6: 2026 LLM Comparison';
+                metaDesc.content = 'DeepSeek V4 vs GPT-5.5 vs Claude Opus 4.6: coding benchmark (LiveCodeBench 93.5%, Codeforces 3206, SWE-bench 80.6%), 1M token context, Chinese capability, pricing per million tokens ($0.14 vs $1.25 vs $15), and real test cases compared.';
+                ogTitle.content = 'DeepSeek V4 vs GPT-5 vs Claude Opus 4.6: 2026 LLM Comparison';
+                ogDesc.content = 'V4-Pro leads coding + Chinese + price (1/86 of Claude); GPT-5.5 wins on math + multimodal; Claude leads long-chain reasoning stability.';
+                twitterTitle.content = 'DeepSeek V4 vs GPT-5 vs Claude Opus 4.6';
+                twitterDesc.content = 'LiveCodeBench 93.5% vs GPT-5.5 ~90% vs Claude 4.6 ~88%. V4 Chinese 94.25% #1. Price 1/86 vs Claude.';
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', function() {
+            const langDisplay = currentLanguage === 'en' ? 'English' : '中文';
+            document.getElementById('current-lang').textContent = langDisplay;
+
+            document.querySelectorAll('[data-zh][data-en]').forEach(element => {
+                const text = element.getAttribute(`data-${currentLanguage}`);
+                if (text) {
+                    element.textContent = text;
+                }
+            });
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
