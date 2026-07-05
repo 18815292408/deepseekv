@@ -4,7 +4,8 @@
       "Bash(start:*)",
       "Bash(vercel logs:*)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "mcp__web-search-prime__webSearchPrime"
     ],
     "deny": [],
     "ask": []
