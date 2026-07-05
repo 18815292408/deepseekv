@@ -18,6 +18,14 @@
       "use": "@vercel/static"
     },
     {
+      "src": "favicon.svg",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "logo.png",
+      "use": "@vercel/static"
+    },
+    {
       "src": "public/**/*",
       "use": "@vercel/static"
     }
@@ -37,11 +45,6 @@
     {
       "source": "/affiliate-disclosure.html",
       "destination": "/advertising-disclosure.html",
-      "permanent": true
-    },
-    {
-      "source": "/deepseek32-landing.html#(.*)",
-      "destination": "/#$1",
       "permanent": true
     }
   ],
