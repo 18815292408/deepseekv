@@ -7,15 +7,15 @@
     <!-- 首页 - deepseek 3.2 落地页 -->
     <url>
         <loc>https://deepseekv.pro/</loc>
-        <lastmod>2025-12-10</lastmod>
+        <lastmod>2026-07-05</lastmod>
         <changefreq>weekly</changefreq>
         <priority>1.0</priority>
     </url>
-    
+
     <!-- deepseek 3.2 落地页 -->
     <url>
         <loc>https://deepseekv.pro/deepseek32-landing.html</loc>
-        <lastmod>2025-12-10</lastmod>
+        <lastmod>2026-07-05</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.9</priority>
     </url>
@@ -79,9 +79,41 @@
     <!-- DeepSeek V4 专题页面 -->
     <url>
         <loc>https://deepseekv.pro/deepseek-v4.html</loc>
-        <lastmod>2026-01-13</lastmod>
+        <lastmod>2026-07-05</lastmod>
         <changefreq>daily</changefreq>
         <priority>1.0</priority>
+    </url>
+
+    <!-- DeepSeek V3 → V4 迁移指南 -->
+    <url>
+        <loc>https://deepseekv.pro/deepseek-v3-to-v4-migration.html</loc>
+        <lastmod>2026-07-05</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>1.0</priority>
+    </url>
+
+    <!-- DeepSeek V4 vs GPT-5 vs Claude 对比 -->
+    <url>
+        <loc>https://deepseekv.pro/deepseek-v4-vs-gpt5-vs-claude.html</loc>
+        <lastmod>2026-07-05</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>1.0</priority>
+    </url>
+
+    <!-- DeepSeek V4 编程能力深度评测 -->
+    <url>
+        <loc>https://deepseekv.pro/deepseek-v4-coding-benchmark.html</loc>
+        <lastmod>2026-07-05</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.9</priority>
+    </url>
+
+    <!-- DeepSeek V4 1M 上下文长文档分析 -->
+    <url>
+        <loc>https://deepseekv.pro/deepseek-v4-long-context.html</loc>
+        <lastmod>2026-07-05</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.9</priority>
     </url>
 
 </urlset>

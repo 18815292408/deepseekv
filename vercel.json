@@ -10,6 +10,22 @@
       "use": "@vercel/static"
     },
     {
+      "src": "deepseek-v3-to-v4-migration.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "deepseek-v4-vs-gpt5-vs-claude.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "deepseek-v4-coding-benchmark.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "deepseek-v4-long-context.html",
+      "use": "@vercel/static"
+    },
+    {
       "src": "remixicon-custom.css",
       "use": "@vercel/static"
     },
@@ -50,6 +66,34 @@
     {
       "src": "/deepseek-v4.html",
       "dest": "/deepseek-v4.html",
+      "headers": {
+        "Cache-Control": "public, max-age=3600"
+      }
+    },
+    {
+      "src": "/deepseek-v3-to-v4-migration.html",
+      "dest": "/deepseek-v3-to-v4-migration.html",
+      "headers": {
+        "Cache-Control": "public, max-age=3600"
+      }
+    },
+    {
+      "src": "/deepseek-v4-vs-gpt5-vs-claude.html",
+      "dest": "/deepseek-v4-vs-gpt5-vs-claude.html",
+      "headers": {
+        "Cache-Control": "public, max-age=3600"
+      }
+    },
+    {
+      "src": "/deepseek-v4-coding-benchmark.html",
+      "dest": "/deepseek-v4-coding-benchmark.html",
+      "headers": {
+        "Cache-Control": "public, max-age=3600"
+      }
+    },
+    {
+      "src": "/deepseek-v4-long-context.html",
+      "dest": "/deepseek-v4-long-context.html",
       "headers": {
         "Cache-Control": "public, max-age=3600"
       }
