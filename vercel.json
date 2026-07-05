@@ -26,6 +26,10 @@
       "use": "@vercel/static"
     },
     {
+      "src": "affiliate-disclosure.html",
+      "use": "@vercel/static"
+    },
+    {
       "src": "remixicon-custom.css",
       "use": "@vercel/static"
     },
@@ -94,6 +98,13 @@
     {
       "src": "/deepseek-v4-long-context.html",
       "dest": "/deepseek-v4-long-context.html",
+      "headers": {
+        "Cache-Control": "public, max-age=3600"
+      }
+    },
+    {
+      "src": "/affiliate-disclosure.html",
+      "dest": "/affiliate-disclosure.html",
       "headers": {
         "Cache-Control": "public, max-age=3600"
       }
