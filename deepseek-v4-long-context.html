@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeepSeek V4 1M Token Context: Long Document Analysis & Codebase Understanding</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" id="meta-description" content="DeepSeek V4 ships 1M token context standard on both V4-Pro and V4-Flash. MRCR 1M retrieval 83.5% (above GPT-5.5 69.8%). Real cases: 970k character mixed document 7-second answer, 240k character novel anomaly detection, full code repo understanding. Cost: 27% FLOPs of V3.2.">
+    <meta name="keywords" id="meta-keywords" content="DeepSeek V4 long context, DeepSeek 1M context, MRCR 1M 83.5, long document AI, million token context, DeepSeek V4-Pro, DeepSeek V4-Flash, hybrid attention CSA HCA, code repo understanding, DeepSeek long context benchmark, Chinese AI long context">
+    <meta name="author" content="DeepSeek V Pro">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+    <meta name="language" content="en">
+
+    <!-- Open Graph -->
+    <meta property="og:title" id="og-title" content="DeepSeek V4 1M Token Context: Long Document & Codebase">
+    <meta property="og:description" id="og-description" content="1M context standard on V4-Pro and V4-Flash. MRCR 1M 83.5% (above GPT-5.5 69.8%). 27% FLOPs of V3.2. Real cases with 970k character documents.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://deepseekv.pro/deepseek-v4-long-context.html">
+    <meta property="og:image" content="https://deepseekv.pro/images/deepseek-long-context-og.jpg">
+    <meta property="og:site_name" content="DeepSeek V Pro">
+    <meta property="article:published_time" content="2026-04-24">
+    <meta property="article:modified_time" content="2026-07-05">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" id="twitter-title" content="DeepSeek V4 1M Context: MRCR 83.5% Beats GPT-5.5 69.8%">
+    <meta name="twitter:description" content="1M context standard. Real cases: 970k char document 7s answer, 240k novel anomaly detection. Open source MIT.">
+
+    <meta name="theme-color" content="#0066FF">
+
+    <!-- Schema.org: TechArticle -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": "DeepSeek V4 1M Token Context Deep-Dive",
+      "description": "DeepSeek V4 long-context capability: 1M context standard on V4-Pro and V4-Flash, MRCR 1M 83.5% benchmark, hybrid attention architecture cost analysis, real-world cases including 970k character document analysis and 240k character novel anomaly detection.",
+      "author": {"@type": "Organization", "name": "DeepSeek V Pro"},
+      "publisher": {"@type": "Organization", "name": "DeepSeek V Pro"},
+      "datePublished": "2026-04-24",
+      "dateModified": "2026-07-05",
+      "mainEntityOfPage": {"@type": "WebPage", "@id": "https://deepseekv.pro/deepseek-v4-long-context.html"},
+      "keywords": "DeepSeek V4, 1M context, long document, hybrid attention, MRCR, code repo",
+      "articleSection": "Long Context AI",
+      "inLanguage": "en"
+    }
+    </script>
+
+    <!-- Schema.org: FAQPage -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How much text can DeepSeek V4's 1M token context handle?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Roughly 1 million tokens equals about 1.5 million Chinese characters (one Chinese character averages 1.5 tokens). This is approximately the volume of Romance of the Three Kingdoms (80万字), or the entire Harry Potter series 1-7 (English), or 5+ full-length technical books, or a typical mid-size codebase (10k-50k lines of code) including dependencies."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does DeepSeek V4 achieve cost-efficient 1M context?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "V4 uses hybrid attention architecture: CSA compresses history at 4:1 ratio, HCA compresses ultra-long text at 128:1, SWA tracks the most recent 128 tokens. Combined with mHC manifold-constrained hyperconnection. Result: inference FLOPs drop to 27% of V3.2 at 1M context, KV cache only 10% of V3.2."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are the limitations of V4's 1M context?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Multi-turn conversations beyond 15 rounds show context forgetting — the model progressively loses track of information at the head of very long conversations. Recommendation: keep important decisions and confirmed interface signatures at the head of messages list, periodically compact conversation history."
+          }
+        }
+      ]
+    }
+    </script>
+
+    <link rel="canonical" href="https://deepseekv.pro/deepseek-v4-long-context.html">
+
+    <!-- Google tag -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PMY0EV67Q2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-PMY0EV67Q2');
+    </script>
+
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%230066FF;stop-opacity:1'/%3E%3Cstop offset='100%25' style='stop-color:%230044CC;stop-opacity:1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='6' fill='url(%23bg)'/%3E%3Cg transform='translate(16,16)'%3E%3Ctext x='16' y='20' font-family='Arial,sans-serif' font-size='7' font-weight='bold' text-anchor='middle' fill='%23FFFFFF'%3EL%3C/text%3E%3C/g%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+
+    <style>
+        :root {
+            --p: #0066FF;
+            --p-light: #3385FF;
+            --accent: #00d4ff;
+            --t0: #ffffff;
+            --t1: rgba(255,255,255,0.85);
+            --b1: rgba(255,255,255,0.05);
+            --b2: rgba(255,255,255,0.08);
+            --bd: rgba(255,255,255,0.1);
+            --g-b: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.7; color: var(--t0); background: var(--g-b); overflow-x: hidden; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+        .section { padding: 4rem 0; }
+        a { color: var(--p); text-decoration: none; }
+        a:hover { color: var(--p-light); }
+
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(10,14,39,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--bd); padding: 1rem 2rem; }
+        .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.4rem; font-weight: 700; color: var(--p); }
+        .nav-links { display: flex; gap: 2rem; list-style: none; }
+        .nav-links a { color: var(--t1); font-size: 0.95rem; }
+        .nav-links a:hover { color: var(--p); }
+        .lang-switcher { background: var(--b2); border: 1px solid var(--bd); border-radius: 8px; padding: 0.4rem 0.8rem; cursor: pointer; color: var(--t0); font-size: 0.9rem; display: flex; align-items: center; gap: 0.4rem; }
+
+        .hero { min-height: 50vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 7rem 2rem 3rem; }
+        .hero h1 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; background: linear-gradient(135deg, var(--p), var(--accent)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem; line-height: 1.2; }
+        .hero .subtitle { font-size: clamp(1rem, 2vw, 1.2rem); color: var(--t1); max-width: 850px; margin-bottom: 1.5rem; }
+
+        .hero-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; max-width: 900px; margin: 1.5rem 0; }
+        .hero-stat { background: var(--b1); border: 1px solid var(--accent); border-radius: 12px; padding: 1rem; }
+        .hero-stat .value { font-size: 1.8rem; font-weight: 800; color: var(--accent); }
+        .hero-stat .label { font-size: 0.85rem; color: var(--t1); }
+
+        .section-header { margin-bottom: 2.5rem; text-align: center; }
+        .section-header h2 { font-size: clamp(1.6rem, 3.5vw, 2.2rem); margin-bottom: 0.75rem; color: var(--t0); }
+        .section-header p { color: var(--t1); font-size: 1.05rem; max-width: 750px; margin: 0 auto; }
+
+        .benchmark-table-wrapper { overflow-x: auto; margin: 2rem 0; border-radius: 12px; }
+        .benchmark-table { width: 100%; border-collapse: collapse; background: var(--b1); }
+        .benchmark-table th { background: var(--p); color: white; padding: 0.9rem 1rem; text-align: left; font-weight: 600; font-size: 0.95rem; }
+        .benchmark-table td { padding: 0.85rem 1rem; border-bottom: 1px solid var(--bd); color: var(--t1); font-size: 0.95rem; }
+        .benchmark-table tr:last-child td { border-bottom: none; }
+        .benchmark-table tr:hover { background: rgba(0,102,255,0.06); }
+        .benchmark-table .v4 { color: var(--accent); font-weight: 600; }
+        .benchmark-table .winner { background: rgba(0,212,255,0.08); }
+
+        .case-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+        .case-card { background: var(--b1); border: 1px solid var(--bd); border-radius: 12px; padding: 1.5rem; }
+        .case-card .icon { font-size: 2rem; margin-bottom: 0.5rem; }
+        .case-card h4 { color: var(--t0); margin-bottom: 0.5rem; }
+        .case-card p { color: var(--t1); font-size: 0.95rem; line-height: 1.5; }
+        .case-card .metric { display: inline-block; padding: 0.25rem 0.7rem; border-radius: 4px; font-size: 0.85rem; font-weight: 600; margin-top: 0.5rem; background: rgba(0,212,255,0.2); color: var(--accent); }
+
+        .insight-box { background: linear-gradient(135deg, rgba(0,102,255,0.15), rgba(0,212,255,0.08)); border: 1px solid var(--p); border-radius: 12px; padding: 1.5rem; margin: 2rem 0; }
+        .insight-box h4 { color: var(--p-light); margin-bottom: 0.75rem; }
+        .insight-box p { color: var(--t1); }
+        .insight-box code { background: rgba(0,102,255,0.2); padding: 0.1rem 0.4rem; border-radius: 3px; font-family: monospace; font-size: 0.9em; color: var(--p-light); }
+
+        .faq-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-top: 2rem; }
+        .faq-item { background: var(--b1); border: 1px solid var(--bd); border-radius: 12px; padding: 1.5rem; }
+        .faq-item h4 { color: var(--p); margin-bottom: 0.75rem; font-size: 1.1rem; }
+        .faq-item p { color: var(--t1); }
+
+        footer { background: rgba(0,0,0,0.5); padding: 3rem 2rem 2rem; margin-top: 4rem; text-align: center; }
+        footer p { color: var(--t1); font-size: 0.9rem; margin-bottom: 1rem; }
+        footer .links { display: flex; justify-content: center; flex-wrap: wrap; gap: 1.5rem; margin-bottom: 1rem; }
+        footer .links a { color: var(--t1); font-size: 0.9rem; }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .container { padding: 0 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-inner">
+            <a href="/" class="logo">1M Context</a>
+            <ul class="nav-links">
+                <li><a href="#hero-stats" data-zh="核心数据" data-en="Key Stats">Key Stats</a></li>
+                <li><a href="#architecture" data-zh="架构原理" data-en="Architecture">Architecture</a></li>
+                <li><a href="#benchmark" data-zh="基准对比" data-en="Benchmark">Benchmark</a></li>
+                <li><a href="#cases" data-zh="实测案例" data-en="Test Cases">Test Cases</a></li>
+                <li><a href="#scenarios" data-zh="适用场景" data-en="Scenarios">Scenarios</a></li>
+                <li><a href="#limits" data-zh="注意事项" data-en="Caveats">Caveats</a></li>
+                <li><a href="#faq" data-en="FAQ">FAQ</a></li>
+            </ul>
+            <div class="lang-switcher" onclick="toggleLanguage()">
+                <span>🌐</span>
+                <span id="current-lang">English</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <h1 data-zh="DeepSeek V4 1M Token 上下文深度应用" data-en="DeepSeek V4 1M Token Context Deep-Dive">DeepSeek V4 1M Token Context Deep-Dive</h1>
+        <p class="subtitle" data-zh="V4-Pro 与 V4-Flash 全系列标配 100 万 token 上下文——百万上下文不再是闭源奢侈品，而是开源普惠基建。" data-en="V4-Pro and V4-Flash both ship with 1M token context standard — 1M context is no longer a closed-source luxury, but open-source infrastructure.">V4-Pro and V4-Flash both ship with 1M token context standard — 1M context is no longer a closed-source luxury, but open-source infrastructure.</p>
+
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <div class="value">1M</div>
+                <div class="label" data-zh="token 上下文" data-en="Token context">Token context</div>
+            </div>
+            <div class="hero-stat">
+                <div class="value">83.5%</div>
+                <div class="label">MRCR 1M 检索</div>
+            </div>
+            <div class="hero-stat">
+                <div class="value">27%</div>
+                <div class="label" data-zh="V3.2 推理 FLOPs" data-en="V3.2 FLOPs">V3.2 FLOPs</div>
+            </div>
+            <div class="hero-stat">
+                <div class="value">10%</div>
+                <div class="label" data-zh="V3.2 KV Cache" data-en="V3.2 KV Cache">V3.2 KV Cache</div>
+            </div>
+            <div class="hero-stat">
+                <div class="value">$0.87</div>
+                <div class="label" data-zh="Pro 输出 / MTok" data-en="Pro output / MTok">Pro output / MTok</div>
+            </div>
+        </div>
+
+        <p style="margin-top: 1rem; color: var(--t1); font-size: 0.95rem; max-width: 700px;" data-zh="1M token ≈ 150 万汉字 ≈ 1 本《三国演义》+ 0.5 本《红楼梦》。能一次性吞下整本小说、整套代码仓库、5+ 本技术书。" data-en="1M tokens ≈ 1.5M Chinese characters ≈ 1 Romance of the Three Kingdoms + 0.5 Dream of the Red Chamber. Can ingest entire novels, full code repos, 5+ technical books at once.">1M tokens ≈ 1.5M Chinese characters ≈ 1 Romance of the Three Kingdoms + 0.5 Dream of the Red Chamber. Can ingest entire novels, full code repos, 5+ technical books at once.</p>
+    </section>
+
+    <!-- Architecture -->
+    <section id="architecture" class="container section">
+        <div class="section-header">
+            <h2 data-zh="🏗️ 混合注意力架构：百万上下文的成本密码" data-en="🏗️ Hybrid Attention: The Cost Code Behind 1M Context">🏗️ Hybrid Attention: The Cost Code Behind 1M Context</h2>
+            <p data-zh="V4 不是简单堆参数做长上下文——而是靠 CSA + HCA + SWA 混合注意力 + mHC 流形约束超连接，让百万上下文 FLOPs 仅为 V3.2 的 27%。" data-en="V4 doesn't naively scale parameters for long context — it uses CSA + HCA + SWA hybrid attention + mHC manifold-constrained hyperconnection to make 1M context FLOPs only 27% of V3.2.">V4 doesn't naively scale parameters for long context — it uses CSA + HCA + SWA hybrid attention + mHC manifold-constrained hyperconnection to make 1M context FLOPs only 27% of V3.2.</p>
+        </div>
+
+        <div class="case-grid">
+            <div class="case-card">
+                <div class="icon">🔬</div>
+                <h4>CSA <span data-zh="压缩稀疏注意力" data-en="Compressed Sparse Attention">Compressed Sparse Attention</h4>
+                <p data-zh="历史信息按 4:1 比例轻度压缩，闪电索引器精准提取关键片段。在保持关键上下文的同时大幅降低计算量。" data-en="Compresses history at 4:1 ratio with a lightning indexer for precise key segment extraction. Maintains critical context while significantly reducing computation.">Compresses history at 4:1 ratio with a lightning indexer for precise key segment extraction. Maintains critical context while significantly reducing computation.</p>
+                <span class="metric" data-zh="4:1 轻度压缩" data-en="4:1 light compression">4:1 light compression</span>
+            </div>
+            <div class="case-card">
+                <div class="icon">⚡</div>
+                <h4>HCA <span data-zh="重度压缩注意力" data-en="Heavy Compressed Attention">Heavy Compressed Attention</h4>
+                <p data-zh="超长文本按 128:1 极限压缩，把百万上下文压成可处理的尺寸。极限压制显存占用。" data-en="Ultra-long text compressed at 128:1 extreme ratio, compressing 1M context into manageable dimensions. Extreme memory compression.">Ultra-long text compressed at 128:1 extreme ratio, compressing 1M context into manageable dimensions. Extreme memory compression.</p>
+                <span class="metric" data-zh="128:1 极限压缩" data-en="128:1 extreme">128:1 extreme</span>
+            </div>
+            <div class="case-card">
+                <div class="icon">🎯</div>
+                <h4>SWA <span data-zh="滑动窗口注意力" data-en="Sliding Window Attention">Sliding Window Attention</h4>
+                <p data-zh="紧盯最近 128 个 token，保证局部细节不丢失——CSA/HCA 压缩全局时，SWA 守住最近的精确细节。" data-en="Tracks the most recent 128 tokens to preserve local detail — while CSA/HCA compress global context, SWA guards the most recent precision.">Tracks the most recent 128 tokens to preserve local detail — while CSA/HCA compress global context, SWA guards the most recent precision.</p>
+                <span class="metric" data-zh="128 token 局部窗口" data-en="128-token window">128-token window</span>
+            </div>
+        </div>
+
+        <div class="insight-box">
+            <h4 data-zh="💡 成本对比：百万上下文的真实价格" data-en="💡 Cost comparison: the real price of 1M context">💡 Cost comparison: the real price of 1M context</h4>
+            <p data-zh="传统 Transformer 自注意力计算复杂度 O(L²)——百万上下文意味着 10^12 级别操作。V4 混合注意力把这部分复杂度降到接近线性。结果：V4-Pro 在 1M token 上下文场景下，推理 FLOPs 仅 V3.2 的 <code>27%</code>，KV Cache 仅 <code>10%</code>。这让百万上下文的边际成本降到可以日常使用的水平。" data-en="Traditional Transformer self-attention has O(L²) complexity — 1M context means 10^12-level operations. V4's hybrid attention reduces this to near-linear. Result: V4-Pro at 1M context uses only <code>27%</code> of V3.2's FLOPs and <code>10%</code> of its KV cache. This brings the marginal cost of 1M context down to daily-use levels.">Traditional Transformer self-attention has O(L²) complexity — 1M context means 10^12-level operations. V4's hybrid attention reduces this to near-linear. Result: V4-Pro at 1M context uses only <code>27%</code> of V3.2's FLOPs and <code>10%</code> of its KV cache. This brings the marginal cost of 1M context down to daily-use levels.</p>
+        </div>
+    </section>
+
+    <!-- Benchmark -->
+    <section id="benchmark" class="container section">
+        <div class="section-header">
+            <h2 data-zh="📊 MRCR 1M：百万上下文检索基准对比" data-en="📊 MRCR 1M: Million-Token Retrieval Benchmark">📊 MRCR 1M: Million-Token Retrieval Benchmark</h2>
+            <p data-zh="MRCR（Multi-Round Co-reference Resolution）测试在超长上下文中检索分散信息的能力。" data-en="MRCR (Multi-Round Co-reference Resolution) tests the ability to retrieve scattered information from ultra-long contexts.">MRCR (Multi-Round Co-reference Resolution) tests the ability to retrieve scattered information from ultra-long contexts.</p>
+        </div>
+
+        <div class="benchmark-table-wrapper">
+            <table class="benchmark-table">
+                <thead>
+                    <tr>
+                        <th data-zh="模型" data-en="Model">Model</th>
+                        <th data-zh="最大上下文" data-en="Max Context">Max Context</th>
+                        <th>MRCR 1M</th>
+                        <th data-zh="MRCR 128K" data-en="MRCR 128K">MRCR 128K</th>
+                        <th data-zh="输出价格 / MTok" data-en="Output Price / MTok">Output Price / MTok</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>DeepSeek V4-Pro</strong></td>
+                        <td class="v4">1M</td>
+                        <td class="v4 winner">83.5%</td>
+                        <td>~92%</td>
+                        <td class="v4 winner">$0.87</td>
+                    </tr>
+                    <tr>
+                        <td>GPT-5.5 Standard</td>
+                        <td>400K</td>
+                        <td data-zh="未公开" data-en="N/A">N/A</td>
+                        <td>69.8% <span data-zh="（128K）" data-en="(128K)">(128K)</span></td>
+                        <td>$10.00</td>
+                    </tr>
+                    <tr>
+                        <td>Claude Opus 4.7</td>
+                        <td>1M</td>
+                        <td data-zh="未公开" data-en="N/A">N/A</td>
+                        <td>~73.5%</td>
+                        <td>$75.00</td>
+                    </tr>
+                    <tr>
+                        <td>Gemini 3.1 Pro</td>
+                        <td>1M</td>
+                        <td data-zh="未公开" data-en="N/A">N/A</td>
+                        <td data-zh="未公开" data-en="N/A">N/A</td>
+                        <td>$15-30</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p style="margin-top: 1rem; color: var(--t1); font-size: 0.95rem;" data-zh="V4 在 1M 上下文检索 83.5% 超过 GPT-5.5 在 128K 的 69.8%。Claude Opus 4.7 同样支持 1M 但 MRCR 数据未公开，价格是 V4-Pro 的 86 倍。" data-en="V4's 83.5% MRCR at 1M exceeds GPT-5.5's 69.8% at 128K. Claude Opus 4.7 also supports 1M but MRCR data isn't public; its price is 86x V4-Pro.">V4's 83.5% MRCR at 1M exceeds GPT-5.5's 69.8% at 128K. Claude Opus 4.7 also supports 1M but MRCR data isn't public; its price is 86x V4-Pro.</p>
+    </section>
+
+    <!-- Test Cases -->
+    <section id="cases" class="container section">
+        <div class="section-header">
+            <h2 data-zh="🧪 百万上下文实测案例" data-en="🧪 1M Context Real Test Cases">🧪 1M Context Real Test Cases</h2>
+            <p data-zh="公开实测的具体案例，看 V4 百万上下文在真实场景下的表现。" data-en="Real cases from public tests to see how V4's 1M context performs in real scenarios.">Real cases from public tests to see how V4's 1M context performs in real scenarios.</p>
+        </div>
+
+        <div class="case-card">
+            <div class="icon">📰</div>
+            <h4 data-zh="案例 1：97 万字混合素材问答" data-en="Case 1: 970K character mixed-material Q&A">Case 1: 970K character mixed-material Q&A</h4>
+            <p data-zh="央视实测：一次性喂入 97 万字混合素材（小说、新闻、行业报告），问「素材中涉及多少细分行业」。V4-Pro 7 秒输出正确结果，且能跨全文定位到 2025 年援建铁路的具体影响，细节召回准确率很高。" data-en="CCTV test: feeding in 970K characters of mixed materials (novels, news, industry reports) at once, asking "how many sub-industries are involved". V4-Pro outputted the correct answer in 7 seconds, and could pinpoint specific impacts of 2025 railway aid across the full text, with high accuracy on detail recall.">CCTV test: feeding in 970K characters of mixed materials (novels, news, industry reports) at once, asking "how many sub-industries are involved". V4-Pro outputted the correct answer in 7 seconds, and could pinpoint specific impacts of 2025 railway aid across the full text, with high accuracy on detail recall.</p>
+            <span class="metric">7s 响应 · 跨素材定位</span>
+        </div>
+
+        <div class="case-card">
+            <div class="icon">📖</div>
+            <h4 data-zh="案例 2：24 万字小说异常片段定位" data-en="Case 2: 240K character novel anomaly detection">Case 2: 240K character novel anomaly detection</h4>
+            <p data-zh="用户测试：往 24 万字的《斗破苍穹》文本中插入一段《都市超能高手》的内容，让 V4 找出异常片段。V4 秒级定位到不属于《斗破苍穹》文风的内容——百万上下文的细节保留能力得到验证。" data-en="User test: inserting a passage from "都市超能高手" into the 240K-character text of "斗破苍穹", asking V4 to find the anomalous passage. V4 located the content that didn't match 斗破苍穹's style within seconds — verifying 1M context's detail-preservation capability.">User test: inserting a passage from "都市超能高手" into the 240K-character text of "斗破苍穹", asking V4 to find the anomalous passage. V4 located the content that didn't match 斗破苍穹's style within seconds — verifying 1M context's detail-preservation capability.</p>
+            <span class="metric" data-zh="秒级定位 · 风格识别" data-en="Seconds-level localization · Style recognition">Seconds-level localization · Style recognition</span>
+        </div>
+
+        <div class="case-card">
+            <div class="icon">📊</div>
+            <h4 data-zh="案例 3：财报分析" data-en="Case 3: Financial report analysis">Case 3: Financial report analysis</h4>
+            <p data-zh="V4 一次性读取上市公司 5 年财报（约 50 万字），能跨年度对比营收、利润、现金流变化趋势，识别管理层讨论中口径不一致的地方，输出风险点清单。" data-en="V4 can ingest 5 years of a listed company's financial reports (~500K characters) at once, comparing revenue, profit, and cash flow trends across years, identifying inconsistencies in management discussion, and outputting a risk-point list.">V4 can ingest 5 years of a listed company's financial reports (~500K characters) at once, comparing revenue, profit, and cash flow trends across years, identifying inconsistencies in management discussion, and outputting a risk-point list.</p>
+            <span class="metric" data-zh="5 年财报 · 跨期对比" data-en="5-year reports · Cross-period">5-year reports · Cross-period</span>
+        </div>
+
+        <div class="case-card">
+            <div class="icon">📝</div>
+            <h4 data-zh="案例 4：合同审查" data-en="Case 4: Contract review">Case 4: Contract review</h4>
+            <p data-zh="把整份商业合同 PDF（通常 100-200 页，约 30 万字）喂给 V4，让它列出所有责任限制条款、付款节点、违约责任。V4 能定位到具体条款编号，并对比行业标准标注异常条款。" data-en="Feed a full commercial contract PDF (typically 100-200 pages, ~300K characters) to V4 and have it list all liability limitation clauses, payment milestones, and breach of contract penalties. V4 can pinpoint specific clause numbers and compare against industry standards to flag anomalies.">Feed a full commercial contract PDF (typically 100-200 pages, ~300K characters) to V4 and have it list all liability limitation clauses, payment milestones, and breach of contract penalties. V4 can pinpoint specific clause numbers and compare against industry standards to flag anomalies.</p>
+            <span class="metric" data-zh="条款定位 · 行业对比" data-en="Clause pinpointing · Industry compare">Clause pinpointing · Industry compare</span>
+        </div>
+
+        <div class="case-card">
+            <div class="icon">💻</div>
+            <h4 data-zh="案例 5：整本代码仓库理解" data-en="Case 5: Entire code repository understanding">Case 5: Entire code repository understanding</h4>
+            <p data-zh="中型项目（5-10 万行代码，约 50-100 万字符）一次性喂入 V4，跨文件做依赖梳理、新人 onboarding 文档生成、复杂 bug 跨文件定位。V4 1M 上下文正好覆盖这类项目规模。" data-en="Mid-size projects (50k-100k lines of code, ~500K-1M characters) can be ingested at once, enabling cross-file dependency mapping, new-hire onboarding doc generation, and complex cross-file bug localization. V4's 1M context is sized just right for this project scale.">Mid-size projects (50k-100k lines of code, ~500K-1M characters) can be ingested at once, enabling cross-file dependency mapping, new-hire onboarding doc generation, and complex cross-file bug localization. V4's 1M context is sized just right for this project scale.</p>
+            <span class="metric" data-zh="5-10 万行代码" data-en="50k-100k LoC">50k-100k LoC</span>
+        </div>
+
+        <div class="case-card">
+            <div class="icon">🏥</div>
+            <h4 data-zh="案例 6：医疗文献综述" data-en="Case 6: Medical literature review">Case 6: Medical literature review</h4>
+            <p data-zh="把一个细分领域近 5 年 PubMed 收录的 200+ 篇论文摘要（约 80 万字）一次性喂给 V4，让它生成研究趋势总结、识别研究空白、对比不同方法的局限。V4 1M 上下文 + 中文原生优势，让中文医学研究综述写作效率大幅提升。" data-en="Feed 5 years of PubMed abstracts (~200+ papers, ~800K characters) from a sub-field at once, generating research trend summaries, identifying research gaps, and comparing limitations of different methods. V4's 1M context + Chinese-native advantage dramatically accelerates Chinese medical research review writing.">Feed 5 years of PubMed abstracts (~200+ papers, ~800K characters) from a sub-field at once, generating research trend summaries, identifying research gaps, and comparing limitations of different methods. V4's 1M context + Chinese-native advantage dramatically accelerates Chinese medical review writing.</p>
+            <span class="metric" data-zh="200+ 论文 · 研究空白识别" data-en="200+ papers · Gap ID">200+ papers · Gap ID</span>
+        </div>
+    </section>
+
+    <!-- Scenarios -->
+    <section id="scenarios" class="container section">
+        <div class="section-header">
+            <h2 data-zh="🎯 适合用 V4 百万上下文的场景" data-en="🎯 Scenarios Suited for V4's 1M Context">🎯 Scenarios Suited for V4's 1M Context</h2>
+        </div>
+
+        <div class="case-grid">
+            <div class="case-card">
+                <div class="icon">📚</div>
+                <h4 data-zh="长文档分析" data-en="Long Document Analysis">Long Document Analysis</h4>
+                <p data-zh="财报、合同、法律文书、医学文献——以前需要切片 + RAG，现在一次性喂入。" data-en="Financial reports, contracts, legal documents, medical literature — used to need chunking + RAG, now feed in at once.">Financial reports, contracts, legal documents, medical literature — used to need chunking + RAG, now feed in at once.</p>
+            </div>
+            <div class="case-card">
+                <div class="icon">📦</div>
+                <h4 data-zh="代码仓库理解" data-en="Code Repo Understanding">Code Repo Understanding</h4>
+                <p data-zh="中型项目（5-10 万行）一次吃下，跨文件依赖梳理、新人 onboarding、复杂 bug 定位。" data-en="Mid-size projects (50k-100k LoC) ingested at once. Cross-file dependency mapping, new-hire onboarding, complex bug localization.">Mid-size projects (50k-100k LoC) ingested at once. Cross-file dependency mapping, new-hire onboarding, complex bug localization.</p>
+            </div>
+            <div class="case-card">
+                <div class="icon">🎭</div>
+                <h4 data-zh="整本小说 / 长文创作" data-en="Full-Novel / Long-Form Creation">Full-Novel / Long-Form Creation</h4>
+                <p data-zh="一次性阅读整本小说做风格识别、人物一致性检查、情节线追踪。" data-en="Read an entire novel at once for style recognition, character consistency checks, and plot line tracking.">Read an entire novel at once for style recognition, character consistency checks, and plot line tracking.</p>
+            </div>
+            <div class="case-card">
+                <div class="icon">🔍</div>
+                <h4 data-zh="研究综述 / 学术" data-en="Research Review / Academic">Research Review / Academic</h4>
+                <p data-zh="200+ 论文摘要一次性喂入做趋势总结、研究空白识别、方法对比。" data-en="Feed 200+ paper abstracts at once for trend summary, gap identification, method comparison.">Feed 200+ paper abstracts at once for trend summary, gap identification, method comparison.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Limits -->
+    <section id="limits" class="container section">
+        <div class="section-header">
+            <h2 data-zh="⚠️ 百万上下文的注意事项" data-en="⚠️ 1M Context Caveats">⚠️ 1M Context Caveats</h2>
+        </div>
+
+        <div class="insight-box" style="background: linear-gradient(135deg, rgba(255,193,7,0.15), rgba(255,142,114,0.08)); border-color: #ffc107;">
+            <h4 style="color: #ffc107;">⚠️ 多轮对话上下文遗忘</h4>
+            <p data-zh="V4 多轮对话超过 15 轮后，会出现上下文遗忘——这与 Gemini 3 的长程一致性差距更大。对策：把重要决策与已确认的接口签名放在 messages 列表头部，定期压缩对话历史，或在关键决策点重启对话 + 摘要传入。" data-en="After 15 rounds of multi-turn conversation, V4 shows context forgetting — the gap with Gemini 3's long-range consistency is larger. Counter-measures: put important decisions and confirmed interface signatures at the head of messages, periodically compact conversation history, or restart the conversation at key decision points with a summary.">After 15 rounds of multi-turn conversation, V4 shows context forgetting — the gap with Gemini 3's long-range consistency is larger. Counter-measures: put important decisions and confirmed interface signatures at the head of messages, periodically compact conversation history, or restart the conversation at key decision points with a summary.</p>
+        </div>
+
+        <div class="insight-box" style="background: linear-gradient(135deg, rgba(255,193,7,0.15), rgba(255,142,114,0.08)); border-color: #ffc107;">
+            <h4 style="color: #ffc107;">⚠️ 召回 ≠ 理解</h4>
+            <p data-zh="MRCR 83.5% 意味着 V4 能从百万上下文中检索到分散信息，但这不等于它能推理复杂多步关系。如果任务需要跨段落逻辑推导，建议拆成多个聚焦的子任务，而不是丢一段百万字符让 V4 一口气做完。" data-en="MRCR 83.5% means V4 can retrieve scattered information from 1M context, but this doesn't equal reasoning over complex multi-step relationships. If the task requires cross-paragraph logical derivation, recommend splitting into multiple focused subtasks rather than dumping a million characters and expecting V4 to do it in one shot.">MRCR 83.5% means V4 can retrieve scattered information from 1M context, but this doesn't equal reasoning over complex multi-step relationships. If the task requires cross-paragraph logical derivation, recommend splitting into multiple focused subtasks rather than dumping a million characters and expecting V4 to do it in one shot.</p>
+        </div>
+
+        <div class="insight-box" style="background: linear-gradient(135deg, rgba(255,193,7,0.15), rgba(255,142,114,0.08)); border-color: #ffc107;">
+            <h4 style="color: #ffc107;">⚠️ Token 与字符的换算</h4>
+            <p data-zh="1M token ≈ 150 万汉字（中文平均 1.5 token / 字）或 ≈ 75 万英文单词。中文比英文占用更多 token——按字符数估算 token 数会低估实际消耗。预算紧张时按 token 计费算账更准确。" data-en="1M tokens ≈ 1.5M Chinese characters (Chinese averages 1.5 tokens/char) or ≈ 750K English words. Chinese uses more tokens than English — estimating token count by character count will underestimate actual consumption. For tight budgets, use token-based billing calculations.">1M tokens ≈ 1.5M Chinese characters (Chinese averages 1.5 tokens/char) or ≈ 750K English words. Chinese uses more tokens than English — estimating token count by character count will underestimate actual consumption. For tight budgets, use token-based billing calculations.</p>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="container section">
+        <div class="section-header">
+            <h2 data-zh="❓ 长上下文常见问题" data-en="❓ Long Context FAQ">❓ Long Context FAQ</h2>
+        </div>
+        <div class="faq-grid">
+            <div class="faq-item">
+                <h4 data-zh="1M token 到底能装多少字？" data-en="How much text can 1M tokens actually hold?">How much text can 1M tokens actually hold?</h4>
+                <p data-zh="1M token ≈ 150 万汉字（中文平均 1.5 token / 字）或 ≈ 75 万英文单词。这个体量大致是 1 本《三国演义》（80 万字）+ 半本《红楼梦》、整部《哈利波特》1-7、5+ 本技术书、或 5-10 万行中等规模代码仓库。" data-en="1M tokens ≈ 1.5M Chinese characters or ≈ 750K English words. This is approximately 1 Romance of the Three Kingdoms (800K chars) + half of Dream of the Red Chamber, the entire Harry Potter 1-7, 5+ technical books, or a 50K-100K LoC mid-size codebase.">1M tokens ≈ 1.5M Chinese characters or ≈ 750K English words. This is approximately 1 Romance of the Three Kingdoms (800K chars) + half of Dream of the Red Chamber, the entire Harry Potter 1-7, 5+ technical books, or a 50K-100K LoC mid-size codebase.</p>
+            </div>
+            <div class="faq-item">
+                <h4 data-zh="V4 百万上下文为什么便宜？" data-en="Why is V4's 1M context so cheap?">Why is V4's 1M context so cheap?</h4>
+                <p data-zh="V4 用混合注意力架构（CSA 4:1 + HCA 128:1 + SWA 128-token 局部窗口）替代传统 Transformer 自注意力。在 1M 上下文场景下，推理 FLOPs 仅 V3.2 的 27%，KV Cache 仅 V3.2 的 10%。价格上 V4-Pro 输出仅 $0.87/MTok，是 Gemini 3.1 的约 1/12、Claude Opus 4.7 的 1/86。" data-en="V4 uses hybrid attention (CSA 4:1 + HCA 128:1 + SWA 128-token local window) instead of traditional Transformer self-attention. At 1M context, inference FLOPs are only 27% of V3.2, KV cache only 10%. Price: V4-Pro output is $0.87/MTok — about 1/12 of Gemini 3.1, 1/86 of Claude Opus 4.7.">V4 uses hybrid attention (CSA 4:1 + HCA 128:1 + SWA 128-token local window) instead of traditional Transformer self-attention. At 1M context, inference FLOPs are only 27% of V3.2, KV cache only 10%. Price: V4-Pro output is $0.87/MTok — about 1/12 of Gemini 3.1, 1/86 of Claude Opus 4.7.</p>
+            </div>
+            <div class="faq-item">
+                <h4 data-zh="百万上下文能取代 RAG 吗？" data-en="Can 1M context replace RAG?">Can 1M context replace RAG?</h4>
+                <p data-zh="部分场景可以——中等规模文档（5-50 万字）一次性喂入，召回率 83.5%，比简单向量召回更准。但对于超大规模（10 万+ 文档库）或强实时性场景，RAG 仍是更经济的方案。V4 1M 上下文更适合「单文档或小语料库」的深度处理。" data-en="Partially. Mid-sized documents (50K-500K chars) fed in at once have 83.5% recall — better than simple vector retrieval. But for very large corpora (100K+ docs) or strong real-time requirements, RAG remains more economical. V4's 1M context is better for "single document or small corpus" deep processing.">Partially. Mid-sized documents (50K-500K chars) fed in at once have 83.5% recall — better than simple vector retrieval. But for very large corpora (100K+ docs) or strong real-time requirements, RAG remains more economical. V4's 1M context is better for "single document or small corpus" deep processing.</p>
+            </div>
+            <div class="faq-item">
+                <h4 data-zh="Gemini 3.1 跟 V4 的 1M 上下文比怎样？" data-en="How does V4's 1M compare to Gemini 3.1?">How does V4's 1M compare to Gemini 3.1?</h4>
+                <p data-zh="Gemini 3.1 同样支持 1M token 上下文，是行业第一梯队成员之一。V4 与 Gemini 3.1 主要差距在长程一致性（V4 多轮 15 轮后会出现上下文遗忘，Gemini 3 维持更好）。价格上 V4 是 Gemini 3.1 的约 1/12。中文场景 V4 优势明显。" data-en="Gemini 3.1 also supports 1M token context, another member of the first tier. V4 vs Gemini 3.1 main gap is in long-range consistency (V4 shows context forgetting after 15 rounds, Gemini 3 maintains better). On price, V4 is about 1/12 of Gemini 3.1. V4 is clearly ahead in Chinese scenarios.">Gemini 3.1 also supports 1M token context, another member of the first tier. V4 vs Gemini 3.1 main gap is in long-range consistency (V4 shows context forgetting after 15 rounds, Gemini 3 maintains better). On price, V4 is about 1/12 of Gemini 3.1. V4 is clearly ahead in Chinese scenarios.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 DeepSeek Technologies. All rights reserved.</p>
+        <div class="links">
+            <a href="/" data-zh="返回首页" data-en="Back to Home">Back to Home</a>
+            <a href="/deepseek-v4.html" data-zh="V4 专题" data-en="V4 Overview">V4 Overview</a>
+            <a href="/deepseek-v4-coding-benchmark.html" data-zh="编程评测" data-en="Coding Benchmark">Coding Benchmark</a>
+            <a href="/deepseek-v4-vs-gpt5-vs-claude.html" data-zh="模型对比" data-en="Model Comparison">Model Comparison</a>
+            <a href="/deepseek-v3-to-v4-migration.html" data-zh="迁移指南" data-en="Migration Guide">Migration Guide</a>
+            <a href="https://cursorhero.com/" target="_blank" rel="nofollow noopener" data-zh="AI 鼠标光标" data-en="AI Cursor Generator">Cursorhero</a>
+        </div>
+        <p style="margin-top: 2rem; font-size: 0.875rem;" data-zh="数据来源：DeepSeek V4 官方技术报告、央视实测、第三方用户测试，2026 年 4-5 月数据。" data-en="Source: DeepSeek V4 official technical report, CCTV test, third-party user tests — April-May 2026 data.">Source: DeepSeek V4 official technical report, CCTV test, third-party user tests — April-May 2026 data.</p>
+    </footer>
+
+    <script>
+        let currentLanguage = localStorage.getItem('preferredLanguage') || 'en';
+
+        if (currentLanguage === 'zh') {
+            document.documentElement.lang = 'zh-CN';
+        }
+
+        function toggleLanguage() {
+            currentLanguage = currentLanguage === 'en' ? 'zh' : 'en';
+            localStorage.setItem('preferredLanguage', currentLanguage);
+            document.documentElement.lang = currentLanguage === 'zh' ? 'zh-CN' : 'en';
+
+            const langDisplay = currentLanguage === 'en' ? 'English' : '中文';
+            document.getElementById('current-lang').textContent = langDisplay;
+
+            document.querySelectorAll('[data-zh][data-en]').forEach(element => {
+                const text = element.getAttribute(`data-${currentLanguage}`);
+                if (text) {
+                    element.textContent = text;
+                }
+            });
+
+            const titleEl = document.querySelector('title');
+            const metaDesc = document.getElementById('meta-description');
+            const ogTitle = document.getElementById('og-title');
+            const ogDesc = document.getElementById('og-description');
+            const twitterTitle = document.getElementById('twitter-title');
+            const twitterDesc = document.getElementById('twitter-description');
+
+            if (currentLanguage === 'zh') {
+                titleEl.textContent = 'DeepSeek V4 1M Token 上下文：长文档与代码仓库分析';
+                metaDesc.content = 'DeepSeek V4 全系列（V4-Pro 与 V4-Flash）标配 1M token 上下文，MRCR 1M 检索 83.5%（超 GPT-5.5 69.8%）。含 6 个实测案例（97 万字素材 / 24 万字小说异常定位 / 5 年财报 / 商业合同 / 整本代码仓库 / 医疗文献）。百万上下文成本：V3.2 FLOPs 的 27%。';
+                ogTitle.content = 'DeepSeek V4 1M Token 上下文：长文档与代码仓库分析';
+                ogDesc.content = '1M context 全系列标配，MRCR 1M 83.5%，97 万字 7 秒响应，开源 MIT。';
+                twitterTitle.content = 'DeepSeek V4 1M 上下文：MRCR 83.5% 超 GPT-5.5';
+                twitterDesc.content = '97 万字素材 7 秒响应，24 万字小说秒级异常定位，开源 MIT 协议。';
+            } else {
+                titleEl.textContent = 'DeepSeek V4 1M Token Context: Long Document Analysis & Codebase Understanding';
+                metaDesc.content = 'DeepSeek V4 ships 1M token context standard on both V4-Pro and V4-Flash. MRCR 1M retrieval 83.5% (above GPT-5.5 69.8%). Real cases: 970k character mixed document 7-second answer, 240k character novel anomaly detection, full code repo understanding. Cost: 27% FLOPs of V3.2.';
+                ogTitle.content = 'DeepSeek V4 1M Token Context: Long Document & Codebase';
+                ogDesc.content = '1M context standard on V4-Pro and V4-Flash. MRCR 1M 83.5% (above GPT-5.5 69.8%). 27% FLOPs of V3.2. Real cases with 970k character documents.';
+                twitterTitle.content = 'DeepSeek V4 1M Context: MRCR 83.5% Beats GPT-5.5 69.8%';
+                twitterDesc.content = '970k char document 7s answer, 240k novel anomaly detection, open source MIT.';
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', function() {
+            const langDisplay = currentLanguage === 'en' ? 'English' : '中文';
+            document.getElementById('current-lang').textContent = langDisplay;
+
+            document.querySelectorAll('[data-zh][data-en]').forEach(element => {
+                const text = element.getAttribute(`data-${currentLanguage}`);
+                if (text) {
+                    element.textContent = text;
+                }
+            });
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
