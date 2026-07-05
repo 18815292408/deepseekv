@@ -157,6 +157,18 @@
   ],
   "routes": [
     {
+      "src": "/sitemap.xml",
+      "dest": "/public/sitemap.xml"
+    },
+    {
+      "src": "/robots.txt",
+      "dest": "/public/robots.txt"
+    },
+    {
+      "src": "/images/(.*)",
+      "dest": "/public/images/$1"
+    },
+    {
       "src": "/favicon.svg",
       "dest": "/favicon.svg"
     },
