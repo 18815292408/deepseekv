@@ -42,9 +42,9 @@
 <h1>广告披露 · Advertising Disclosure</h1>
 
 <div class="disclosure-box">
-    <p><strong>核心说明</strong>：deepseekv.pro 通过 <strong>Adsterra 广告网络</strong>（publisher 账号 zy18815292408）投放广告以支持网站运营。Adsterra 全部广告格式（Native Banner / Social Bar / Smartlink / Popunder）均使用 <strong>effectivecpmnetwork.com</strong> 作为广告 SDK 分发 CDN。（Popunder 于 2026-07-05 应访客偏好下架。）</p>
+    <p><strong>核心说明</strong>：deepseekv.pro 通过 <strong>Adsterra 广告网络</strong>（publisher 账号 zy18815292408）投放广告以支持网站运营。Adsterra 广告格式包括 Native Banner / Social Bar / Smartlink / Popunder / Banner（300×250、728×90）。其中 Native Banner / Social Bar / Smartlink / Popunder 使用 <strong>effectivecpmnetwork.com</strong> 作为广告 SDK 分发 CDN；Banner（300×250、728×90）系列使用 <strong>highperformanceformat.com</strong> CDN。（Popunder 曾于 2026-07-05 下架，于 2026-07-09 应需求恢复上线。）</p>
     <p><strong>广告内容</strong>：所有广告内容由 Adsterra 及其广告主提供，不代表 deepseekv.pro 编辑立场。</p>
-    <p><strong>用户影响</strong>：Smartlink 可能在用户点击外部链接时跳转到广告商页面；Social Bar 在页面底部显示固定广告条；Native Banner 在内容区域显示原生卡片。</p>
+    <p><strong>用户影响</strong>：Smartlink 可能在用户点击外部链接时跳转到广告商页面；Social Bar 在页面底部显示固定广告条；Native Banner 在内容区域显示原生卡片；Banner 728×90 显示在文章顶部、Banner 300×250 显示在文章末尾。</p>
     <p><strong>合规</strong>：本披露页遵守 FTC（美国联邦贸易委员会）、中国《互联网广告管理办法》等法规要求。</p>
 </div>
 
@@ -70,11 +70,29 @@
             <td>内容区</td>
             <td>原生卡片形式展示，与内容风格融合</td>
         </tr>
-        <!-- Popunder — disabled by user request 2026-07-05.
-             Adsterra API showed Popunder_1 (id=30113317) using effectivecpmnetwork exchange
-             but user explicitly opted out. Zone pl30213816 removed from HTML. -->
         <tr>
-            <td><strong>effectivecpmnetwork.com</strong></td>
+            <td><strong>Adsterra (highperformanceformat.com)</strong></td>
+            <td>Banner 横幅 (728×90)</td>
+            <td>文章顶部（hero 之后）</td>
+            <td>标准 IAB 顶部横幅位，桌面端常见</td>
+        </tr>
+        <tr>
+            <td><strong>Adsterra (highperformanceformat.com)</strong></td>
+            <td>Banner 横幅 (300×250)</td>
+            <td>文章末尾（FAQ 之后）</td>
+            <td>标准 IAB 中矩形位，桌面端常见</td>
+        </tr>
+        <!-- Popunder — disabled by user request 2026-07-05, re-enabled 2026-07-09.
+             Adsterra API: Popunder_1 (id=30113317) using effectivecpmnetwork exchange.
+             Zone pl30213816 currently active. -->
+        <tr>
+            <td><strong>Adsterra (effectivecpmnetwork.com)</strong></td>
+            <td>Popunder 弹窗</td>
+            <td>全站</td>
+            <td>用户点击页面任意位置时，在新标签页/背后打开广告页</td>
+        </tr>
+        <tr>
+            <td><strong>Adsterra (effectivecpmnetwork.com)</strong></td>
             <td>Smartlink 智能链接</td>
             <td>全站外部链接</td>
             <td>用户点击外部链接时可能跳转到广告商页面</td>
@@ -138,9 +156,27 @@
             <td>In-content</td>
             <td>Card-style ads integrated into content area</td>
         </tr>
-        <!-- Popunder — disabled by user request. See note above. -->
         <tr>
-            <td><strong>effectivecpmnetwork.com</strong></td>
+            <td><strong>Adsterra (highperformanceformat.com)</strong></td>
+            <td>Banner (728×90)</td>
+            <td>Top of article (after hero)</td>
+            <td>Standard IAB top banner, common on desktop</td>
+        </tr>
+        <tr>
+            <td><strong>Adsterra (highperformanceformat.com)</strong></td>
+            <td>Banner (300×250)</td>
+            <td>End of article (after FAQ)</td>
+            <td>Standard IAB medium rectangle, common on desktop</td>
+        </tr>
+        <!-- Popunder — disabled by user request. See note above. Re-enabled 2026-07-09. -->
+        <tr>
+            <td><strong>Adsterra (effectivecpmnetwork.com)</strong></td>
+            <td>Popunder</td>
+            <td>Site-wide</td>
+            <td>Opens ad page in new tab/behind when user clicks anywhere on the page</td>
+        </tr>
+        <tr>
+            <td><strong>Adsterra (effectivecpmnetwork.com)</strong></td>
             <td>Smartlink</td>
             <td>All external links</td>
             <td>Outbound clicks may redirect to advertiser page</td>
@@ -182,7 +218,7 @@
 <p>deepseekv.pro reserves the right to modify this page at any time. Modified versions will be posted here with an updated "Last Updated" date.</p>
 </div>
 
-<p class="last-updated"><strong>Last Updated</strong>: 2026-07-05</p>
+<p class="last-updated"><strong>Last Updated</strong>: 2026-07-09</p>
 
 <a href="/" class="footer-link">← 返回首页 / Back to Home</a>
 
