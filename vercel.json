@@ -5,6 +5,7 @@
     { "src": "remixicon-custom.css", "use": "@vercel/static" },
     { "src": "llms.txt", "use": "@vercel/static" },
     { "src": "llms-full.txt", "use": "@vercel/static" },
+    { "src": "840781bc22844d5897b27c136fa16770.txt", "use": "@vercel/static" },
     { "src": "favicon.svg", "use": "@vercel/static" },
     { "src": "logo.png", "use": "@vercel/static" },
     { "src": "public/**/*", "use": "@vercel/static" }
