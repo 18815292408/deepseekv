@@ -60,4 +60,20 @@
         <priority>0.3</priority>
     </url>
 
+    <!-- DeepSeek V4 vs GLM 5.3 Prime 对比 -->
+    <url>
+        <loc>https://www.deepseekv.pro/deepseek-v4-vs-glm-5-3-prime.html</loc>
+        <lastmod>2026-10-13</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+    </url>
+
+    <!-- Claude Fable 5.5 状态核查 -->
+    <url>
+        <loc>https://www.deepseekv.pro/claude-fable-5-5.html</loc>
+        <lastmod>2026-10-13</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
 </urlset>

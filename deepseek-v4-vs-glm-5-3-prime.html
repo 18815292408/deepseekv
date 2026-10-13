@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeepSeek V4 vs GLM 5.3 Prime: Benchmarks, Pricing &amp; 1M Context</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" id="meta-description" content="DeepSeek-V4-Pro-0813 vs Z.ai GLM-5.3-Prime compared: vendor-published benchmarks, official API pricing, 1M-token context, open weights, and when to pick each.">
+    <meta name="keywords" id="meta-keywords" content="GLM 5.3 Prime, GLM-5.3-Prime, DeepSeek V4 vs GLM 5.3, DeepSeek V4 Pro, GLM 5.3 benchmark, 1M context, open weights LLM, Z.ai GLM pricing, DeepSeek V4 pricing, LLM comparison 2026">
+    <meta name="author" content="DeepSeek V Pro">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+    <meta name="language" content="en">
+
+    <!-- Open Graph -->
+    <meta property="og:title" id="og-title" content="DeepSeek V4 vs GLM 5.3 Prime: Benchmarks, Pricing &amp; 1M Context">
+    <meta property="og:description" id="og-description" content="Vendor-published head-to-head: Terminal Bench 2.1 87.9 vs 88.2, CyberGym 83.3 vs 84.5. Official API pricing, 1M context, MIT vs custom weights.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://www.deepseekv.pro/deepseek-v4-vs-glm-5-3-prime.html">
+    <meta property="og:image" content="https://www.deepseekv.pro/images/deepseek-comparison-og.png">
+    <meta property="og:site_name" content="DeepSeek V Pro">
+    <meta property="article:published_time" content="2026-10-13">
+    <meta property="article:modified_time" content="2026-10-13">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" id="twitter-title" content="DeepSeek V4 vs GLM 5.3 Prime: Benchmarks, Pricing &amp; 1M Context">
+    <meta name="twitter:description" content="Terminal Bench 2.1 87.9 vs 88.2. CyberGym 83.3 vs 84.5. 1M context both. Official pricing: $0.66 vs $2.80 per MTok input.">
+    <meta name="twitter:image" content="https://www.deepseekv.pro/images/deepseek-comparison-og.png">
+
+    <meta name="theme-color" content="#0066FF">
+
+    <!-- Schema.org: TechArticle -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": "DeepSeek V4 vs GLM 5.3 Prime: Benchmarks, Pricing &amp; 1M Context",
+      "description": "Head-to-head comparison of DeepSeek-V4-Pro-0813 and Z.ai GLM-5.3-Prime using vendor-published benchmark tables, official API pricing, context limits and open-weight availability.",
+      "author": {"@type": "Organization", "name": "DeepSeek V Pro"},
+      "publisher": {"@type": "Organization", "name": "DeepSeek V Pro"},
+      "datePublished": "2026-10-13",
+      "dateModified": "2026-10-13",
+      "mainEntityOfPage": {"@type": "WebPage", "@id": "https://www.deepseekv.pro/deepseek-v4-vs-glm-5-3-prime.html"},
+      "keywords": "GLM 5.3 Prime, DeepSeek V4, model comparison, Terminal Bench, DeepSWE, CyberGym, 1M context",
+      "articleSection": "AI Model Comparison",
+      "inLanguage": "en"
+    }
+    </script>
+
+    <!-- Schema.org: FAQPage -->
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is the difference between GLM 5.3 Prime and GLM 5.3?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Prime is a high-speed serving tier of GLM-5.3, not a new model: same capability band, roughly 1.5–2× output throughput from inference acceleration, measured at about 77 tokens/s by third parties. Its benchmark numbers are the GLM-5.3 numbers — Terminal Bench 2.1 at 88.2, for example. The model ID is z-ai/glm-5.3-prime."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is DeepSeek V4 or GLM 5.3 Prime stronger?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "On the 2026 tables the two vendors published, they are very close: Terminal Bench 2.1 is 87.9 vs 88.2, CyberGym 83.3 vs 84.5, Toolathlon Verified 74.1 vs 73.0, NL2Repo 61.5 vs 58.0. Which one leads depends on the benchmark, and both are vendor-run under different harnesses, so this is not an absolute ranking. The real differences are price, maximum output length and deployment shape."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do both have open weights?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "GLM-5.3 weights are on Hugging Face (zai-org/GLM-5.3, with Flash and BF16 variants) under Z.ai's own glm-5.3 licence, but GLM-5.3-Prime is an API serving tier with no separate weights. DeepSeek-V4-Pro-0813 weights are also published, under an MIT licence, alongside V4.1-Flash in the same family."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are both really 1M-token context?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Both are listed at roughly 1M tokens of context in the official docs. Maximum single output differs, though: DeepSeek V4 allows up to 384K output tokens versus about 128K for GLM-5.3-Prime. If your workload is one long generation, that gap matters more than the window itself."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How big is the price gap on the same job?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "List prices for 1M input (cache miss) plus 250K output: DeepSeek V4-Pro is about $1.16 off-peak and $2.31 at peak, V4.1-Flash about $0.30 off-peak, and GLM-5.3-Prime $5.00. Off-peak, DeepSeek V4-Pro runs at about 1/4.3 of Prime; where caching applies, the cache-hit rate differs by 25×."
+      }
+    }
+  ]
+}
+    </script>
+
+    <!-- Schema.org: BreadcrumbList -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.deepseekv.pro/"},
+        {"@type": "ListItem", "position": 2, "name": "Model Comparison", "item": "https://www.deepseekv.pro/deepseek-v4-vs-gpt5-vs-claude.html"},
+        {"@type": "ListItem", "position": 3, "name": "DeepSeek V4 vs GLM 5.3 Prime", "item": "https://www.deepseekv.pro/deepseek-v4-vs-glm-5-3-prime.html"}
+      ]
+    }
+    </script>
+
+    <link rel="canonical" href="https://www.deepseekv.pro/deepseek-v4-vs-glm-5-3-prime.html">
+
+    <!-- Hreflang -->
+    <link rel="alternate" hreflang="en" href="https://www.deepseekv.pro/deepseek-v4-vs-glm-5-3-prime.html">
+    <link rel="alternate" hreflang="x-default" href="https://www.deepseekv.pro/deepseek-v4-vs-glm-5-3-prime.html">
+
+    <!-- Google tag -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PMY0EV67Q2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-PMY0EV67Q2');
+    </script>
+
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%230066FF;stop-opacity:1'/%3E%3Cstop offset='100%25' style='stop-color:%230044CC;stop-opacity:1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='6' fill='url(%23bg)'/%3E%3Cg transform='translate(16,16)'%3E%3Ctext x='16' y='20' font-family='Arial,sans-serif' font-size='7' font-weight='bold' text-anchor='middle' fill='%23FFFFFF'%3EC%3C/text%3E%3C/g%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+
+    <style>
+        :root {
+            --p: #0066FF;
+            --p-light: #3385FF;
+            --accent: #00d4ff;
+            --t0: #ffffff;
+            --t1: rgba(255,255,255,0.85);
+            --b1: rgba(255,255,255,0.05);
+            --b2: rgba(255,255,255,0.08);
+            --bd: rgba(255,255,255,0.1);
+            --g-b: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.7; color: var(--t0); background: var(--g-b); overflow-x: hidden; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+        .section { padding: 4rem 0; }
+        a { color: var(--p); text-decoration: none; }
+        a:hover { color: var(--p-light); }
+
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(10,14,39,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--bd); padding: 1rem 2rem; }
+        .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.4rem; font-weight: 700; color: var(--p); }
+        .nav-links { display: flex; gap: 2rem; list-style: none; }
+        .nav-links a { color: var(--t1); font-size: 0.95rem; }
+        .nav-links a:hover { color: var(--p); }
+        .lang-switcher { background: var(--b2); border: 1px solid var(--bd); border-radius: 8px; padding: 0.4rem 0.8rem; cursor: pointer; color: var(--t0); font-size: 0.9rem; display: flex; align-items: center; gap: 0.4rem; }
+
+        .hero { min-height: 50vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 7rem 2rem 3rem; }
+        .hero h1 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; background: linear-gradient(135deg, var(--p), var(--accent)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem; line-height: 1.2; }
+        .hero .subtitle { font-size: clamp(1rem, 2vw, 1.2rem); color: var(--t1); max-width: 850px; margin-bottom: 1.5rem; }
+
+        .breadcrumb { font-size: 0.85rem; color: var(--t1); margin-bottom: 1.25rem; }
+        .breadcrumb a { color: var(--t1); }
+
+        .hero-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; max-width: 900px; width: 100%; margin: 1.5rem 0; }
+        .hero-stat { background: var(--b1); border: 1px solid var(--accent); border-radius: 12px; padding: 1rem; }
+        .hero-stat .value { font-size: 1.6rem; font-weight: 800; color: var(--accent); }
+        .hero-stat .label { font-size: 0.85rem; color: var(--t1); }
+
+        .section-header { margin-bottom: 2.5rem; text-align: center; }
+        .section-header h2 { font-size: clamp(1.6rem, 3.5vw, 2.2rem); margin-bottom: 0.75rem; color: var(--t0); }
+        .section-header p { color: var(--t1); font-size: 1.05rem; max-width: 750px; margin: 0 auto; }
+
+        .benchmark-table-wrapper { overflow-x: auto; margin: 2rem 0; border-radius: 12px; }
+        .benchmark-table { width: 100%; border-collapse: collapse; background: var(--b1); }
+        .benchmark-table th { background: var(--p); color: white; padding: 0.9rem 1rem; text-align: left; font-weight: 600; font-size: 0.95rem; }
+        .benchmark-table td { padding: 0.85rem 1rem; border-bottom: 1px solid var(--bd); color: var(--t1); font-size: 0.95rem; }
+        .benchmark-table tr:last-child td { border-bottom: none; }
+        .benchmark-table tr:hover { background: rgba(0,102,255,0.06); }
+        .benchmark-table .v4 { color: var(--accent); font-weight: 600; }
+        .benchmark-table .winner { background: rgba(0,212,255,0.08); }
+        .benchmark-table caption { caption-side: bottom; padding-top: 0.75rem; font-size: 0.85rem; color: var(--t1); text-align: left; }
+
+        .insight-box { background: linear-gradient(135deg, rgba(0,102,255,0.15), rgba(0,212,255,0.08)); border: 1px solid var(--p); border-radius: 12px; padding: 1.5rem; margin: 0 0 2rem; }
+        .insight-box h4 { color: var(--p-light); margin-bottom: 0.75rem; }
+        .insight-box p { color: var(--t1); }
+        .insight-box ul { color: var(--t1); margin: 0.75rem 0 0 1.25rem; }
+
+        .warn-box { background: rgba(255,193,7,0.08); border: 1px solid rgba(255,193,7,0.5); border-radius: 12px; padding: 1.25rem 1.5rem; margin: 2rem 0; }
+        .warn-box h4 { color: #ffc107; margin-bottom: 0.5rem; font-size: 1.05rem; }
+        .warn-box p { color: var(--t1); font-size: 0.95rem; }
+
+        .scenario-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+        .scenario-card { background: var(--b1); border: 1px solid var(--bd); border-radius: 12px; padding: 1.5rem; }
+        .scenario-card .icon { font-size: 2rem; margin-bottom: 0.5rem; }
+        .scenario-card h4 { color: var(--t0); margin-bottom: 0.5rem; }
+        .scenario-card p { color: var(--t1); font-size: 0.95rem; line-height: 1.5; }
+
+        .faq-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-top: 2rem; }
+        .faq-item { background: var(--b1); border: 1px solid var(--bd); border-radius: 12px; padding: 1.5rem; }
+        .faq-item h4 { color: var(--p); margin-bottom: 0.75rem; font-size: 1.1rem; }
+        .faq-item p { color: var(--t1); }
+        .faq-item code { background: rgba(0,102,255,0.12); padding: 0.05rem 0.3rem; border-radius: 3px; font-family: monospace; font-size: 0.9em; color: var(--p-light); }
+
+        .source-list { list-style: none; margin-top: 1rem; }
+        .source-list li { color: var(--t1); font-size: 0.9rem; margin-bottom: 0.6rem; padding-left: 1.1rem; position: relative; }
+        .source-list li::before { content: "\2192"; position: absolute; left: 0; color: var(--p); }
+
+        footer { background: rgba(0,0,0,0.5); padding: 3rem 2rem 2rem; margin-top: 4rem; text-align: center; }
+        footer p { color: var(--t1); font-size: 0.9rem; margin-bottom: 1rem; }
+        footer .links { display: flex; justify-content: center; flex-wrap: wrap; gap: 1.5rem; margin-bottom: 1rem; }
+        footer .links a { color: var(--t1); font-size: 0.9rem; }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .container { padding: 0 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-inner">
+            <a href="/" class="logo">V4 vs GLM</a>
+            <ul class="nav-links">
+                <li><a href="#answer" data-zh="结论" data-en="Bottom Line">Bottom Line</a></li>
+                <li><a href="#specs" data-zh="规格" data-en="Specs">Specs</a></li>
+                <li><a href="#benchmarks" data-zh="基准" data-en="Benchmarks">Benchmarks</a></li>
+                <li><a href="#pricing" data-zh="价格" data-en="Pricing">Pricing</a></li>
+                <li><a href="#pick" data-zh="怎么选" data-en="Which to Pick">Which to Pick</a></li>
+                <li><a href="#faq" data-en="FAQ">FAQ</a></li>
+            </ul>
+            <div class="lang-switcher" onclick="toggleLanguage()">
+                <span>🌐</span>
+                <span id="current-lang">English</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <p class="breadcrumb"><a href="/" data-zh="首页" data-en="Home">Home</a> › <a href="/deepseek-v4-vs-gpt5-vs-claude.html" data-zh="模型对比" data-en="Model Comparison">Model Comparison</a> › <span data-zh="V4 vs GLM 5.3 Prime" data-en="V4 vs GLM 5.3 Prime">V4 vs GLM 5.3 Prime</span></p>
+        <h1 data-zh="DeepSeek V4 vs GLM 5.3 Prime" data-en="DeepSeek V4 vs GLM 5.3 Prime">DeepSeek V4 vs GLM 5.3 Prime</h1>
+        <p class="subtitle" data-zh="两款 2026 年的开源权重旗舰，都是百万级上下文。下面用两家自己公布的基准表、官方 API 价格和权重状态逐项对比，并说清各自真正赢在哪。" data-en="Two 2026 open-weights flagships, both with 1M-token context. Here is the vendor-published benchmark data, the official per-token pricing, the weight availability — and where each one actually wins.">Two 2026 open-weights flagships, both with 1M-token context. Here is the vendor-published benchmark data, the official per-token pricing, the weight availability — and where each one actually wins.</p>
+
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <div class="value">87.9 / 88.2</div>
+                <div class="label" data-zh="Terminal Bench 2.1：V4-Pro / GLM-5.3" data-en="Terminal Bench 2.1: V4-Pro / GLM-5.3">Terminal Bench 2.1: V4-Pro / GLM-5.3</div>
+            </div>
+            <div class="hero-stat">
+                <div class="value">1M</div>
+                <div class="label" data-zh="上下文窗口（两者）" data-en="Context window (both)">Context window (both)</div>
+            </div>
+            <div class="hero-stat">
+                <div class="value">$0.66 / $2.80</div>
+                <div class="label" data-zh="输入 $/MTok：V4-Pro 非高峰 / Prime" data-en="Input $/MTok: V4-Pro off-peak / Prime">Input $/MTok: V4-Pro off-peak / Prime</div>
+            </div>
+            <div class="hero-stat">
+                <div class="value">MIT</div>
+                <div class="label" data-zh="DeepSeek V4-Pro 权重许可" data-en="DeepSeek V4-Pro weight licence">DeepSeek V4-Pro weight licence</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ad: Banner 728x90 (highperformanceformat.com — Adsterra's CDN)
+     Banner 728x90_1 (id=301745523) retrieved from beta.publishers.adsterra.com dashboard (2026-07-09). -->
+    <div class="container" style="padding: 0 2rem;">
+    <div style="background: rgba(0,0,0,0.03); border: 1px dashed rgba(0,0,0,0.1); padding: 0.5rem; margin: 2rem auto; max-width: 1200px; border-radius: 8px; text-align: center;">
+        <div style="font-size: 0.7rem; color: #888; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0;">
+            SPONSORED · <a href="/advertising-disclosure.html" style="color: #888; text-decoration: underline;">Advertising Disclosure</a>
+        </div>
+        <script>
+            atOptions = {
+                'key' : 'ee8bc1e77d94a913b862ff8aaead0cca',
+                'format' : 'iframe',
+                'height' : 90,
+                'width' : 728,
+                'params' : {}
+            };
+        </script>
+        <script src="https://www.highperformanceformat.com/ee8bc1e77d94a913b862ff8aaead0cca/invoke.js"></script>
+    </div>
+    </div>
+
+    <!-- Bottom line -->
+    <section id="answer" class="container section">
+        <div class="insight-box">
+            <h4 data-zh="一句话结论" data-en="The bottom line">The bottom line</h4>
+            <p data-zh="在两家各自公布的基准上，DeepSeek-V4-Pro-0813 与 GLM-5.3-Prime 咬得很紧，没有一边倒的赢家。真正的差别不在榜单，而在三件事：价格（DeepSeek 非高峰约为 Prime 的 1/4.3）、单次输出上限（384K vs 约 128K）、以及部署形态（两者权重都开放，但 Prime 本身是 API 服务档）。" data-en="On the two vendors' own benchmark tables, DeepSeek-V4-Pro-0813 and GLM-5.3-Prime are close enough that neither wins outright. The real differences are not on the leaderboard but in three things: price (DeepSeek off-peak is roughly 1/4.3 of Prime for the same job), maximum single output (384K vs about 128K), and deployment shape (both families publish weights, but Prime itself is an API serving tier).">On the two vendors' own benchmark tables, DeepSeek-V4-Pro-0813 and GLM-5.3-Prime are close enough that neither wins outright. The real differences are not on the leaderboard but in three things: price (DeepSeek off-peak is roughly 1/4.3 of Prime for the same job), maximum single output (384K vs about 128K), and deployment shape (both families publish weights, but Prime itself is an API serving tier).</p>
+            <ul>
+                <li data-zh="要最低单位成本、最大单次输出 → DeepSeek V4-Pro（或更便宜的 V4.1-Flash）。" data-en="Lowest unit cost and the largest single output → DeepSeek V4-Pro (or the cheaper V4.1-Flash).">Lowest unit cost and the largest single output → DeepSeek V4-Pro (or the cheaper V4.1-Flash).</li>
+                <li data-zh="要更高吐字速度的实时编码 / 长链条 agent → GLM-5.3-Prime。" data-en="Higher streaming throughput for realtime coding or long-horizon agents → GLM-5.3-Prime.">Higher streaming throughput for realtime coding or long-horizon agents → GLM-5.3-Prime.</li>
+                <li data-zh="要图像输入等 1M 上下文的多模态能力 → 走 DeepSeek-V4.1-Flash（V4-Pro 不支持视觉）。" data-en="Multimodal input at 1M context → DeepSeek-V4.1-Flash (V4-Pro does not support vision).">Multimodal input at 1M context → DeepSeek-V4.1-Flash (V4-Pro does not support vision).</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Specs -->
+    <section id="specs" class="container section">
+        <div class="section-header">
+            <h2 data-zh="📋 核心规格对比（官方口径）" data-en="📋 Core Specs (official sources)">📋 Core Specs (official sources)</h2>
+            <p data-zh="下表只写官方文档或模型卡能直接查到的项；查不到的写「未确认」，不猜。" data-en="Every row below is taken from an official doc or model card. Anything not confirmed there is marked as unconfirmed rather than guessed.">Every row below is taken from an official doc or model card. Anything not confirmed there is marked as unconfirmed rather than guessed.</p>
+        </div>
+        <div class="benchmark-table-wrapper">
+            <table class="benchmark-table">
+                <thead>
+                    <tr>
+                        <th data-zh="规格" data-en="Spec">Spec</th>
+                        <th data-zh="DeepSeek-V4-Pro-0813" data-en="DeepSeek-V4-Pro-0813">DeepSeek-V4-Pro-0813</th>
+                        <th data-zh="GLM-5.3-Prime" data-en="GLM-5.3-Prime">GLM-5.3-Prime</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td data-zh="厂商 / 版本" data-en="Vendor / version">Vendor / version</td>
+                        <td class="v4"" data-zh="DeepSeek（deepseek-v4-pro，权重日期 0813）" data-en="DeepSeek (deepseek-v4-pro, weights dated 0813)">DeepSeek (deepseek-v4-pro, weights dated 0813)</td>
+                        <td" data-zh="Z.ai（z-ai/glm-5.3-prime，2026-09-23 上线）" data-en="Z.ai (z-ai/glm-5.3-prime, live 2026-09-23)">Z.ai (z-ai/glm-5.3-prime, live 2026-09-23)</td>
+                    </tr>
+                    <tr>
+                        <td data-zh="上下文窗口" data-en="Context window">Context window</td>
+                        <td class="v4">1M tokens</td>
+                        <td" data-zh="约 1M tokens" data-en="About 1M tokens">About 1M tokens</td>
+                    </tr>
+                    <tr>
+                        <td data-zh="单次最大输出" data-en="Max output">Max output</td>
+                        <td class="winner v4">384K tokens</td>
+                        <td" data-zh="约 128K tokens" data-en="About 128K tokens">About 128K tokens</td>
+                    </tr>
+                    <tr>
+                        <td data-zh="输入模态" data-en="Input modality">Input modality</td>
+                        <td" data-zh="文本（Pro 不支持视觉；V4.1-Flash 支持）" data-en="Text (no vision on Pro; V4.1-Flash supports it)">Text (no vision on Pro; V4.1-Flash supports it)</td>
+                        <td" data-zh="纯文本" data-en="Text only">Text only</td>
+                    </tr>
+                    <tr>
+                        <td data-zh="思考模式" data-en="Thinking mode">Thinking mode</td>
+                        <td class="v4"" data-zh="可切换非思考 / 思考（默认思考）" data-en="Switchable non-thinking / thinking (thinking is the default)">Switchable non-thinking / thinking (thinking is the default)</td>
+                        <td" data-zh="常开；low / high / max（默认 max）" data-en="Always on; low / high / max (default max)">Always on; low / high / max (default max)</td>
+                    </tr>
+                    <tr>
+                        <td data-zh="工具调用 / JSON" data-en="Tools / JSON output">Tools / JSON output</td>
+                        <td class="v4"" data-zh="✓ / ✓（另支持 Anthropic API 格式）" data-en="✓ / ✓ (also supports the Anthropic API format)">✓ / ✓ (also supports the Anthropic API format)</td>
+                        <td" data-zh="✓ / ✓（聚合器路径不强制 schema）" data-en="✓ / ✓ (schema not enforced on the aggregator path)">✓ / ✓ (schema not enforced on the aggregator path)</td>
+                    </tr>
+                    <tr>
+                        <td data-zh="开源权重" data-en="Open weights">Open weights</td>
+                        <td class="winner v4"" data-zh="✓ Hugging Face，MIT 许可" data-en="✓ Hugging Face, MIT licence">✓ Hugging Face, MIT licence</td>
+                        <td" data-zh="✓ GLM-5.3 权重开放；Prime 为 API 档，无单独权重" data-en="✓ GLM-5.3 weights are open; Prime is an API tier with no separate weights">✓ GLM-5.3 weights are open; Prime is an API tier with no separate weights</td>
+                    </tr>
+                    <tr>
+                        <td data-zh="吞吐 / 并发" data-en="Throughput / concurrency">Throughput / concurrency</td>
+                        <td" data-zh="并发上限 2500（Flash）/ 500（Pro）" data-en="Concurrency limit 2500 (Flash) / 500 (Pro)">Concurrency limit 2500 (Flash) / 500 (Pro)</td>
+                        <td class="v4"" data-zh="约 1.5–2× GLM-5.3 输出吞吐，第三方实测约 77 tok/s" data-en="About 1.5–2× GLM-5.3 output throughput, around 77 tok/s in third-party tests">About 1.5–2× GLM-5.3 output throughput, around 77 tok/s in third-party tests</td>
+                    </tr>
+                    <tr>
+                        <td data-zh="分时定价" data-en="Time-of-day pricing">Time-of-day pricing</td>
+                        <td class="v4"" data-zh="有：非高峰为高峰的半价" data-en="Yes: off-peak is half of peak">Yes: off-peak is half of peak</td>
+                        <td" data-zh="无" data-en="None">None</td>
+                    </tr>
+                </tbody>
+                <caption data-zh="来源：DeepSeek API 文档与 HF 模型卡、Z.ai/OpenRouter 的 GLM-5.3-Prime 卡片（2026-10-13 读取）。" data-en="Sources: DeepSeek API docs and HF model card; Z.ai / OpenRouter GLM-5.3-Prime card — read 2026-10-13.">Sources: DeepSeek API docs and HF model card; Z.ai / OpenRouter GLM-5.3-Prime card — read 2026-10-13.</caption>
+            </table>
+        </div>
+    </section>
+
+    <!-- Benchmarks -->
+    <section id="benchmarks" class="container section">
+        <div class="section-header">
+            <h2 data-zh="📊 厂商公布的基准对比" data-en="📊 Vendor-Published Benchmarks">📊 Vendor-Published Benchmarks</h2>
+            <p data-zh="两边都把对方列进了自己的对比表，所以这里的数字来自两家模型卡，可交叉核对。" data-en="Both vendors list the other in their own comparison tables, so these numbers come from both model cards and can be cross-checked.">Both vendors list the other in their own comparison tables, so these numbers come from both model cards and can be cross-checked.</p>
+        </div>
+        <div class="benchmark-table-wrapper">
+            <table class="benchmark-table">
+                <thead>
+                    <tr>
+                        <th data-zh="基准" data-en="Benchmark">Benchmark</th>
+                        <th data-zh="DeepSeek-V4-Pro-0813" data-en="DeepSeek-V4-Pro-0813">DeepSeek-V4-Pro-0813</th>
+                        <th data-zh="GLM-5.3（Prime 沿用）" data-en="GLM-5.3 (Prime inherits)">GLM-5.3 (Prime inherits)</th>
+                        <th data-zh="来源" data-en="Source">Source</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Terminal Bench 2.1</td><td class="v4">87.9</td><td class="winner v4">88.2</td><td data-zh="两家模型卡" data-en="Both model cards">Both model cards</td></tr>
+                    <tr><td>DeepSWE</td><td class="v4">62.7</td><td class="winner v4">66.9</td><td data-zh="两家模型卡" data-en="Both model cards">Both model cards</td></tr>
+                    <tr><td>NL2Repo</td><td class="winner v4">61.5</td><td>58.0</td><td data-zh="两家模型卡" data-en="Both model cards">Both model cards</td></tr>
+                    <tr><td>CyberGym</td><td class="v4">83.3</td><td class="winner v4">84.5</td><td data-zh="两家模型卡" data-en="Both model cards">Both model cards</td></tr>
+                    <tr><td>Toolathlon Verified</td><td class="winner v4">74.1</td><td>73.0</td><td data-zh="两家模型卡" data-en="Both model cards">Both model cards</td></tr>
+                    <tr><td>Agents' Last Exam</td><td class="v4">25.7</td><td class="winner v4">28.5</td><td data-zh="两家模型卡" data-en="Both model cards">Both model cards</td></tr>
+                    <tr><td>HLE (with tools)</td><td class="v4">60.0</td><td class="winner v4">62.5</td><td data-zh="两家模型卡" data-en="Both model cards">Both model cards</td></tr>
+                    <tr><td>AutomationBench</td><td" data-zh="31.8（Public 口径）" data-en="31.8 (Public)">31.8 (Public)</td><td class="winner v4"" data-zh="48.2（v1.0.6 口径）" data-en="48.2 (v1.0.6)">48.2 (v1.0.6)</td><td data-zh="口径不同，不可直接比" data-en="Different versions — not directly comparable">Different versions — not directly comparable</td></tr>
+                    <tr><td>GDPval-AA v2</td><td>1590</td><td class="winner v4">1769</td><td data-zh="Z.ai 模型卡（含对 DeepSeek 的复现）" data-en="Z.ai model card (incl. its DeepSeek run)">Z.ai model card (incl. its DeepSeek run)</td></tr>
+                </tbody>
+                <caption data-zh="粗体 = 该行较高者。数值来自各家 2026 年自有评测，harness、超时与轮次不同。" data-en="Bold = higher value in that row. Numbers come from each vendor's own 2026 evaluation; harness, timeouts and rollout counts differ.">Bold = higher value in that row. Numbers come from each vendor's own 2026 evaluation; harness, timeouts and rollout counts differ.</caption>
+            </table>
+        </div>
+
+        <div class="warn-box">
+            <h4 data-zh="⚠️ 怎么读这张表" data-en="⚠️ How to read this table">⚠️ How to read this table</h4>
+            <p data-zh="这些是厂商自评（vendor-run），不是第三方同条件复现：两边用的 agent harness、超时、上下文上限和取平均方式都不一样，AutomationBench 甚至不是同一版本。GLM-5.3-Prime 的基准数值继承自 GLM-5.3，因为 Prime 是服务加速档而不是新模型。把这张表当作方向性参考，不要当作绝对排名。" data-en="These are vendor-run results, not same-condition third-party reproductions: the agents' harnesses, timeouts, context limits and rollout averaging all differ, and AutomationBench is not even the same version. GLM-5.3-Prime's benchmark numbers are inherited from GLM-5.3 because Prime is a serving tier, not a new model. Treat this as directional, not as an absolute ranking.">These are vendor-run results, not same-condition third-party reproductions: the agents' harnesses, timeouts, context limits and rollout averaging all differ, and AutomationBench is not even the same version. GLM-5.3-Prime's benchmark numbers are inherited from GLM-5.3 because Prime is a serving tier, not a new model. Treat this as directional, not as an absolute ranking.</p>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section id="pricing" class="container section">
+        <div class="section-header">
+            <h2 data-zh="💰 官方 API 价格对比" data-en="💰 Official API Pricing">💰 Official API Pricing</h2>
+            <p data-zh="按官方价目表，每百万 token。DeepSeek 有高峰/非高峰两档，GLM-5.3-Prime 没有。" data-en="List prices per million tokens. DeepSeek splits peak and off-peak; GLM-5.3-Prime does not.">List prices per million tokens. DeepSeek splits peak and off-peak; GLM-5.3-Prime does not.</p>
+        </div>
+        <div class="benchmark-table-wrapper">
+            <table class="benchmark-table">
+                <thead>
+                    <tr>
+                        <th data-zh="计费项（每 1M token）" data-en="Line item (per 1M tokens)">Line item (per 1M tokens)</th>
+                        <th data-zh="DeepSeek V4-Pro" data-en="DeepSeek V4-Pro">DeepSeek V4-Pro</th>
+                        <th data-zh="DeepSeek V4.1-Flash" data-en="DeepSeek V4.1-Flash">DeepSeek V4.1-Flash</th>
+                        <th data-zh="GLM-5.3-Prime" data-en="GLM-5.3-Prime">GLM-5.3-Prime</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td data-zh="输入 · 缓存未命中" data-en="Input · cache miss">Input · cache miss</td>
+                        <td class="winner v4"" data-zh="$0.66 非高峰 / $1.32 高峰" data-en="$0.66 off-peak / $1.32 peak">$0.66 off-peak / $1.32 peak</td>
+                        <td class="v4"" data-zh="$0.15 非高峰 / $0.30 高峰" data-en="$0.15 off-peak / $0.30 peak">$0.15 off-peak / $0.30 peak</td>
+                        <td>$2.80</td>
+                    </tr>
+                    <tr>
+                        <td data-zh="输入 · 缓存命中" data-en="Input · cache hit">Input · cache hit</td>
+                        <td class="winner v4"" data-zh="$0.022 非高峰 / $0.044 高峰" data-en="$0.022 off-peak / $0.044 peak">$0.022 off-peak / $0.044 peak</td>
+                        <td class="v4"" data-zh="$0.003 非高峰 / $0.006 高峰" data-en="$0.003 off-peak / $0.006 peak">$0.003 off-peak / $0.006 peak</td>
+                        <td>$0.56</td>
+                    </tr>
+                    <tr>
+                        <td data-zh="输出" data-en="Output">Output</td>
+                        <td class="winner v4"" data-zh="$1.98 非高峰 / $3.96 高峰" data-en="$1.98 off-peak / $3.96 peak">$1.98 off-peak / $3.96 peak</td>
+                        <td class="v4"" data-zh="$0.60 非高峰 / $1.20 高峰" data-en="$0.60 off-peak / $1.20 peak">$0.60 off-peak / $1.20 peak</td>
+                        <td>$8.80</td>
+                    </tr>
+                    <tr>
+                        <td data-zh="分时规则" data-en="Time-of-day rule">Time-of-day rule</td>
+                        <td colspan="2" class="v4" data-zh="高峰 = 周一至周五 01:00–04:00 与 06:00–10:00 UTC（不含中国法定假日）；其余时段与周末为半价非高峰。" data-en="Peak = Mon–Fri 01:00–04:00 and 06:00–10:00 UTC (excl. Chinese public holidays); everything else, including weekends, is half-price off-peak.">Peak = Mon–Fri 01:00–04:00 and 06:00–10:00 UTC (excl. Chinese public holidays); everything else, including weekends, is half-price off-peak.</td>
+                        <td data-zh="无分时，单一价" data-en="Flat rate, no split">Flat rate, no split</td>
+                    </tr>
+                </tbody>
+                <caption data-zh="来源：DeepSeek API 文档价格页；OpenRouter / Z.ai 的 GLM-5.3-Prime 卡片（2026-10-13 读取）。" data-en="Sources: DeepSeek API docs pricing page; OpenRouter / Z.ai GLM-5.3-Prime card — read 2026-10-13.">Sources: DeepSeek API docs pricing page; OpenRouter / Z.ai GLM-5.3-Prime card — read 2026-10-13.</caption>
+            </table>
+        </div>
+
+        <div class="insight-box">
+            <h4 data-zh="一个算例：1M 输入（未命中）+ 250K 输出" data-en="Worked example: 1M input (cache miss) + 250K output">Worked example: 1M input (cache miss) + 250K output</h4>
+            <ul>
+                <li data-zh="DeepSeek V4-Pro（非高峰）：$0.66 + 0.25 × $1.98 ≈ $1.16" data-en="DeepSeek V4-Pro (off-peak): $0.66 + 0.25 × $1.98 ≈ $1.16">DeepSeek V4-Pro (off-peak): $0.66 + 0.25 × $1.98 ≈ $1.16</li>
+                <li data-zh="DeepSeek V4-Pro（高峰）：$1.32 + 0.25 × $3.96 ≈ $2.31" data-en="DeepSeek V4-Pro (peak): $1.32 + 0.25 × $3.96 ≈ $2.31">DeepSeek V4-Pro (peak): $1.32 + 0.25 × $3.96 ≈ $2.31</li>
+                <li data-zh="DeepSeek V4.1-Flash（非高峰）：$0.15 + 0.25 × $0.60 ≈ $0.30" data-en="DeepSeek V4.1-Flash (off-peak): $0.15 + 0.25 × $0.60 ≈ $0.30">DeepSeek V4.1-Flash (off-peak): $0.15 + 0.25 × $0.60 ≈ $0.30</li>
+                <li data-zh="GLM-5.3-Prime：$2.80 + 0.25 × $8.80 = $5.00" data-en="GLM-5.3-Prime: $2.80 + 0.25 × $8.80 = $5.00">GLM-5.3-Prime: $2.80 + 0.25 × $8.80 = $5.00</li>
+            </ul>
+            <p style="margin-top: 0.75rem;" data-zh="同一笔活，DeepSeek V4-Pro 非高峰约为 Prime 的 1/4.3，高峰也只要约一半；V4.1-Flash 再便宜一个量级。缓存命中的场景差距更大（命中价差 25 倍）。" data-en="For the same job, DeepSeek V4-Pro off-peak is about 1/4.3 of Prime and even at peak costs roughly half; V4.1-Flash is another order of magnitude cheaper. Cache-heavy workloads widen the gap further (25× on the cache-hit rate).">For the same job, DeepSeek V4-Pro off-peak is about 1/4.3 of Prime and even at peak costs roughly half; V4.1-Flash is another order of magnitude cheaper. Cache-heavy workloads widen the gap further (25× on the cache-hit rate).</p>
+        </div>
+    </section>
+
+    <!-- Speed -->
+    <section id="speed" class="container section">
+        <div class="section-header">
+            <h2 data-zh="⚡ Prime 的「加速」到底加在哪里" data-en="⚡ What Prime Actually Accelerates">⚡ What Prime Actually Accelerates</h2>
+        </div>
+        <p data-zh="GLM-5.3-Prime 不是新模型，而是 GLM-5.3 的高速服务档：Z.ai 与 OpenRouter 都把它描述为继承 GLM-5.3 的全部能力，再通过推理加速把输出吞吐提高到约 1.5–2×，第三方实测约 77 tok/s。它的卖点是流式体验——实时编码对话、流式代码生成、以及已经想要 GLM-5.3 质量但嫌基础版慢的长链条 agent。" data-en="GLM-5.3-Prime is not a new model: it is a high-speed serving tier of GLM-5.3. Z.ai and OpenRouter both describe it as inheriting GLM-5.3's full capabilities while inference acceleration lifts output throughput to roughly 1.5–2×, with third-party measurements around 77 tokens/s. Its selling point is streaming feel — realtime coding chat, streamed code generation, and long-horizon agents that already wanted GLM-5.3 quality but found the base ID too slow.">GLM-5.3-Prime is not a new model: it is a high-speed serving tier of GLM-5.3. Z.ai and OpenRouter both describe it as inheriting GLM-5.3's full capabilities while inference acceleration lifts output throughput to roughly 1.5–2×, with third-party measurements around 77 tokens/s. Its selling point is streaming feel — realtime coding chat, streamed code generation, and long-horizon agents that already wanted GLM-5.3 quality but found the base ID too slow.</p>
+        <p style="margin-top: 1rem; color: var(--t1);" data-zh="DeepSeek 这边没有对应的「同款加速档」，它用另一套办法换成本：把一天切成高峰与非高峰，非高峰半价，并给出并发上限（Pro 500 / Flash 2500）。所以这其实是两条不同的优化路径——GLM 优化「每秒吐多少」，DeepSeek 优化「每百万 token 多少钱」。" data-en="DeepSeek has no equivalent accelerated tier; it buys the same outcome a different way, splitting the day into peak and off-peak windows at half price and publishing concurrency limits (500 for Pro, 2500 for Flash). So these are two different optimisation paths: GLM optimises tokens per second, DeepSeek optimises dollars per million tokens.">DeepSeek has no equivalent accelerated tier; it buys the same outcome a different way, splitting the day into peak and off-peak windows at half price and publishing concurrency limits (500 for Pro, 2500 for Flash). So these are two different optimisation paths: GLM optimises tokens per second, DeepSeek optimises dollars per million tokens.</p>
+    </section>
+
+    <!-- Open weights -->
+    <section id="open" class="container section">
+        <div class="section-header">
+            <h2 data-zh="🧩 开源权重与自托管" data-en="🧩 Open Weights &amp; Self-Hosting">🧩 Open Weights &amp; Self-Hosting</h2>
+        </div>
+        <div class="scenario-grid">
+            <div class="scenario-card">
+                <div class="icon">🪪</div>
+                <h4 data-zh="DeepSeek：MIT" data-en="DeepSeek: MIT">DeepSeek: MIT</h4>
+                <p data-zh="DeepSeek-V4-Pro-0813 的权重在 Hugging Face 上以 MIT 许可发布，同系列还有 DeepSeek-V4.1-Flash（2026-09-10，支持视觉）。要自托管、要改许可友好的东西，这条线更省心。" data-en="DeepSeek-V4-Pro-0813 weights are published on Hugging Face under an MIT licence, alongside DeepSeek-V4.1-Flash (2026-09-10, vision-capable). If you want to self-host on permissive terms, this is the simpler line.">DeepSeek-V4-Pro-0813 weights are published on Hugging Face under an MIT licence, alongside DeepSeek-V4.1-Flash (2026-09-10, vision-capable). If you want to self-host on permissive terms, this is the simpler line.</p>
+            </div>
+            <div class="scenario-card">
+                <div class="icon">📦</div>
+                <h4 data-zh="GLM-5.3：权重开放，但 Prime 不带权重" data-en="GLM-5.3: weights open, Prime is not">GLM-5.3: weights open, Prime is not</h4>
+                <p data-zh="zai-org/GLM-5.3（含 Flash 与 BF16 版本）在 Hugging Face 可下载，采用 Z.ai 自有的 glm-5.3 许可。但 GLM-5.3-Prime 是 API 服务档，没有单独权重——想自托管，拿到的是 GLM-5.3 / Flash 的权重，不是 Prime 的吞吐。" data-en="zai-org/GLM-5.3 (including Flash and BF16 variants) is downloadable on Hugging Face under Z.ai's own glm-5.3 licence. But GLM-5.3-Prime is an API serving tier with no separate weights — if you self-host, you get GLM-5.3 / Flash weights, not Prime's throughput.">zai-org/GLM-5.3 (including Flash and BF16 variants) is downloadable on Hugging Face under Z.ai's own glm-5.3 licence. But GLM-5.3-Prime is an API serving tier with no separate weights — if you self-host, you get GLM-5.3 / Flash weights, not Prime's throughput.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Which to pick -->
+    <section id="pick" class="container section">
+        <div class="section-header">
+            <h2 data-zh="🎯 什么时候选哪个" data-en="🎯 When to Pick Which">🎯 When to Pick Which</h2>
+        </div>
+        <div class="scenario-grid">
+            <div class="scenario-card">
+                <div class="icon">💰</div>
+                <h4 data-zh="成本敏感 / 大批量" data-en="Cost-sensitive, high volume">Cost-sensitive, high volume</h4>
+                <p data-zh="走 DeepSeek。非高峰半价加上缓存命中价（$0.022/MTok 对 $0.56），长期批处理的账会差出数倍。" data-en="Go DeepSeek. Half-price off-peak plus a cache-hit rate of $0.022/MTok against $0.56 compounds into multiples on long-running batch work.">Go DeepSeek. Half-price off-peak plus a cache-hit rate of $0.022/MTok against $0.56 compounds into multiples on long-running batch work.</p>
+            </div>
+            <div class="scenario-card">
+                <div class="icon">⌨️</div>
+                <h4 data-zh="实时编码 / 流式对话" data-en="Realtime coding, streaming chat">Realtime coding, streaming chat</h4>
+                <p data-zh="走 GLM-5.3-Prime。它的全部意义就是吐字更快，人盯着屏幕等输出的场景收益最直接。" data-en="Go GLM-5.3-Prime. Its whole reason to exist is faster token output, which pays off most where a human is watching the stream.">Go GLM-5.3-Prime. Its whole reason to exist is faster token output, which pays off most where a human is watching the stream.</p>
+            </div>
+            <div class="scenario-card">
+                <div class="icon">📄</div>
+                <h4 data-zh="超长单次输出" data-en="Very long single outputs">Very long single outputs</h4>
+                <p data-zh="走 DeepSeek V4。384K 的单次输出上限是 Prime 约 128K 的三倍，整仓库生成、整本书改写这类任务不撞上限。" data-en="Go DeepSeek V4. Its 384K single-output ceiling is roughly three times Prime's ~128K, so whole-repo generation or book-length rewrites do not hit the wall.">Go DeepSeek V4. Its 384K single-output ceiling is roughly three times Prime's ~128K, so whole-repo generation or book-length rewrites do not hit the wall.</p>
+            </div>
+            <div class="scenario-card">
+                <div class="icon">🖼️</div>
+                <h4 data-zh="需要图像输入" data-en="You need image input">You need image input</h4>
+                <p data-zh="两个 Pro 档都不吃图。DeepSeek 走 V4.1-Flash（支持视觉），或者去用 Claude Sonnet 5.5 这类原生多模态模型。" data-en="Neither Pro tier takes images. On the DeepSeek side use V4.1-Flash (vision-capable), or move to a natively multimodal model such as Claude Sonnet 5.5.">Neither Pro tier takes images. On the DeepSeek side use V4.1-Flash (vision-capable), or move to a natively multimodal model such as Claude Sonnet 5.5.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="container section">
+        <div class="section-header">
+            <h2 data-zh="❓ 常见问题" data-en="❓ FAQ">❓ FAQ</h2>
+        </div>
+        <div class="faq-grid">
+            <div class="faq-item">
+                <h4 class="faq-question" data-zh="GLM 5.3 Prime 和 GLM 5.3 有什么区别？" data-en="What is the difference between GLM 5.3 Prime and GLM 5.3?">What is the difference between GLM 5.3 Prime and GLM 5.3?</h4>
+                <p class="faq-answer" data-zh="Prime 是 GLM-5.3 的高速服务档，不是新模型：同一能力档，通过推理加速带来约 1.5–2× 的输出吞吐，第三方实测约 77 tok/s。它的基准数值沿用 GLM-5.3，例如 Terminal Bench 2.1 的 88.2。模型 ID 是 z-ai/glm-5.3-prime。" data-en="Prime is a high-speed serving tier of GLM-5.3, not a new model: same capability band, roughly 1.5–2× output throughput from inference acceleration, measured at about 77 tokens/s by third parties. Its benchmark numbers are the GLM-5.3 numbers — Terminal Bench 2.1 at 88.2, for example. The model ID is z-ai/glm-5.3-prime.">Prime is a high-speed serving tier of GLM-5.3, not a new model: same capability band, roughly 1.5–2× output throughput from inference acceleration, measured at about 77 tokens/s by third parties. Its benchmark numbers are the GLM-5.3 numbers — Terminal Bench 2.1 at 88.2, for example. The model ID is z-ai/glm-5.3-prime.</p>
+            </div>
+            <div class="faq-item">
+                <h4 class="faq-question" data-zh="DeepSeek V4 和 GLM 5.3 Prime 哪个更强？" data-en="Is DeepSeek V4 or GLM 5.3 Prime stronger?">Is DeepSeek V4 or GLM 5.3 Prime stronger?</h4>
+                <p class="faq-answer" data-zh="在两家各自公布的 2026 基准上咬得很紧：Terminal Bench 2.1 是 87.9 vs 88.2，CyberGym 83.3 vs 84.5，Toolathlon Verified 74.1 vs 73.0，NL2Repo 61.5 vs 58.0。谁高取决于用哪张基准，而且两边都是厂商自评、harness 不同，不宜当成绝对排名。真正的差别在价格、单次输出上限和部署形态。" data-en="On the 2026 tables the two vendors published, they are very close: Terminal Bench 2.1 is 87.9 vs 88.2, CyberGym 83.3 vs 84.5, Toolathlon Verified 74.1 vs 73.0, NL2Repo 61.5 vs 58.0. Which one leads depends on the benchmark, and both are vendor-run under different harnesses, so this is not an absolute ranking. The real differences are price, maximum output length and deployment shape.">On the 2026 tables the two vendors published, they are very close: Terminal Bench 2.1 is 87.9 vs 88.2, CyberGym 83.3 vs 84.5, Toolathlon Verified 74.1 vs 73.0, NL2Repo 61.5 vs 58.0. Which one leads depends on the benchmark, and both are vendor-run under different harnesses, so this is not an absolute ranking. The real differences are price, maximum output length and deployment shape.</p>
+            </div>
+            <div class="faq-item">
+                <h4 class="faq-question" data-zh="两个都有开源权重吗？" data-en="Do both have open weights?">Do both have open weights?</h4>
+                <p class="faq-answer" data-zh="GLM-5.3 的权重在 Hugging Face 上（zai-org/GLM-5.3，含 Flash / BF16 版本），采用 Z.ai 自有的 glm-5.3 许可；但 GLM-5.3-Prime 是 API 服务档，没有单独权重。DeepSeek-V4-Pro-0813 的权重同样开放，采用 MIT 许可，同系列还有 V4.1-Flash。" data-en="GLM-5.3 weights are on Hugging Face (zai-org/GLM-5.3, with Flash and BF16 variants) under Z.ai's own glm-5.3 licence, but GLM-5.3-Prime is an API serving tier with no separate weights. DeepSeek-V4-Pro-0813 weights are also published, under an MIT licence, alongside V4.1-Flash in the same family.">GLM-5.3 weights are on Hugging Face (zai-org/GLM-5.3, with Flash and BF16 variants) under Z.ai's own glm-5.3 licence, but GLM-5.3-Prime is an API serving tier with no separate weights. DeepSeek-V4-Pro-0813 weights are also published, under an MIT licence, alongside V4.1-Flash in the same family.</p>
+            </div>
+            <div class="faq-item">
+                <h4 class="faq-question" data-zh="两个都是「百万上下文」是一回事吗？" data-en="Are both really 1M-token context?">Are both really 1M-token context?</h4>
+                <p class="faq-answer" data-zh="窗口都在约 1M，这一点官方文档都写了。但单次最大输出不同：DeepSeek V4 支持到 384K token，GLM-5.3-Prime 约 128K。如果你是「一次吐一篇长文」的用法，这个差别比窗口本身更重要。" data-en="Both are listed at roughly 1M tokens of context in the official docs. Maximum single output differs, though: DeepSeek V4 allows up to 384K output tokens versus about 128K for GLM-5.3-Prime. If your workload is one long generation, that gap matters more than the window itself.">Both are listed at roughly 1M tokens of context in the official docs. Maximum single output differs, though: DeepSeek V4 allows up to 384K output tokens versus about 128K for GLM-5.3-Prime. If your workload is one long generation, that gap matters more than the window itself.</p>
+            </div>
+            <div class="faq-item">
+                <h4 class="faq-question" data-zh="同一笔任务，价差有多大？" data-en="How big is the price gap on the same job?">How big is the price gap on the same job?</h4>
+                <p class="faq-answer" data-zh="按官方价目：1M 输入（未命中）+ 250K 输出，DeepSeek V4-Pro 非高峰约 $1.16、高峰约 $2.31，V4.1-Flash 非高峰约 $0.30，GLM-5.3-Prime 为 $5.00。非高峰下 DeepSeek V4-Pro 约为 Prime 的 1/4.3；如果用得上缓存，命中价差是 25 倍。" data-en="List prices for 1M input (cache miss) plus 250K output: DeepSeek V4-Pro is about $1.16 off-peak and $2.31 at peak, V4.1-Flash about $0.30 off-peak, and GLM-5.3-Prime $5.00. Off-peak, DeepSeek V4-Pro runs at about 1/4.3 of Prime; where caching applies, the cache-hit rate differs by 25×.">List prices for 1M input (cache miss) plus 250K output: DeepSeek V4-Pro is about $1.16 off-peak and $2.31 at peak, V4.1-Flash about $0.30 off-peak, and GLM-5.3-Prime $5.00. Off-peak, DeepSeek V4-Pro runs at about 1/4.3 of Prime; where caching applies, the cache-hit rate differs by 25×.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sources -->
+    <section id="sources" class="container section">
+        <div class="section-header">
+            <h2 data-zh="🔗 来源与更新" data-en="🔗 Sources &amp; Updates">🔗 Sources &amp; Updates</h2>
+            <p data-zh="页面数据于 2026-10-13 从下列一手来源读取。价格与规格会变，下单前请以官网为准。" data-en="Page data was read from the primary sources below on 2026-10-13. Prices and specs change — check the vendor pages before you commit.">Page data was read from the primary sources below on 2026-10-13. Prices and specs change — check the vendor pages before you commit.</p>
+        </div>
+        <ul class="source-list">
+            <li><a href="https://api-docs.deepseek.com/quick_start/pricing" target="_blank" rel="noopener nofollow">DeepSeek API Docs — Models &amp; Pricing</a><span data-zh="（deepseek-v4-pro / deepseek-flash 的上下文、输出上限、分时价格与并发）" data-en=" — context, output limits, time-of-day pricing and concurrency for deepseek-v4-pro / deepseek-flash"> — context, output limits, time-of-day pricing and concurrency for deepseek-v4-pro / deepseek-flash</span></li>
+            <li><a href="https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-0813" target="_blank" rel="noopener nofollow">Hugging Face — deepseek-ai/DeepSeek-V4-Pro-0813</a><span data-zh="（MIT 许可与厂商基准表）" data-en=" — MIT licence and the vendor benchmark table"> — MIT licence and the vendor benchmark table</span></li>
+            <li><a href="https://huggingface.co/zai-org/GLM-5.3" target="_blank" rel="noopener nofollow">Hugging Face — zai-org/GLM-5.3</a><span data-zh="（GLM-5.3 基准表，含对 DeepSeek-V4-Pro-0813 的复现）" data-en=" — the GLM-5.3 benchmark table, including its reproduction of DeepSeek-V4-Pro-0813"> — the GLM-5.3 benchmark table, including its reproduction of DeepSeek-V4-Pro-0813</span></li>
+            <li><a href="https://openrouter.ai/z-ai/glm-5.3-prime" target="_blank" rel="noopener nofollow">OpenRouter — GLM 5.3 Prime</a><span data-zh="（Prime 定位与 $2.80 / $8.80 价目）" data-en=" — what Prime is and its $2.80 / $8.80 rates"> — what Prime is and its $2.80 / $8.80 rates</span></li>
+            <li><a href="https://platform.claude.com/docs/en/models/overview" target="_blank" rel="noopener nofollow">Claude Platform Docs — Models overview</a><span data-zh="（上文提到的 Claude 对比价格）" data-en=" — the Claude comparison prices mentioned above"> — the Claude comparison prices mentioned above</span></li>
+        </ul>
+    </section>
+
+    <!-- Ad: Banner 300x250 (highperformanceformat.com — Adsterra's CDN)
+     Banner 300x250_1 (id=301745522) retrieved from beta.publishers.adsterra.com dashboard (2026-07-09). -->
+    <div class="container" style="padding: 0 2rem;">
+    <div style="background: rgba(0,0,0,0.03); border: 1px dashed rgba(0,0,0,0.1); padding: 0.5rem; margin: 2rem auto; max-width: 1200px; border-radius: 8px; text-align: center;">
+        <div style="font-size: 0.7rem; color: #888; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0;">
+            SPONSORED · <a href="/advertising-disclosure.html" style="color: #888; text-decoration: underline;">Advertising Disclosure</a>
+        </div>
+        <script>
+            atOptions = {
+                'key' : '856aa80835ef4d5205c4bb07b7b9d37c',
+                'format' : 'iframe',
+                'height' : 250,
+                'width' : 300,
+                'params' : {}
+            };
+        </script>
+        <script src="https://www.highperformanceformat.com/856aa80835ef4d5205c4bb07b7b9d37c/invoke.js"></script>
+    </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p data-zh="© 2026 deepseekv.pro — 独立第三方资料站，与 DeepSeek、Z.ai、Anthropic 均无隶属关系。" data-en="© 2026 deepseekv.pro — an independent third-party resource, not affiliated with DeepSeek, Z.ai or Anthropic.">© 2026 deepseekv.pro — an independent third-party resource, not affiliated with DeepSeek, Z.ai or Anthropic.</p>
+        <div class="links">
+            <a href="/" data-zh="返回首页" data-en="Back to Home">Back to Home</a>
+            <a href="/deepseek-v4.html" data-zh="V4 专题" data-en="V4 Overview">V4 Overview</a>
+            <a href="/deepseek-v4-coding-benchmark.html" data-zh="编程评测" data-en="Coding Benchmark">Coding Benchmark</a>
+            <a href="/deepseek-v4-vs-gpt5-vs-claude.html" data-zh="V4 vs GPT-5 vs Claude" data-en="V4 vs GPT-5 vs Claude">V4 vs GPT-5 vs Claude</a>
+            <a href="/claude-fable-5-5.html" data-zh="Claude Fable 5.5 状态" data-en="Claude Fable 5.5 Status">Claude Fable 5.5 Status</a>
+            <a href="/deepseek-v4-long-context.html" data-zh="百万上下文" data-en="1M Context">1M Context</a>
+            <a href="/advertising-disclosure.html" style="color: #c2410c;" data-zh="推广披露" data-en="Affiliate Disclosure">Affiliate Disclosure</a>
+        </div>
+        <p style="margin-top: 2rem; font-size: 0.875rem;" data-zh="数据来源：DeepSeek API 官方文档与模型卡、Z.ai / OpenRouter 模型卡、Claude Platform Docs，2026-10-13 读取。" data-en="Data sources: DeepSeek official API docs and model cards, Z.ai / OpenRouter model cards, Claude Platform Docs — read 2026-10-13.">Data sources: DeepSeek official API docs and model cards, Z.ai / OpenRouter model cards, Claude Platform Docs — read 2026-10-13.</p>
+
+    <!-- Ad: Native Banner (effectivecpmnetwork.com — Adsterra's CDN)
+     NativeBanner_1 (id=30113316) retrieved from beta.publishers.adsterra.com dashboard (2026-07-05).
+     Adsterra uses effectivecpmnetwork.com as the CDN for Native Banner, Social Bar, Popunder,
+     Smartlink across all publisher accounts. -->
+<div class="ad-native-banner" style="background: rgba(0,0,0,0.03); border: 1px dashed rgba(0,0,0,0.1); padding: 0.5rem; margin: 2rem auto; max-width: 1200px; border-radius: 8px;">
+    <div style="font-size: 0.7rem; color: #888; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0; text-align: center;">
+        SPONSORED · <a href="/advertising-disclosure.html" style="color: #888; text-decoration: underline;">Advertising Disclosure</a>
+    </div>
+    <script async="async" data-cfasync="false" src="https://pl30213815.effectivecpmnetwork.com/ebe954634f6c78466c5e14609e5dd149/invoke.js"></script>
+    <div id="container-ebe954634f6c78466c5e14609e5dd149" style="min-height: 60px;"></div>
+</div>
+    </footer>
+
+    <script>
+        let currentLanguage = localStorage.getItem('preferredLanguage') || 'en';
+
+        if (currentLanguage === 'zh') {
+            document.documentElement.lang = 'zh-CN';
+        }
+
+        function toggleLanguage() {
+            currentLanguage = currentLanguage === 'en' ? 'zh' : 'en';
+            localStorage.setItem('preferredLanguage', currentLanguage);
+            document.documentElement.lang = currentLanguage === 'zh' ? 'zh-CN' : 'en';
+
+            const langDisplay = currentLanguage === 'en' ? 'English' : '中文';
+            document.getElementById('current-lang').textContent = langDisplay;
+
+            document.querySelectorAll('[data-zh][data-en]').forEach(element => {
+                const text = element.getAttribute(`data-${currentLanguage}`);
+                if (text) {
+                    element.textContent = text;
+                }
+            });
+
+            const titleEl = document.querySelector('title');
+            const metaDesc = document.getElementById('meta-description');
+            const ogTitle = document.getElementById('og-title');
+            const ogDesc = document.getElementById('og-description');
+            const twitterTitle = document.getElementById('twitter-title');
+            const twitterDesc = document.getElementById('twitter-description');
+
+            if (currentLanguage === 'zh') {
+                titleEl.textContent = 'DeepSeek V4 vs GLM 5.3 Prime 对比：基准、价格与百万上下文';
+                metaDesc.content = 'DeepSeek-V4-Pro-0813 与 Z.ai GLM-5.3-Prime 正面对比：厂商公布的基准数据（Terminal Bench 2.1 87.9 vs 88.2）、官方 API 价格、百万上下文、开源权重与选型建议。';
+                ogTitle.content = 'DeepSeek V4 vs GLM 5.3 Prime 对比：基准、价格与百万上下文';
+                ogDesc.content = 'Terminal Bench 2.1 87.9 vs 88.2，CyberGym 83.3 vs 84.5，两边都是 1M 上下文。官方价格：输入 $0.66 vs $2.80 每 MTok。';
+                twitterTitle.content = 'DeepSeek V4 vs GLM 5.3 Prime：基准、价格与百万上下文';
+                twitterDesc.content = 'Terminal Bench 2.1 87.9 vs 88.2。CyberGym 83.3 vs 84.5。都是 1M 上下文。官方价格：输入 $0.66 vs $2.80 每 MTok。';
+            } else {
+                titleEl.textContent = 'DeepSeek V4 vs GLM 5.3 Prime: Benchmarks, Pricing & 1M Context';
+                metaDesc.content = 'DeepSeek-V4-Pro-0813 vs Z.ai GLM-5.3-Prime compared: vendor-published benchmarks, official API pricing, 1M-token context, open weights, and when to pick each.';
+                ogTitle.content = 'DeepSeek V4 vs GLM 5.3 Prime: Benchmarks, Pricing & 1M Context';
+                ogDesc.content = 'Terminal Bench 2.1 87.9 vs 88.2, CyberGym 83.3 vs 84.5, 1M context both. Official pricing: $0.66 vs $2.80 per MTok input.';
+                twitterTitle.content = 'DeepSeek V4 vs GLM 5.3 Prime: Benchmarks, Pricing & 1M Context';
+                twitterDesc.content = 'Terminal Bench 2.1 87.9 vs 88.2. CyberGym 83.3 vs 84.5. 1M context both. Official pricing: $0.66 vs $2.80 per MTok input.';
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', function() {
+            const langDisplay = currentLanguage === 'en' ? 'English' : '中文';
+            document.getElementById('current-lang').textContent = langDisplay;
+
+            document.querySelectorAll('[data-zh][data-en]').forEach(element => {
+                const text = element.getAttribute(`data-${currentLanguage}`);
+                if (text) {
+                    element.textContent = text;
+                }
+            });
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+
+    <!-- Ads: Popunder + Smartlink + Social Bar (effectivecpmnetwork.com) -->
+    <!-- Ad: Popunder (effectivecpmnetwork.com — Adsterra's CDN)
+     Popunder_1 (id=30113317) — re-enabled 2026-07-09 after user request. -->
+<script src="https://pl30213816.effectivecpmnetwork.com/b1/de/14/b1de14656aa288f3a0abad48f1d4c29f.js"></script>
+<script src="https://www.effectivecpmnetwork.com/k6mwpc8t?key=ee4176418ab78a252d7b97ece931a5fa"></script>
+    <!-- Ad: Social Bar (effectivecpmnetwork.com — Adsterra's CDN)
+     SocialBar_1 (id=30113319) retrieved from beta.publishers.adsterra.com dashboard (2026-07-05). -->
+<script src="https://pl30213818.effectivecpmnetwork.com/74/61/a5/7461a528560e86fb15b2e286cd2dbeff.js"></script><!-- /Ads -->
+</body>
+</html>
+
