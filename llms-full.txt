@@ -132,6 +132,20 @@ URL: https://www.deepseekv.pro/deepseek-v4-long-context.html
 
 ---
 
+## DeepSeek V4.1-Flash-1017 (released 2026-10-17)
+URL: https://www.deepseekv.pro/deepseek-v4-1-flash-1017.html
+
+DeepSeek-V4.1-Flash-1017 is the Flash-tier checkpoint released on 17 October 2026 under the same API model name, deepseek-flash, at unchanged list prices.
+- Terminal-Bench 4.0: 42.3 (up from 31.2 on the September V4.1-Flash); DeepSWE v1.1: 77.0 (up from 74.2)
+- ProgramBench 29.1 (from 20.3); Automation-Bench v1.0.6 60.5 (from 54.8); Apex Bench v1.1 72.1 (from 64.6)
+- HLE without tools 42.6 (text-only subset 44.0); Opus 5 still leads HLE at 56.3 and NL2Repo-Bench at 75.3
+- Context 1M tokens, max output listed as 384K, vision supported (V4-Pro does not take images), concurrency 2,500
+- Official prices per 1M tokens: cache-hit input $0.003 off-peak / $0.006 peak; cache-miss input $0.15 / $0.30; output $0.60 / $1.20
+- MIT-licensed weights on Hugging Face and ModelScope; no Jinja chat template (use the repo's Python reference encoder or the deepseek-recipe toolkit)
+- Search and Fetch APIs opened to everyone at $0.75 per 1,000 successful calls; free for server-side tool calls until 1 November 2026
+
+---
+
 ## Advertising Disclosure
 URL: https://www.deepseekv.pro/advertising-disclosure.html
 
