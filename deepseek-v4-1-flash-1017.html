@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeepSeek V4.1-Flash-1017: Benchmarks, API Pricing &amp; What's New</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" id="meta-description" content="DeepSeek-V4.1-Flash-1017 (Oct 17, 2026): full benchmark table, official deepseek-flash pricing, 1M context, MIT weights and the Opus 5 comparison.">
+    <meta name="keywords" id="meta-keywords" content="DeepSeek V4.1-Flash-1017, deepseek v4.1 flash 1017, DeepSeek V4.1 Flash 1017 benchmark, deepseek-flash pricing, DeepSeek V4.1 Flash 1017 release, DeepSeek vs GLM 5.3, DeepSeek vs Opus 5, DeepSeek 1M context, DeepSeek MIT open weights">
+    <meta name="author" content="DeepSeek V Pro">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+    <meta name="language" content="en">
+
+    <!-- Open Graph -->
+    <meta property="og:title" id="og-title" content="DeepSeek V4.1-Flash-1017: Benchmarks, API Pricing &amp; What's New">
+    <meta property="og:description" id="og-description" content="The October 17, 2026 Flash checkpoint: Terminal-Bench 4.0 42.3, DeepSWE v1.1 77.0, 1M context, MIT weights, and official pricing of $0.15 / $0.60 per 1M tokens off-peak.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://www.deepseekv.pro/deepseek-v4-1-flash-1017.html">
+    <meta property="og:image" content="https://www.deepseekv.pro/images/deepseek-comparison-og.png">
+    <meta property="og:site_name" content="DeepSeek V Pro">
+    <meta property="article:published_time" content="2026-10-17">
+    <meta property="article:modified_time" content="2026-10-17">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" id="twitter-title" content="DeepSeek V4.1-Flash-1017: Benchmarks, Pricing &amp; What's New">
+    <meta name="twitter:description" id="twitter-description" content="Terminal-Bench 4.0 42.3 (up from 31.2), DeepSWE v1.1 77.0, 1M context, MIT weights, official price $0.15 / $0.60 per 1M tokens off-peak.">
+    <meta name="twitter:image" content="https://www.deepseekv.pro/images/deepseek-comparison-og.png">
+
+    <meta name="theme-color" content="#0066FF">
+
+    <!-- Schema.org: TechArticle -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": "DeepSeek V4.1-Flash-1017: Benchmarks, API Pricing and What's New",
+      "description": "What the October 17, 2026 DeepSeek Flash checkpoint changes, the vendor-published benchmark table against K3, GLM-5.3, GPT-5.6 Sol and Opus 5, official deepseek-flash API pricing, and how to run the MIT-licensed weights.",
+      "author": {"@type": "Organization", "name": "DeepSeek V Pro"},
+      "publisher": {"@type": "Organization", "name": "DeepSeek V Pro"},
+      "datePublished": "2026-10-17",
+      "dateModified": "2026-10-17",
+      "mainEntityOfPage": {"@type": "WebPage", "@id": "https://www.deepseekv.pro/deepseek-v4-1-flash-1017.html"},
+      "keywords": "DeepSeek V4.1-Flash-1017, deepseek-flash, DeepSeek V4.1 Flash 1017 benchmark, DeepSeek API pricing, open weights, 1M context",
+      "articleSection": "AI Model News",
+      "inLanguage": "en"
+    }
+    </script>
+
+    <!-- Schema.org: FAQPage -->
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What does the 1017 in DeepSeek-V4.1-Flash-1017 mean?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It is the release date encoded in the model name: 17 October 2026. DeepSeek describes it as a minor update to DeepSeek-V4.1-Flash rather than a new generation, but the model card shows double-digit gains on several agentic benchmarks, for example Terminal-Bench 4.0 rising from 31.2 to 42.3."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the API model name for DeepSeek-V4.1-Flash-1017?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "On DeepSeek's own API it is deepseek-flash; there is no dated model ID to call. The legacy names deepseek-v4-flash and deepseek-v4-flash-vision-exp are still accepted, but those models have been retired: the requests are served by DeepSeek-V4.1-Flash-1017 and billed at the Flash price. OpenRouter lists the same checkpoint as deepseek/deepseek-v4.1-flash-1017."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much does DeepSeek-V4.1-Flash-1017 cost?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Official DeepSeek list prices per 1M tokens: cache-hit input $0.003 off-peak and $0.006 at peak, cache-miss input $0.15 off-peak and $0.30 at peak, output $0.60 off-peak and $1.20 at peak. Off-peak is half of peak; peak hours are 01:00-04:00 and 06:00-10:00 UTC, Monday to Friday, excluding Chinese public holidays. Third-party routes on OpenRouter start at $0.10 input and $0.50 output per 1M tokens."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is DeepSeek-V4.1-Flash-1017 open source, and can I self-host it?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. The weights are published under the MIT licence on Hugging Face and ModelScope. Note that this release ships no Jinja-format chat template: DeepSeek provides a Python reference encoder in the repository encoding folder and a Rust toolkit called deepseek-recipe for production prompt formatting. Recommended sampling settings are temperature 1.0, top_p 1.0 and at least 256K max output tokens."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does DeepSeek-V4.1-Flash-1017 support images and tool calls?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes to both. The checkpoint is tagged image-text-to-text, and DeepSeek's pricing table lists vision support on Flash, while V4-Pro does not take images. Tool calls, JSON output, the Responses API and the Anthropic API format are all listed as supported, with a concurrency limit of 2,500."
+      }
+    }
+  ]
+}
+    </script>
+
+    <!-- Schema.org: BreadcrumbList -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.deepseekv.pro/"},
+        {"@type": "ListItem", "position": 2, "name": "DeepSeek V4 overview", "item": "https://www.deepseekv.pro/deepseek-v4.html"},
+        {"@type": "ListItem", "position": 3, "name": "DeepSeek V4.1-Flash-1017", "item": "https://www.deepseekv.pro/deepseek-v4-1-flash-1017.html"}
+      ]
+    }
+    </script>
+
+    <link rel="canonical" href="https://www.deepseekv.pro/deepseek-v4-1-flash-1017.html">
+
+    <!-- Hreflang -->
+    <link rel="alternate" hreflang="en" href="https://www.deepseekv.pro/deepseek-v4-1-flash-1017.html">
+    <link rel="alternate" hreflang="x-default" href="https://www.deepseekv.pro/deepseek-v4-1-flash-1017.html">
+
+    <!-- Google tag -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PMY0EV67Q2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-PMY0EV67Q2');
+    </script>
+
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%230066FF;stop-opacity:1'/%3E%3Cstop offset='100%25' style='stop-color:%230044CC;stop-opacity:1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='6' fill='url(%23bg)'/%3E%3Cg transform='translate(16,16)'%3E%3Ctext x='16' y='20' font-family='Arial,sans-serif' font-size='7' font-weight='bold' text-anchor='middle' fill='%23FFFFFF'%3ED%3C/text%3E%3C/g%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+
+    <style>
+        :root {
+            --p: #0066FF;
+            --p-light: #3385FF;
+            --accent: #00d4ff;
+            --t0: #ffffff;
+            --t1: rgba(255,255,255,0.85);
+            --b1: rgba(255,255,255,0.05);
+            --b2: rgba(255,255,255,0.08);
+            --bd: rgba(255,255,255,0.1);
+            --g-b: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.7; color: var(--t0); background: var(--g-b); overflow-x: hidden; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+        .section { padding: 4rem 0; }
+        a { color: var(--p); text-decoration: none; }
+        a:hover { color: var(--p-light); }
+
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(10,14,39,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--bd); padding: 1rem 2rem; }
+        .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.4rem; font-weight: 700; color: var(--p); }
+        .nav-links { display: flex; gap: 2rem; list-style: none; }
+        .nav-links a { color: var(--t1); font-size: 0.95rem; }
+        .nav-links a:hover { color: var(--p); }
+        .lang-switcher { background: var(--b2); border: 1px solid var(--bd); border-radius: 8px; padding: 0.4rem 0.8rem; cursor: pointer; color: var(--t0); font-size: 0.9rem; display: flex; align-items: center; gap: 0.4rem; }
+
+        .hero { min-height: 50vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 7rem 2rem 3rem; }
+        .hero h1 { font-size: clamp(1.9rem, 4.6vw, 3.2rem); font-weight: 800; background: linear-gradient(135deg, var(--p), var(--accent)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem; line-height: 1.2; }
+        .hero .subtitle { font-size: clamp(1rem, 2vw, 1.2rem); color: var(--t1); max-width: 850px; margin-bottom: 1.5rem; }
+
+        .breadcrumb { font-size: 0.85rem; color: var(--t1); margin-bottom: 1.25rem; }
+        .breadcrumb a { color: var(--t1); }
+
+        .hero-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; max-width: 900px; width: 100%; margin: 1.5rem 0; }
+        .hero-stat { background: var(--b1); border: 1px solid var(--accent); border-radius: 12px; padding: 1rem; }
+        .hero-stat .value { font-size: 1.6rem; font-weight: 800; color: var(--accent); }
+        .hero-stat .label { font-size: 0.85rem; color: var(--t1); }
+
+        .section-header { margin-bottom: 2.5rem; text-align: center; }
+        .section-header h2 { font-size: clamp(1.6rem, 3.5vw, 2.2rem); margin-bottom: 0.75rem; color: var(--t0); }
+        .section-header p { color: var(--t1); font-size: 1.05rem; max-width: 780px; margin: 0 auto; }
+
+        .benchmark-table-wrapper { overflow-x: auto; margin: 2rem 0; border-radius: 12px; }
+        .benchmark-table { width: 100%; border-collapse: collapse; background: var(--b1); min-width: 640px; }
+        .benchmark-table th { background: var(--p); color: white; padding: 0.9rem 1rem; text-align: left; font-weight: 600; font-size: 0.95rem; }
+        .benchmark-table td { padding: 0.85rem 1rem; border-bottom: 1px solid var(--bd); color: var(--t1); font-size: 0.95rem; }
+        .benchmark-table tr:last-child td { border-bottom: none; }
+        .benchmark-table tr:hover { background: rgba(0,102,255,0.06); }
+        .benchmark-table .v4 { color: var(--accent); font-weight: 600; }
+        .benchmark-table .winner { background: rgba(0,212,255,0.08); }
+        .benchmark-table caption { caption-side: bottom; padding-top: 0.75rem; font-size: 0.85rem; color: var(--t1); text-align: left; }
+
+        .insight-box { background: linear-gradient(135deg, rgba(0,102,255,0.15), rgba(0,212,255,0.08)); border: 1px solid var(--p); border-radius: 12px; padding: 1.5rem; margin: 0 0 2rem; }
+        .insight-box h4 { color: var(--p-light); margin-bottom: 0.75rem; }
+        .insight-box p { color: var(--t1); }
+        .insight-box ul { color: var(--t1); margin: 0.75rem 0 0 1.25rem; }
+
+        .warn-box { background: rgba(255,193,7,0.08); border: 1px solid rgba(255,193,7,0.5); border-radius: 12px; padding: 1.25rem 1.5rem; margin: 2rem 0; }
+        .warn-box h4 { color: #ffc107; margin-bottom: 0.5rem; font-size: 1.05rem; }
+        .warn-box p { color: var(--t1); font-size: 0.95rem; }
+        .warn-box ul { color: var(--t1); font-size: 0.95rem; margin: 0.5rem 0 0 1.25rem; }
+
+        .scenario-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+        .scenario-card { background: var(--b1); border: 1px solid var(--bd); border-radius: 12px; padding: 1.5rem; }
+        .scenario-card .icon { font-size: 2rem; margin-bottom: 0.5rem; }
+        .scenario-card h4 { color: var(--t0); margin-bottom: 0.5rem; }
+        .scenario-card p { color: var(--t1); font-size: 0.95rem; line-height: 1.5; }
+
+        .faq-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-top: 2rem; }
+        .faq-item { background: var(--b1); border: 1px solid var(--bd); border-radius: 12px; padding: 1.5rem; }
+        .faq-item h4 { color: var(--p); margin-bottom: 0.75rem; font-size: 1.1rem; }
+        .faq-item p { color: var(--t1); }
+        .faq-item code { background: rgba(0,102,255,0.12); padding: 0.05rem 0.3rem; border-radius: 3px; font-family: monospace; font-size: 0.9em; color: var(--p-light); }
+
+        .source-list { list-style: none; margin-top: 1rem; }
+        .source-list li { color: var(--t1); font-size: 0.9rem; margin-bottom: 0.6rem; padding-left: 1.1rem; position: relative; }
+        .source-list li::before { content: "\2192"; position: absolute; left: 0; color: var(--p); }
+
+        footer { background: rgba(0,0,0,0.5); padding: 3rem 2rem 2rem; margin-top: 4rem; text-align: center; }
+        footer p { color: var(--t1); font-size: 0.9rem; margin-bottom: 1rem; }
+        footer .links { display: flex; justify-content: center; flex-wrap: wrap; gap: 1.5rem; margin-bottom: 1rem; }
+        footer .links a { color: var(--t1); font-size: 0.9rem; }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .container { padding: 0 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-inner">
+            <a href="/" class="logo">V4.1-Flash-1017</a>
+            <ul class="nav-links">
+                <li><a href="#answer" data-zh="直接回答" data-en="The Answer">The Answer</a></li>
+                <li><a href="#changed" data-zh="改了什么" data-en="What Changed">What Changed</a></li>
+                <li><a href="#benchmarks" data-zh="基准" data-en="Benchmarks">Benchmarks</a></li>
+                <li><a href="#pricing" data-zh="价格" data-en="Pricing">Pricing</a></li>
+                <li><a href="#run" data-zh="怎么跑" data-en="Run It">Run It</a></li>
+                <li><a href="#faq" data-en="FAQ">FAQ</a></li>
+            </ul>
+            <div class="lang-switcher" onclick="toggleLanguage()">
+                <span>&#127760;</span>
+                <span id="current-lang">English</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <p class="breadcrumb"><a href="/" data-zh="首页" data-en="Home">Home</a> &rsaquo; <a href="/deepseek-v4.html" data-zh="DeepSeek V4 专题" data-en="DeepSeek V4 overview">DeepSeek V4 overview</a> &rsaquo; <span data-zh="V4.1-Flash-1017" data-en="V4.1-Flash-1017">V4.1-Flash-1017</span></p>
+        <h1 data-zh="DeepSeek V4.1-Flash-1017：基准、价格与这次更新改了什么" data-en="DeepSeek V4.1-Flash-1017: Benchmarks, API Pricing and What's New">DeepSeek V4.1-Flash-1017: Benchmarks, API Pricing and What's New</h1>
+        <p class="subtitle" data-zh="2026 年 10 月 17 日发布的 Flash 检查点。本文用官方模型卡、官方 API 价目表和官方公告三处一手来源，逐项列出改了什么、跑分多少、每百万 token 多少钱、权重怎么拿——查不到的写「未证实」，不编。" data-en="The Flash checkpoint released on 17 October 2026. Everything below comes from three primary sources — the official model card, the official API price list and DeepSeek's own announcement: what changed, the benchmark numbers, the per-token price, and how to get the weights. Anything we could not verify is labelled as such.">The Flash checkpoint released on 17 October 2026. Everything below comes from three primary sources — the official model card, the official API price list and DeepSeek's own announcement: what changed, the benchmark numbers, the per-token price, and how to get the weights. Anything we could not verify is labelled as such.</p>
+
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <div class="value">Oct 17, 2026</div>
+                <div class="label" data-zh="1017 检查点发布日期" data-en="Release date of the 1017 checkpoint">Release date of the 1017 checkpoint</div>
+            </div>
+            <div class="hero-stat">
+                <div class="value">42.3 vs 31.2</div>
+                <div class="label" data-zh="Terminal-Bench 4.0：1017 vs 9 月的 V4.1-Flash" data-en="Terminal-Bench 4.0: 1017 vs the September V4.1-Flash">Terminal-Bench 4.0: 1017 vs the September V4.1-Flash</div>
+            </div>
+            <div class="hero-stat">
+                <div class="value">77.0</div>
+                <div class="label" data-zh="DeepSWE v1.1（厂商自评），上一版 74.2" data-en="DeepSWE v1.1 (vendor-run), up from 74.2">DeepSWE v1.1 (vendor-run), up from 74.2</div>
+            </div>
+            <div class="hero-stat">
+                <div class="value">$0.15 / $0.60</div>
+                <div class="label" data-zh="官方非高峰输入 / 输出，每 1M token（deepseek-flash）" data-en="Official off-peak input / output per 1M tokens (deepseek-flash)">Official off-peak input / output per 1M tokens (deepseek-flash)</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Answer -->
+    <section id="answer" class="container section">
+        <div class="insight-box">
+            <h4 data-zh="直接回答" data-en="The short answer">The short answer</h4>
+            <p data-zh="DeepSeek-V4.1-Flash-1017 是 2026-10-17 发布的 Flash 档更新检查点，官方称其为「V4.1-Flash 的小版本更新」，但模型卡上的多数 agentic / 编程基准都是两位数百分比提升（Terminal-Bench 4.0 从 31.2 升到 42.3，ProgramBench 从 20.3 升到 29.1），同时官方称任务耗时和输出长度都下降——也就是说这次是「更强 + 更省」，而不只是刷分。权重仍以 MIT 许可开源，API 名字仍是 deepseek-flash，价格也没变。" data-en="DeepSeek-V4.1-Flash-1017 is the Flash-tier checkpoint released on 17 October 2026. DeepSeek calls it a minor update to V4.1-Flash, but most of the agentic and coding rows on the model card move by double digits (Terminal-Bench 4.0 from 31.2 to 42.3, ProgramBench from 20.3 to 29.1), while the vendor also reports shorter task times and shorter outputs. In other words: stronger and cheaper to run, not just a higher score. The weights stay MIT-licensed, the API model name is still deepseek-flash, and the price list did not change.">DeepSeek-V4.1-Flash-1017 is the Flash-tier checkpoint released on 17 October 2026. DeepSeek calls it a minor update to V4.1-Flash, but most of the agentic and coding rows on the model card move by double digits (Terminal-Bench 4.0 from 31.2 to 42.3, ProgramBench from 20.3 to 29.1), while the vendor also reports shorter task times and shorter outputs. In other words: stronger <em>and</em> cheaper to run, not just a higher score. The weights stay MIT-licensed, the API model name is still deepseek-flash, and the price list did not change.</p>
+            <ul>
+                <li data-zh="要跑 agent / 终端 / 仓库级任务：这张表上 1017 在 Terminal-Bench 4.0、DeepSWE v1.1、ProgramBench、Automation-Bench、Agents' Last Exam、Apex Bench 六行都是所列五个模型里的最高分。" data-en="Running agents, terminal or repo-scale work: on this table the 1017 checkpoint has the top score among the five listed models on six rows — Terminal-Bench 4.0, DeepSWE v1.1, ProgramBench, Automation-Bench, Agents' Last Exam and Apex Bench.">Running agents, terminal or repo-scale work: on this table the 1017 checkpoint has the top score among the five listed models on six rows — Terminal-Bench 4.0, DeepSWE v1.1, ProgramBench, Automation-Bench, Agents' Last Exam and Apex Bench.</li>
+                <li data-zh="要纯推理 / 通用知识：Opus 5 仍在 HLE（56.3 vs 42.6）、NL2Repo-Bench（75.3 vs 68.2）和部分视觉基准上领先；GPT-5.6 Sol 在 ZeroBench-main 上更高。" data-en="Pure reasoning and general knowledge: Opus 5 still leads on HLE (56.3 vs 42.6), NL2Repo-Bench (75.3 vs 68.2) and some vision rows, and GPT-5.6 Sol is higher on ZeroBench-main.">Pure reasoning and general knowledge: Opus 5 still leads on HLE (56.3 vs 42.6), NL2Repo-Bench (75.3 vs 68.2) and some vision rows, and GPT-5.6 Sol is higher on ZeroBench-main.</li>
+                <li data-zh="要最便宜的单位成本 + 1M 上下文 + 图像输入：这就是它的位置，官方非高峰 $0.15 / $0.60 每百万 token，第三方聚合线路低至 $0.10 / $0.50。" data-en="Cheapest unit cost with 1M context and image input: that is exactly this model's slot — $0.15 / $0.60 per million tokens off-peak on the official API, down to $0.10 / $0.50 on aggregator routes.">Cheapest unit cost with 1M context and image input: that is exactly this model's slot — $0.15 / $0.60 per million tokens off-peak on the official API, down to $0.10 / $0.50 on aggregator routes.</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Ad: Banner 728x90 (highperformanceformat.com — Adsterra's CDN)
+     Banner 728x90_1 (id=301745523) retrieved from beta.publishers.adsterra.com dashboard (2026-07-09).
+     Placed below the first-screen answer so the answer and the headline table render before any ad. -->
+    <div class="container" style="padding: 0 2rem;">
+    <div style="background: rgba(0,0,0,0.03); border: 1px dashed rgba(0,0,0,0.1); padding: 0.5rem; margin: 2rem auto; max-width: 1200px; border-radius: 8px; text-align: center;">
+        <div style="font-size: 0.7rem; color: #888; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0;">
+            SPONSORED &middot; <a href="/advertising-disclosure.html" style="color: #888; text-decoration: underline;">Advertising Disclosure</a>
+        </div>
+        <script>
+            atOptions = {
+                'key' : 'ee8bc1e77d94a913b862ff8aaead0cca',
+                'format' : 'iframe',
+                'height' : 90,
+                'width' : 728,
+                'params' : {}
+            };
+        </script>
+        <script src="https://www.highperformanceformat.com/ee8bc1e77d94a913b862ff8aaead0cca/invoke.js"></script>
+    </div>
+    </div>
+
+    <!-- What changed -->
+    <section id="changed" class="container section">
+        <div class="section-header">
+            <h2 data-zh="🆕 1017 更新改了什么" data-en="🆕 What the 1017 Update Changed">🆕 What the 1017 Update Changed</h2>
+            <p data-zh="下表两列都来自官方模型卡：左边是新检查点，右边是 2026 年 9 月的 V4.1-Flash。同一张卡、同一套 harness，所以这两列可以直接相减。" data-en="Both columns come from the same official model card: the new checkpoint on the left, the September 2026 V4.1-Flash on the right. Same card, same harnesses, so the two columns can be subtracted directly.">Both columns come from the same official model card: the new checkpoint on the left, the September 2026 V4.1-Flash on the right. Same card, same harnesses, so the two columns can be subtracted directly.</p>
+        </div>
+        <div class="benchmark-table-wrapper">
+            <table class="benchmark-table">
+                <thead>
+                    <tr>
+                        <th data-zh="基准" data-en="Benchmark">Benchmark</th>
+                        <th data-zh="V4.1-Flash-1017" data-en="V4.1-Flash-1017">V4.1-Flash-1017</th>
+                        <th data-zh="V4.1-Flash（2026-09）" data-en="V4.1-Flash (Sep 2026)">V4.1-Flash (Sep 2026)</th>
+                        <th data-zh="变化" data-en="Change">Change</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Terminal-Bench 4.0</td><td class="v4 winner">42.3</td><td>31.2</td><td>+11.1</td></tr>
+                    <tr><td>ProgramBench</td><td class="v4 winner">29.1</td><td>20.3</td><td>+8.8</td></tr>
+                    <tr><td>Apex Bench v1.1</td><td class="v4 winner">72.1</td><td>64.6</td><td>+7.5</td></tr>
+                    <tr><td>HLE without tools</td><td class="v4 winner">42.6</td><td>36.8</td><td>+5.8</td></tr>
+                    <tr><td>Automation-Bench v1.0.6</td><td class="v4 winner">60.5</td><td>54.8</td><td>+5.7</td></tr>
+                    <tr><td>HLE (text-only subset)</td><td class="v4 winner">44.0</td><td>39.1</td><td>+4.9</td></tr>
+                    <tr><td>Chartography (with tools)</td><td class="v4 winner">83.0</td><td>78.9</td><td>+4.1</td></tr>
+                    <tr><td>Agents' Last Exam</td><td class="v4 winner">35.4</td><td>31.8</td><td>+3.6</td></tr>
+                    <tr><td>DeepSWE v1.1</td><td class="v4 winner">77.0</td><td>74.2</td><td>+2.8</td></tr>
+                    <tr><td>NL2Repo-Bench</td><td class="v4 winner">68.2</td><td>65.4</td><td>+2.8</td></tr>
+                    <tr><td>BabyVision (with tools)</td><td class="v4 winner">92.5</td><td>89.6</td><td>+2.9</td></tr>
+                    <tr><td>ZeroBench-main (with tools)</td><td class="v4 winner">51.0</td><td>49.0</td><td>+2.0</td></tr>
+                </tbody>
+                <caption data-zh="来源：Hugging Face 官方模型卡的基准表（2026-10-17 读取）。Terminal-Bench 4.0 用 Claude Code harness，DeepSWE v1.1 用 Mini-SWE-V2 harness。" data-en="Source: the benchmark table on the official Hugging Face model card (read 2026-10-17). Terminal-Bench 4.0 was run with the Claude Code harness; DeepSWE v1.1 with the Mini-SWE-V2 harness.">Source: the benchmark table on the official Hugging Face model card (read 2026-10-17). Terminal-Bench 4.0 was run with the Claude Code harness; DeepSWE v1.1 with the Mini-SWE-V2 harness.</caption>
+            </table>
+        </div>
+
+        <div class="insight-box">
+            <h4 data-zh="除了跑分，这次真正变了的三件事" data-en="Three things that actually changed besides the scores">Three things that actually changed besides the scores</h4>
+            <ul>
+                <li data-zh="任务更快、输出更短：官方公告称这是「性能与成本的帕累托改进」——同样的任务，完成时间与输出长度都下降，token 花得更少。做 agent 流水线时，这比榜单分数更直接影响账单。" data-en="Faster tasks, shorter outputs: DeepSeek's announcement calls it a Pareto improvement in performance and cost — the same task now finishes sooner and writes less, so it burns fewer tokens. For a production agent pipeline that matters more than a leaderboard row.">Faster tasks, shorter outputs: DeepSeek's announcement calls it a Pareto improvement in performance and cost — the same task now finishes sooner and writes less, so it burns fewer tokens. For a production agent pipeline that matters more than a leaderboard row.</li>
+                <li data-zh="Search / Fetch API 对所有人开放：按成功请求计费，每个端点 $0.75 / 1000 次。走 DeepSeek Harness、Claude Code、Codex 的 server-side 工具调用目前免费，2026-11-01（北京时间 00:00，即 UTC 10-31 16:00）开始计费。" data-en="Search and Fetch APIs are open to everyone: billed per successful request at $0.75 per 1,000 calls for each endpoint. Server-side tool calls through DeepSeek Harness, Claude Code and Codex are currently free, with billing starting at 00:00 Beijing time on 1 November 2026 (16:00 UTC on 31 October).">Search and Fetch APIs are open to everyone: billed per successful request at $0.75 per 1,000 calls for each endpoint. Server-side tool calls through DeepSeek Harness, Claude Code and Codex are currently free, with billing starting at 00:00 Beijing time on 1 November 2026 (16:00 UTC on 31 October).</li>
+                <li data-zh="强化 agent harness 适配：官方点名 DeepSeek Harness、腾讯 CodeBuddy、WorkBuddy，并建议把 Harness 升到 v0.2.1-rc.1 或更高以取得最佳效果。" data-en="Tighter agent-harness fit: DeepSeek names DeepSeek Harness, Tencent CodeBuddy and WorkBuddy, and recommends upgrading DeepSeek Harness to v0.2.1-rc.1 or later for the best experience.">Tighter agent-harness fit: DeepSeek names DeepSeek Harness, Tencent CodeBuddy and WorkBuddy, and recommends upgrading DeepSeek Harness to v0.2.1-rc.1 or later for the best experience.</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Benchmarks -->
+    <section id="benchmarks" class="container section">
+        <div class="section-header">
+            <h2 data-zh="📊 完整基准表：1017 vs V4.1-Flash、K3、GLM-5.3、GPT-5.6 Sol、Opus 5" data-en="📊 Full Benchmark Table: 1017 vs V4.1-Flash, K3, GLM-5.3, GPT-5.6 Sol and Opus 5">📊 Full Benchmark Table: 1017 vs V4.1-Flash, K3, GLM-5.3, GPT-5.6 Sol and Opus 5</h2>
+            <p data-zh="全部数值来自官方模型卡上那一张对比表，未做任何换算或补插值。粗体 = 该行五个模型里的最高分，青色 = 本页主角。" data-en="Every number below is copied from the single comparison table on the official model card — nothing rescaled, nothing interpolated. Bold marks the highest score among the five models in that row; cyan marks the model this page is about.">Every number below is copied from the single comparison table on the official model card — nothing rescaled, nothing interpolated. Bold marks the highest score among the five models in that row; cyan marks the model this page is about.</p>
+        </div>
+        <div class="benchmark-table-wrapper">
+            <table class="benchmark-table">
+                <thead>
+                    <tr>
+                        <th data-zh="基准" data-en="Benchmark">Benchmark</th>
+                        <th data-zh="V4.1-Flash-1017" data-en="V4.1-Flash-1017">V4.1-Flash-1017</th>
+                        <th data-zh="V4.1-Flash" data-en="V4.1-Flash">V4.1-Flash</th>
+                        <th>K3</th>
+                        <th>GLM-5.3</th>
+                        <th>GPT-5.6 Sol</th>
+                        <th>Opus 5</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Terminal-Bench 4.0</td><td class="v4 winner">42.3</td><td>31.2</td><td>12.6</td><td>37.9</td><td>39.9</td><td>51.8</td></tr>
+                    <tr><td>DeepSWE v1.1</td><td class="v4 winner">77.0</td><td>74.2</td><td>67.5</td><td>66.9</td><td>73.0</td><td>74.0</td></tr>
+                    <tr><td>ProgramBench</td><td class="v4">29.1</td><td>20.3</td><td>17.5</td><td>19.0</td><td>23.0</td><td class="winner">37.0</td></tr>
+                    <tr><td>NL2Repo-Bench</td><td class="v4">68.2</td><td>65.4</td><td>58.0</td><td>58.0</td><td>56.8</td><td class="winner">75.3</td></tr>
+                    <tr><td>Automation-Bench v1.0.6</td><td class="v4 winner">60.5</td><td>54.8</td><td>46.7</td><td>48.8</td><td>45.8</td><td>50.3</td></tr>
+                    <tr><td>Agents' Last Exam</td><td class="v4 winner">35.4</td><td>31.8</td><td>27.6</td><td>28.5</td><td>26.7</td><td>28.6</td></tr>
+                    <tr><td>Apex Bench v1.1</td><td class="v4 winner">72.1</td><td>64.6</td><td>47.8</td><td>56.6</td><td>54.3</td><td>65.8</td></tr>
+                    <tr><td>HLE (no tools)</td><td class="v4">42.6 (44.0*)</td><td>36.8 (39.1*)</td><td>43.5</td><td>42.0*</td><td>44.5</td><td class="winner">56.3</td></tr>
+                    <tr><td>Chartography (with tools)</td><td class="v4">83.0</td><td>78.9</td><td>68.1</td><td>&mdash;</td><td>79.9</td><td class="winner">84.0</td></tr>
+                    <tr><td>BabyVision (with tools)</td><td class="v4">92.5</td><td>89.6</td><td>85.7</td><td>&mdash;</td><td>88.9</td><td class="winner">94.1</td></tr>
+                    <tr><td>ZeroBench-main (with tools)</td><td class="v4">51.0</td><td>49.0</td><td>41.0</td><td>&mdash;</td><td class="winner">53.0</td><td>52.0</td></tr>
+                </tbody>
+                <caption data-zh="来源：Hugging Face 官方模型卡（2026-10-17 读取）。* = HLE 的纯文本子集；只有 DeepSeek 与 GLM 标了这个子集。Terminal-Bench 4.0 用 Claude Code harness，DeepSWE v1.1 用 Mini-SWE-V2 harness。" data-en="Source: the official Hugging Face model card (read 2026-10-17). * = the text-only subset of HLE, which only DeepSeek and GLM report. Terminal-Bench 4.0 used the Claude Code harness; DeepSWE v1.1 used the Mini-SWE-V2 harness.">Source: the official Hugging Face model card (read 2026-10-17). * = the text-only subset of HLE, which only DeepSeek and GLM report. Terminal-Bench 4.0 used the Claude Code harness; DeepSWE v1.1 used the Mini-SWE-V2 harness.</caption>
+            </table>
+        </div>
+
+        <div class="warn-box">
+            <h4 data-zh="⚠️ 怎么读这张表" data-en="⚠️ How to read this table">⚠️ How to read this table</h4>
+            <ul>
+                <li data-zh="这是厂商自评：一张模型卡里的单次评测，不是第三方同条件复现。竞品的分数同样取自 DeepSeek 的对照实验，不是各家自己声明的最佳成绩，所以两边都可能与竞品官宣数字有出入。" data-en="These are vendor-run numbers: a single evaluation inside one model card, not a same-condition third-party reproduction. The competitor scores are also DeepSeek's own runs rather than each vendor's best published result, so they may differ from those vendors' own claims.">These are vendor-run numbers: a single evaluation inside one model card, not a same-condition third-party reproduction. The competitor scores are also DeepSeek's own runs rather than each vendor's best published result, so they may differ from those vendors' own claims.</li>
+                <li data-zh="口径不同：Terminal-Bench 4.0 与 DeepSWE v1.1 各自绑定一个 harness（Claude Code / Mini-SWE-V2）；HLE 的带星号数字是纯文本子集，不与整表数字混比。" data-en="Different harnesses: Terminal-Bench 4.0 and DeepSWE v1.1 each bind to a specific harness (Claude Code and Mini-SWE-V2 respectively), and the starred HLE figures are a text-only subset that should not be mixed with the full-table numbers.">Different harnesses: Terminal-Bench 4.0 and DeepSWE v1.1 each bind to a specific harness (Claude Code and Mini-SWE-V2 respectively), and the starred HLE figures are a text-only subset that should not be mixed with the full-table numbers.</li>
+                <li data-zh="第三方口径不同：OpenRouter 引用的 Artificial Analysis 上，V4.1 Flash（Max 档）的 Intelligence Index 为 39.5、HLE 39.2%、Terminal-Bench 4.0 26.8%——与厂商表不同，因为测的是不同推理档位和不同 harness。两套数字都别当成绝对排名。" data-en="Third-party numbers differ too: OpenRouter cites Artificial Analysis with an Intelligence Index of 39.5, HLE of 39.2% and Terminal-Bench 4.0 of 26.8% for V4.1 Flash at Max reasoning effort — different from the vendor table because the effort tier and harness differ. Neither set is an absolute ranking.">Third-party numbers differ too: OpenRouter cites Artificial Analysis with an Intelligence Index of 39.5, HLE of 39.2% and Terminal-Bench 4.0 of 26.8% for V4.1 Flash at Max reasoning effort — different from the vendor table because the effort tier and harness differ. Neither set is an absolute ranking.</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section id="pricing" class="container section">
+        <div class="section-header">
+            <h2 data-zh="💰 官方 API 价格与调用方式" data-en="💰 Official API Pricing and How to Call It">💰 Official API Pricing and How to Call It</h2>
+            <p data-zh="1017 走的是同一个 API 模型名 deepseek-flash，价格与上一版 Flash 相同。下表是官方价目表原文，每 1M token。" data-en="The 1017 checkpoint is served under the same API model name, deepseek-flash, at the same list price as the previous Flash version. The table below is taken from the official price list, per 1M tokens.">The 1017 checkpoint is served under the same API model name, deepseek-flash, at the same list price as the previous Flash version. The table below is taken from the official price list, per 1M tokens.</p>
+        </div>
+        <div class="benchmark-table-wrapper">
+            <table class="benchmark-table">
+                <thead>
+                    <tr>
+                        <th data-zh="计费项（每 1M token）" data-en="Line item (per 1M tokens)">Line item (per 1M tokens)</th>
+                        <th data-zh="非高峰" data-en="Off-peak">Off-peak</th>
+                        <th data-zh="高峰" data-en="Peak">Peak</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td data-zh="输入 · 缓存命中" data-en="Input · cache hit">Input · cache hit</td><td class="v4 winner">$0.003</td><td>$0.006</td></tr>
+                    <tr><td data-zh="输入 · 缓存未命中" data-en="Input · cache miss">Input · cache miss</td><td class="v4 winner">$0.15</td><td>$0.30</td></tr>
+                    <tr><td data-zh="输出" data-en="Output">Output</td><td class="v4 winner">$0.60</td><td>$1.20</td></tr>
+                    <tr><td data-zh="分时规则" data-en="Time-of-day rule">Time-of-day rule</td><td colspan="2" class="v4" data-zh="高峰 = 周一至周五 01:00–04:00 与 06:00–10:00 UTC（不含中国法定假日）；其余时段与周末全部为半价非高峰。" data-en="Peak = Mon-Fri 01:00-04:00 and 06:00-10:00 UTC (excluding Chinese public holidays); everything else, including weekends, is half-price off-peak.">Peak = Mon-Fri 01:00-04:00 and 06:00-10:00 UTC (excluding Chinese public holidays); everything else, including weekends, is half-price off-peak.</td></tr>
+                </tbody>
+                <caption data-zh="来源：DeepSeek API 文档「Models &amp; Pricing」（2026-10-17 读取）。搜索 / 抓取端点另行按次计费：$0.75 / 1000 次成功请求。" data-en="Source: DeepSeek API docs, Models &amp; Pricing (read 2026-10-17). Search and Fetch are billed separately per request: $0.75 per 1,000 successful calls.">Source: DeepSeek API docs, Models &amp; Pricing (read 2026-10-17). Search and Fetch are billed separately per request: $0.75 per 1,000 successful calls.</caption>
+            </table>
+        </div>
+
+        <div class="insight-box">
+            <h4 data-zh="一个算例：1M 输入（未命中）+ 250K 输出" data-en="Worked example: 1M input (cache miss) + 250K output">Worked example: 1M input (cache miss) + 250K output</h4>
+            <ul>
+                <li data-zh="非高峰：$0.15 + 0.25 × $0.60 = $0.30" data-en="Off-peak: $0.15 + 0.25 x $0.60 = $0.30">Off-peak: $0.15 + 0.25 x $0.60 = $0.30</li>
+                <li data-zh="高峰：$0.30 + 0.25 × $1.20 = $0.60" data-en="Peak: $0.30 + 0.25 x $1.20 = $0.60">Peak: $0.30 + 0.25 x $1.20 = $0.60</li>
+                <li data-zh="全部走缓存命中（agent 反复读同一份长上下文）：$0.003 + 0.25 × $0.60 ≈ $0.153" data-en="All input on cache hits (an agent re-reading the same long context): $0.003 + 0.25 x $0.60 = about $0.153">All input on cache hits (an agent re-reading the same long context): $0.003 + 0.25 x $0.60 = about $0.153</li>
+                <li data-zh="同一笔活若用 deepseek-v4-pro（非高峰 $0.66 / $1.98）≈ $1.16，也就是 Flash-1017 的约 3.9 倍。" data-en="The same job on deepseek-v4-pro (off-peak $0.66 / $1.98) is about $1.16 — roughly 3.9x this Flash checkpoint.">The same job on deepseek-v4-pro (off-peak $0.66 / $1.98) is about $1.16 — roughly 3.9x this Flash checkpoint.</li>
+            </ul>
+        </div>
+
+        <div class="section-header" style="margin-top: 3rem;">
+            <h2 data-zh="🔀 第三方聚合线路的价格（OpenRouter 快照）" data-en="🔀 Aggregator Route Prices (OpenRouter snapshot)">🔀 Aggregator Route Prices (OpenRouter snapshot)</h2>
+            <p data-zh="同一个检查点，不同线路的价格不一样。下表是 OpenRouter 在 2026-10-17 列出的线路价，属于第三方平台数据，随时会变。" data-en="Same checkpoint, different routes, different prices. The table below is what OpenRouter listed on 2026-10-17 — third-party marketplace data that can change at any time.">Same checkpoint, different routes, different prices. The table below is what OpenRouter listed on 2026-10-17 — third-party marketplace data that can change at any time.</p>
+        </div>
+        <div class="benchmark-table-wrapper">
+            <table class="benchmark-table">
+                <thead>
+                    <tr>
+                        <th data-zh="线路" data-en="Route">Route</th>
+                        <th data-zh="输入 / 每 1M" data-en="Input / 1M">Input / 1M</th>
+                        <th data-zh="输出 / 每 1M" data-en="Output / 1M">Output / 1M</th>
+                        <th data-zh="缓存读 / 每 1M" data-en="Cache read / 1M">Cache read / 1M</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>inference.net</td><td class="winner v4">$0.10</td><td class="winner v4">$0.50</td><td>$0.002</td></tr>
+                    <tr><td>Cloudflare</td><td>$0.10</td><td>$0.60</td><td>$0.003</td></tr>
+                    <tr><td>DeepSeek（官方）</td><td>$0.15</td><td>$0.60</td><td>$0.003</td></tr>
+                    <tr><td>DeepInfra（-30%）</td><td>$0.14</td><td>$0.42</td><td>$0.0042</td></tr>
+                </tbody>
+                <caption data-zh="来源：OpenRouter 的 deepseek/deepseek-v4.1-flash-1017 模型页（2026-10-17 读取）。OpenRouter 的标题价 $0.10 / $0.50 即最便宜线路。" data-en="Source: the deepseek/deepseek-v4.1-flash-1017 model page on OpenRouter (read 2026-10-17). OpenRouter's headline $0.10 / $0.50 is its cheapest route.">Source: the deepseek/deepseek-v4.1-flash-1017 model page on OpenRouter (read 2026-10-17). OpenRouter's headline $0.10 / $0.50 is its cheapest route.</caption>
+            </table>
+        </div>
+
+        <div class="insight-box">
+            <h4 data-zh="调用方式与限制（官方价目表口径）" data-en="How to call it (from the official price list)">How to call it (from the official price list)</h4>
+            <ul>
+                <li data-zh="模型名写 deepseek-flash。旧名 deepseek-v4-flash 与 deepseek-v4-flash-vision-exp 仍被接受，但对应模型已退役，请求由 V4.1-Flash-1017 承接，并按 Flash 价格计费。" data-en="Use the model name deepseek-flash. The legacy names deepseek-v4-flash and deepseek-v4-flash-vision-exp are still accepted, but those models are retired: requests are served by V4.1-Flash-1017 and billed at the Flash price.">Use the model name deepseek-flash. The legacy names deepseek-v4-flash and deepseek-v4-flash-vision-exp are still accepted, but those models are retired: requests are served by V4.1-Flash-1017 and billed at the Flash price.</li>
+                <li data-zh="上下文 1M token，最大输出官方写 384K；支持思考 / 非思考两种模式（默认思考）、工具调用、JSON 输出、Responses API 与 Anthropic API 格式，并发上限 2500。" data-en="1M-token context, maximum output listed as 384K, switchable thinking / non-thinking modes (thinking is the default), tool calls, JSON output, the Responses API and the Anthropic API format, with a concurrency limit of 2,500.">1M-token context, maximum output listed as 384K, switchable thinking / non-thinking modes (thinking is the default), tool calls, JSON output, the Responses API and the Anthropic API format, with a concurrency limit of 2,500.</li>
+                <li data-zh="图像输入只在 Flash 档支持，V4-Pro 不收图——如果你的流水线里有截图或 PDF 页面，这一条决定你只能用 Flash。" data-en="Image input is Flash-only here: V4-Pro does not take images. If your pipeline involves screenshots or rendered PDF pages, that alone pins you to the Flash tier.">Image input is Flash-only here: V4-Pro does not take images. If your pipeline involves screenshots or rendered PDF pages, that alone pins you to the Flash tier.</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Run it -->
+    <section id="run" class="container section">
+        <div class="section-header">
+            <h2 data-zh="🧩 拿权重、自己跑：这次要注意什么" data-en="🧩 Weights and Self-Hosting: What to Watch">🧩 Weights and Self-Hosting: What to Watch</h2>
+            <p data-zh="权重仍是 MIT，仓库里带完整的推理与编码说明；但这次有一个容易踩的坑——没有 Jinja chat template。" data-en="The weights are still MIT-licensed and the repository carries inference and encoding instructions, but there is one trap this time: no Jinja chat template.">The weights are still MIT-licensed and the repository carries inference and encoding instructions, but there is one trap this time: no Jinja chat template.</p>
+        </div>
+        <div class="scenario-grid">
+            <div class="scenario-card">
+                <div class="icon">📦</div>
+                <h4 data-zh="权重在哪" data-en="Where the weights are">Where the weights are</h4>
+                <p data-zh="Hugging Face（deepseek-ai/DeepSeek-V4.1-Flash-1017）与 ModelScope 同步发布，MIT 许可，仓库标注 FP8 8-bit、image-text-to-text pipeline。发布数小时内 HF 上已累积 680 个 Like、11 个开放讨论。" data-en="Published on Hugging Face (deepseek-ai/DeepSeek-V4.1-Flash-1017) and ModelScope under the MIT licence, tagged FP8 8-bit and image-text-to-text. Within hours of release the HF repo had 680 likes and 11 open discussions.">Published on Hugging Face (deepseek-ai/DeepSeek-V4.1-Flash-1017) and ModelScope under the MIT licence, tagged FP8 8-bit and image-text-to-text. Within hours of release the HF repo had 680 likes and 11 open discussions.</p>
+            </div>
+            <div class="scenario-card">
+                <div class="icon">⚠️</div>
+                <h4 data-zh="没有 Jinja chat template" data-en="No Jinja chat template">No Jinja chat template</h4>
+                <p data-zh="这一版不提供 Jinja 格式的对话模板。仓库的 encoding 目录里有一份自包含的 Python 参考实现，覆盖多轮对话、工具调用、思考模式、数值推理档位、会话中途的系统消息与交错的图片内容。" data-en="This release ships no Jinja-format chat template. The repository's encoding folder contains a self-contained Python reference implementation covering multi-turn conversations, tool calling, thinking mode, numeric reasoning effort, mid-conversation system messages and interleaved image content.">This release ships no Jinja-format chat template. The repository's encoding folder contains a self-contained Python reference implementation covering multi-turn conversations, tool calling, thinking mode, numeric reasoning effort, mid-conversation system messages and interleaved image content.</p>
+            </div>
+            <div class="scenario-card">
+                <div class="icon">🦀</div>
+                <h4 data-zh="生产环境用 deepseek-recipe" data-en="Use deepseek-recipe in production">Use deepseek-recipe in production</h4>
+                <p data-zh="官方另发了一套 Rust 库（带 Python 绑定）deepseek-recipe：把 Messages / Chat Completions / Responses 三类请求转成 DeepSeek 的 Conversation 格式，编码成 prompt 或 token id，再把输出解析回完整或流式响应。模型推理、工具执行和 HTTP 传输由调用方自己实现。" data-en="DeepSeek also publishes deepseek-recipe, a set of Rust libraries with Python bindings: it converts Messages, Chat Completions and Responses API requests into the Conversation format, encodes them into prompts or token IDs, and parses output back into complete or streamed responses. Model inference, tool execution and HTTP transport are left to the caller.">DeepSeek also publishes deepseek-recipe, a set of Rust libraries with Python bindings: it converts Messages, Chat Completions and Responses API requests into the Conversation format, encodes them into prompts or token IDs, and parses output back into complete or streamed responses. Model inference, tool execution and HTTP transport are left to the caller.</p>
+            </div>
+            <div class="scenario-card">
+                <div class="icon">🎛️</div>
+                <h4 data-zh="推荐采样参数" data-en="Recommended sampling settings">Recommended sampling settings</h4>
+                <p data-zh="官方模型卡给的默认值：temperature 1.0、top_p 1.0、上下文窗口 1M token、max_tokens 至少 256K。注意这是「最小 256K 输出预算」的写法，不等于每次都要吐满。" data-en="The model card's recommended defaults: temperature 1.0, top_p 1.0, a 1M-token context window, and max_tokens of at least 256K. That is a minimum output budget, not a target length to fill.">The model card's recommended defaults: temperature 1.0, top_p 1.0, a 1M-token context window, and max_tokens of at least 256K. That is a minimum output budget, not a target length to fill.</p>
+            </div>
+        </div>
+
+        <div class="warn-box">
+            <h4 data-zh="🔍 我们没能证实的四件事（写在这里，免得你按传闻做决定）" data-en="🔍 Four things we could not verify (listed so you do not decide on rumour)">🔍 Four things we could not verify (listed so you do not decide on rumour)</h4>
+            <ul>
+                <li data-zh="搜索量：Google Ads 关键词规划师口径下，deepseek v4.1 flash 1017 与 deepseek v4.1 flash 都还没有数据（2026-10-17，美国口径），所以本页不给任何「月搜索量」数字。" data-en="Search volume: in Google Ads Keyword Planner terms, neither deepseek v4.1 flash 1017 nor deepseek v4.1 flash had data yet on 2026-10-17 (US), so this page quotes no monthly search volume at all.">Search volume: in Google Ads Keyword Planner terms, neither deepseek v4.1 flash 1017 nor deepseek v4.1 flash had data yet on 2026-10-17 (US), so this page quotes no monthly search volume at all.</li>
+                <li data-zh="社区评价：发布当天 Reddit r/LocalLLaMA 的相关讨论是 Google 前排结果之一，但 Reddit 拒绝服务端抓取，我们只看到标题，因此不引用其中任何说法。" data-en="Community reaction: the r/LocalLLaMA thread was one of the top Google results on release day, but Reddit blocks server-side fetching, so we only saw its title and quote none of its claims.">Community reaction: the r/LocalLLaMA thread was one of the top Google results on release day, but Reddit blocks server-side fetching, so we only saw its title and quote none of its claims.</li>
+                <li data-zh="「Search API 有争议」的说法：一篇第三方文章（shattered.io）在前排标题里称 Search API 的说法存在争议。我们只能核实官方口径：Search / Fetch 每个端点 $0.75 / 1000 次成功请求，Harness / Claude Code / Codex 的 server-side 调用 2026-11-01 前免费。争议本身没有一手来源，本页不展开。" data-en="The 'contested Search API' framing: one third-party post (shattered.io) describes the Search API announcement as contested in its headline. We could only verify the official position: Search and Fetch cost $0.75 per 1,000 successful calls per endpoint, and server-side calls from Harness, Claude Code and Codex are free until 1 November 2026. The controversy itself has no primary source, so this page does not pursue it.">The 'contested Search API' framing: one third-party post (shattered.io) describes the Search API announcement as contested in its headline. We could only verify the official position: Search and Fetch cost $0.75 per 1,000 successful calls per endpoint, and server-side calls from Harness, Claude Code and Codex are free until 1 November 2026. The controversy itself has no primary source, so this page does not pursue it.</li>
+                <li data-zh="最大输出上限两个口径不一致：DeepSeek 官方价目表写最大输出 384K，OpenRouter 同一模型写 131,072 completion tokens。不同线路的实际上限可能不同，按你实际调用的那条线路核对。" data-en="Two different max-output figures: DeepSeek's own price list lists a 384K maximum output, while OpenRouter lists 131,072 completion tokens for the same model. Per-route limits can differ — check the route you actually call.">Two different max-output figures: DeepSeek's own price list lists a 384K maximum output, while OpenRouter lists 131,072 completion tokens for the same model. Per-route limits can differ — check the route you actually call.</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="container section">
+        <div class="section-header">
+            <h2 data-zh="❓ 常见问题" data-en="❓ FAQ">❓ FAQ</h2>
+        </div>
+        <div class="faq-grid">
+            <div class="faq-item">
+                <h4 class="faq-question" data-zh="名字里的 1017 是什么意思？" data-en="What does the 1017 in DeepSeek-V4.1-Flash-1017 mean?">What does the 1017 in DeepSeek-V4.1-Flash-1017 mean?</h4>
+                <p class="faq-answer" data-zh="它是写在模型名里的发布日期：2026 年 10 月 17 日。官方称这是 V4.1-Flash 的小版本更新而不是新一代，但模型卡上多个 agentic 基准出现两位数提升，例如 Terminal-Bench 4.0 从 31.2 升到 42.3。" data-en="It is the release date encoded in the model name: 17 October 2026. DeepSeek describes it as a minor update to DeepSeek-V4.1-Flash rather than a new generation, but the model card shows double-digit gains on several agentic benchmarks, for example Terminal-Bench 4.0 rising from 31.2 to 42.3.">It is the release date encoded in the model name: 17 October 2026. DeepSeek describes it as a minor update to DeepSeek-V4.1-Flash rather than a new generation, but the model card shows double-digit gains on several agentic benchmarks, for example Terminal-Bench 4.0 rising from 31.2 to 42.3.</p>
+            </div>
+            <div class="faq-item">
+                <h4 class="faq-question" data-zh="API 里这个模型叫什么？旧名字还能用吗？" data-en="What is the API model name for DeepSeek-V4.1-Flash-1017?">What is the API model name for DeepSeek-V4.1-Flash-1017?</h4>
+                <p class="faq-answer" data-zh="在 DeepSeek 自己的 API 上就叫 deepseek-flash，没有带日期的模型 ID。旧名 deepseek-v4-flash 与 deepseek-v4-flash-vision-exp 仍被接受，但对应模型已退役：请求由 V4.1-Flash-1017 承接，并按 Flash 价格计费。OpenRouter 上同一个检查点写作 deepseek/deepseek-v4.1-flash-1017。" data-en="On DeepSeek's own API it is deepseek-flash; there is no dated model ID to call. The legacy names deepseek-v4-flash and deepseek-v4-flash-vision-exp are still accepted, but those models have been retired: the requests are served by DeepSeek-V4.1-Flash-1017 and billed at the Flash price. OpenRouter lists the same checkpoint as deepseek/deepseek-v4.1-flash-1017.">On DeepSeek's own API it is deepseek-flash; there is no dated model ID to call. The legacy names deepseek-v4-flash and deepseek-v4-flash-vision-exp are still accepted, but those models have been retired: the requests are served by DeepSeek-V4.1-Flash-1017 and billed at the Flash price. OpenRouter lists the same checkpoint as deepseek/deepseek-v4.1-flash-1017.</p>
+            </div>
+            <div class="faq-item">
+                <h4 class="faq-question" data-zh="多少钱？" data-en="How much does DeepSeek-V4.1-Flash-1017 cost?">How much does DeepSeek-V4.1-Flash-1017 cost?</h4>
+                <p class="faq-answer" data-zh="官方价目表每 1M token：缓存命中输入非高峰 $0.003、高峰 $0.006；缓存未命中输入非高峰 $0.15、高峰 $0.30；输出非高峰 $0.60、高峰 $1.20。非高峰是高峰的半价，高峰为周一至周五 01:00–04:00 与 06:00–10:00 UTC（不含中国法定假日）。第三方线路在 OpenRouter 上最低 $0.10 输入 / $0.50 输出。" data-en="Official DeepSeek list prices per 1M tokens: cache-hit input $0.003 off-peak and $0.006 at peak, cache-miss input $0.15 off-peak and $0.30 at peak, output $0.60 off-peak and $1.20 at peak. Off-peak is half of peak; peak hours are 01:00-04:00 and 06:00-10:00 UTC, Monday to Friday, excluding Chinese public holidays. Third-party routes on OpenRouter start at $0.10 input and $0.50 output per 1M tokens.">Official DeepSeek list prices per 1M tokens: cache-hit input $0.003 off-peak and $0.006 at peak, cache-miss input $0.15 off-peak and $0.30 at peak, output $0.60 off-peak and $1.20 at peak. Off-peak is half of peak; peak hours are 01:00-04:00 and 06:00-10:00 UTC, Monday to Friday, excluding Chinese public holidays. Third-party routes on OpenRouter start at $0.10 input and $0.50 output per 1M tokens.</p>
+            </div>
+            <div class="faq-item">
+                <h4 class="faq-question" data-zh="是开源的吗？能自己部署吗？" data-en="Is DeepSeek-V4.1-Flash-1017 open source, and can I self-host it?">Is DeepSeek-V4.1-Flash-1017 open source, and can I self-host it?</h4>
+                <p class="faq-answer" data-zh="是。权重以 MIT 许可发布在 Hugging Face 与 ModelScope 上。要注意这一版不带 Jinja 格式的对话模板：官方在仓库 encoding 目录提供 Python 参考编码器，另有一套叫 deepseek-recipe 的 Rust 工具链用于生产环境的 prompt 组装。推荐采样参数为 temperature 1.0、top_p 1.0、max_tokens 至少 256K。" data-en="Yes. The weights are published under the MIT licence on Hugging Face and ModelScope. Note that this release ships no Jinja-format chat template: DeepSeek provides a Python reference encoder in the repository encoding folder and a Rust toolkit called deepseek-recipe for production prompt formatting. Recommended sampling settings are temperature 1.0, top_p 1.0 and at least 256K max output tokens.">Yes. The weights are published under the MIT licence on Hugging Face and ModelScope. Note that this release ships no Jinja-format chat template: DeepSeek provides a Python reference encoder in the repository encoding folder and a Rust toolkit called deepseek-recipe for production prompt formatting. Recommended sampling settings are temperature 1.0, top_p 1.0 and at least 256K max output tokens.</p>
+            </div>
+            <div class="faq-item">
+                <h4 class="faq-question" data-zh="支持图片输入和工具调用吗？" data-en="Does DeepSeek-V4.1-Flash-1017 support images and tool calls?">Does DeepSeek-V4.1-Flash-1017 support images and tool calls?</h4>
+                <p class="faq-answer" data-zh="都支持。模型卡把它标为 image-text-to-text，官方价目表也写明 Flash 档支持视觉（V4-Pro 不收图）。工具调用、JSON 输出、Responses API 与 Anthropic API 格式都在支持列表里，并发上限 2500。" data-en="Yes to both. The checkpoint is tagged image-text-to-text, and DeepSeek's pricing table lists vision support on Flash, while V4-Pro does not take images. Tool calls, JSON output, the Responses API and the Anthropic API format are all listed as supported, with a concurrency limit of 2,500.">Yes to both. The checkpoint is tagged image-text-to-text, and DeepSeek's pricing table lists vision support on Flash, while V4-Pro does not take images. Tool calls, JSON output, the Responses API and the Anthropic API format are all listed as supported, with a concurrency limit of 2,500.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Related reading -->
+    <section id="related" class="container section">
+        <div class="section-header">
+            <h2 data-zh="📚 接着读" data-en="📚 Keep Reading">📚 Keep Reading</h2>
+            <p data-zh="把这一页放回整条 V4 线里看，下面几页分别承接规格、编程评测、迁移与横向对比。" data-en="To place this page back in the V4 line, the pages below cover the overview, the coding deep-dive, the migration path and the head-to-head comparisons.">To place this page back in the V4 line, the pages below cover the overview, the coding deep-dive, the migration path and the head-to-head comparisons.</p>
+        </div>
+        <ul class="source-list">
+            <li><a href="/deepseek-v4.html" data-zh="DeepSeek V4 专题：V4-Pro 与 Flash 的规格、架构与完整基准" data-en="DeepSeek V4 overview: V4-Pro and Flash specs, architecture and the full benchmark set">DeepSeek V4 overview: V4-Pro and Flash specs, architecture and the full benchmark set</a> — <span data-zh="如果 1017 只是你第一次听说 Flash，先看这一页的家族全貌。" data-en="if the 1017 checkpoint is your first encounter with Flash, start with the family overview">if the 1017 checkpoint is your first encounter with Flash, start with the family overview</span></li>
+            <li><a href="/deepseek-v4-coding-benchmark.html" data-zh="编程能力深度评测：LiveCodeBench 93.5%、Codeforces 3206、SWE-bench 80.6%" data-en="Coding benchmark deep-dive: LiveCodeBench 93.5%, Codeforces 3206, SWE-bench 80.6%">Coding benchmark deep-dive: LiveCodeBench 93.5%, Codeforces 3206, SWE-bench 80.6%</a> — <span data-zh="本页只给 1017 的对照分；那边有 Flash 与 Pro 的日常编码选型建议。" data-en="this page gives the 1017 deltas; that one gives the day-to-day Flash-vs-Pro routing advice">this page gives the 1017 deltas; that one gives the day-to-day Flash-vs-Pro routing advice</span></li>
+            <li><a href="/deepseek-v4-long-context.html" data-zh="1M 上下文长文档分析：MRCR 1M 83.5% 与六个实测案例" data-en="1M-token long-document analysis: MRCR 1M 83.5% and six real cases">1M-token long-document analysis: MRCR 1M 83.5% and six real cases</a> — <span data-zh="1017 也是 1M 上下文；长文档场景的实测在那里。" data-en="the 1017 checkpoint is also 1M context; the long-document tests live there">the 1017 checkpoint is also 1M context; the long-document tests live there</span></li>
+            <li><a href="/deepseek-v4-vs-glm-5-3-prime.html" data-zh="V4 vs GLM 5.3 Prime：官方价格与基准对比" data-en="V4 vs GLM 5.3 Prime: official pricing and benchmarks compared">V4 vs GLM 5.3 Prime: official pricing and benchmarks compared</a> — <span data-zh="GLM-5.3 也在本页的对照表里，那边是完整的正面对比。" data-en="GLM-5.3 also appears in the comparison table above; that page is the full head-to-head">GLM-5.3 also appears in the comparison table above; that page is the full head-to-head</span></li>
+            <li><a href="/deepseek-v3-to-v4-migration.html" data-zh="V3 → V4 迁移指南：deepseek-chat 停用与模型名映射" data-en="V3 to V4 migration guide: the deepseek-chat deprecation and model-name mapping">V3 to V4 migration guide: the deepseek-chat deprecation and model-name mapping</a> — <span data-zh="要把线上请求从旧名切到 deepseek-flash，按这份清单走。" data-en="if you are moving production traffic from the old model names to deepseek-flash, follow that checklist">if you are moving production traffic from the old model names to deepseek-flash, follow that checklist</span></li>
+        </ul>
+    </section>
+
+    <!-- Sources -->
+    <section id="sources" class="container section">
+        <div class="section-header">
+            <h2 data-zh="🔗 来源与更新" data-en="🔗 Sources &amp; Updates">🔗 Sources &amp; Updates</h2>
+            <p data-zh="本页数据于 2026-10-17 从下列一手来源读取。价格、基准与上限都会变，下单或部署前请以官网为准。" data-en="Page data was read from the primary sources below on 2026-10-17. Prices, benchmark numbers and limits change — check the vendor pages before you commit.">Page data was read from the primary sources below on 2026-10-17. Prices, benchmark numbers and limits change — check the vendor pages before you commit.</p>
+        </div>
+        <ul class="source-list">
+            <li><a href="https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017" target="_blank" rel="noopener noreferrer">Hugging Face — deepseek-ai/DeepSeek-V4.1-Flash-1017</a><span data-zh="（官方模型卡：基准表、采样参数、MIT 许可、编码说明）" data-en=" — the official model card: benchmark table, sampling settings, MIT licence, encoding notes"> — the official model card: benchmark table, sampling settings, MIT licence, encoding notes</span></li>
+            <li><a href="https://api-docs.deepseek.com/news/news261017/" target="_blank" rel="noopener noreferrer">DeepSeek API Docs — V4.1-Flash-1017 release note</a><span data-zh="（发布日期、harness 适配、Search / Fetch 开放）" data-en=" — release date, harness support, the Search and Fetch opening"> — release date, harness support, the Search and Fetch opening</span></li>
+            <li><a href="https://api-docs.deepseek.com/quick_start/pricing" target="_blank" rel="noopener noreferrer">DeepSeek API Docs — Models &amp; Pricing</a><span data-zh="（deepseek-flash 的模型版本、1M 上下文、384K 最大输出、分时价格、并发）" data-en=" — the deepseek-flash model version, 1M context, 384K max output, time-of-day pricing and concurrency"> — the deepseek-flash model version, 1M context, 384K max output, time-of-day pricing and concurrency</span></li>
+            <li><a href="https://openrouter.ai/deepseek/deepseek-v4.1-flash-1017" target="_blank" rel="noopener noreferrer">OpenRouter — DeepSeek V4.1 Flash 1017</a><span data-zh="（第三方线路价、吞吐与延迟、Artificial Analysis 对照分）" data-en=" — third-party route prices, throughput and latency, and the Artificial Analysis comparison scores"> — third-party route prices, throughput and latency, and the Artificial Analysis comparison scores</span></li>
+            <li><a href="https://www.mindstudio.ai/blog/deepseek-v4-1-flash-1017-release" target="_blank" rel="noopener noreferrer">MindStudio — What's New in the Benchmark Update</a><span data-zh="（第三方对本次更新的逐项解读，用于交叉核对官方口径）" data-en=" — a third-party read of the update, used here to cross-check the official claims"> — a third-party read of the update, used here to cross-check the official claims</span></li>
+        </ul>
+    </section>
+
+    <!-- Ad: Banner 300x250 (highperformanceformat.com — Adsterra's CDN)
+     Banner 300x250_1 (id=301745522) retrieved from beta.publishers.adsterra.com dashboard (2026-07-09). -->
+    <div class="container" style="padding: 0 2rem;">
+    <div style="background: rgba(0,0,0,0.03); border: 1px dashed rgba(0,0,0,0.1); padding: 0.5rem; margin: 2rem auto; max-width: 1200px; border-radius: 8px; text-align: center;">
+        <div style="font-size: 0.7rem; color: #888; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0;">
+            SPONSORED &middot; <a href="/advertising-disclosure.html" style="color: #888; text-decoration: underline;">Advertising Disclosure</a>
+        </div>
+        <script>
+            atOptions = {
+                'key' : '856aa80835ef4d5205c4bb07b7b9d37c',
+                'format' : 'iframe',
+                'height' : 250,
+                'width' : 300,
+                'params' : {}
+            };
+        </script>
+        <script src="https://www.highperformanceformat.com/856aa80835ef4d5205c4bb07b7b9d37c/invoke.js"></script>
+    </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p data-zh="© 2026 deepseekv.pro — 独立第三方资料站，与 DeepSeek（深度求索）、Z.ai、Anthropic 均无隶属关系。" data-en="© 2026 deepseekv.pro — an independent third-party resource, not affiliated with DeepSeek, Z.ai or Anthropic.">© 2026 deepseekv.pro — an independent third-party resource, not affiliated with DeepSeek, Z.ai or Anthropic.</p>
+        <div class="links">
+            <a href="/" data-zh="返回首页" data-en="Back to Home">Back to Home</a>
+            <a href="/deepseek-v4.html" data-zh="V4 专题" data-en="V4 Overview">V4 Overview</a>
+            <a href="/deepseek-v4-coding-benchmark.html" data-zh="编程评测" data-en="Coding Benchmark">Coding Benchmark</a>
+            <a href="/deepseek-v4-long-context.html" data-zh="百万上下文" data-en="1M Context">1M Context</a>
+            <a href="/deepseek-v4-vs-glm-5-3-prime.html" data-zh="V4 vs GLM 5.3 Prime" data-en="V4 vs GLM 5.3 Prime">V4 vs GLM 5.3 Prime</a>
+            <a href="/deepseek-v4-vs-gpt5-vs-claude.html" data-zh="V4 vs GPT-5 vs Claude" data-en="V4 vs GPT-5 vs Claude">V4 vs GPT-5 vs Claude</a>
+            <a href="/deepseek-v3-to-v4-migration.html" data-zh="V3→V4 迁移" data-en="V3 to V4 Migration">V3 to V4 Migration</a>
+            <a href="/advertising-disclosure.html" style="color: #c2410c;" data-zh="推广披露" data-en="Affiliate Disclosure">Affiliate Disclosure</a>
+        </div>
+        <p style="margin-top: 2rem; font-size: 0.875rem;" data-zh="数据来源：DeepSeek 官方模型卡与 API 文档、OpenRouter 模型页、Google 搜索结果页快照，2026-10-17 读取。" data-en="Data sources: DeepSeek's official model card and API docs, the OpenRouter model page, and a Google SERP snapshot — read 2026-10-17.">Data sources: DeepSeek's official model card and API docs, the OpenRouter model page, and a Google SERP snapshot — read 2026-10-17.</p>
+
+    <!-- Ad: Native Banner (effectivecpmnetwork.com — Adsterra's CDN)
+     NativeBanner_1 (id=30113316) retrieved from beta.publishers.adsterra.com dashboard (2026-07-05).
+     Adsterra uses effectivecpmnetwork.com as the CDN for Native Banner, Social Bar, Popunder,
+     Smartlink across all publisher accounts. -->
+<div class="ad-native-banner" style="background: rgba(0,0,0,0.03); border: 1px dashed rgba(0,0,0,0.1); padding: 0.5rem; margin: 2rem auto; max-width: 1200px; border-radius: 8px;">
+    <div style="font-size: 0.7rem; color: #888; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0; text-align: center;">
+        SPONSORED &middot; <a href="/advertising-disclosure.html" style="color: #888; text-decoration: underline;">Advertising Disclosure</a>
+    </div>
+    <script async="async" data-cfasync="false" src="https://pl30213815.effectivecpmnetwork.com/ebe954634f6c78466c5e14609e5dd149/invoke.js"></script>
+    <div id="container-ebe954634f6c78466c5e14609e5dd149" style="min-height: 60px;"></div>
+</div>
+    </footer>
+
+    <script>
+        let currentLanguage = localStorage.getItem('preferredLanguage') || 'en';
+
+        if (currentLanguage === 'zh') {
+            document.documentElement.lang = 'zh-CN';
+        }
+
+        function toggleLanguage() {
+            currentLanguage = currentLanguage === 'en' ? 'zh' : 'en';
+            localStorage.setItem('preferredLanguage', currentLanguage);
+            document.documentElement.lang = currentLanguage === 'zh' ? 'zh-CN' : 'en';
+
+            const langDisplay = currentLanguage === 'en' ? 'English' : '中文';
+            document.getElementById('current-lang').textContent = langDisplay;
+
+            document.querySelectorAll('[data-zh][data-en]').forEach(element => {
+                const text = element.getAttribute(`data-${currentLanguage}`);
+                if (text) {
+                    element.textContent = text;
+                }
+            });
+
+            const titleEl = document.querySelector('title');
+            const metaDesc = document.getElementById('meta-description');
+            const ogTitle = document.getElementById('og-title');
+            const ogDesc = document.getElementById('og-description');
+            const twitterTitle = document.getElementById('twitter-title');
+            const twitterDesc = document.getElementById('twitter-description');
+
+            if (currentLanguage === 'zh') {
+                titleEl.textContent = 'DeepSeek V4.1-Flash-1017：基准、API 价格与更新内容';
+                metaDesc.content = 'DeepSeek-V4.1-Flash-1017（2026-10-17 发布）：完整基准表、官方 deepseek-flash 价格、1M 上下文、MIT 开源权重，与 Opus 5 和 GLM-5.3 的对照。';
+                ogTitle.content = 'DeepSeek V4.1-Flash-1017：基准、API 价格与更新内容';
+                ogDesc.content = 'Terminal-Bench 4.0 从 31.2 升到 42.3，DeepSWE v1.1 77.0，1M 上下文，MIT 权重，官方非高峰 $0.15 / $0.60 每百万 token。';
+                twitterTitle.content = 'DeepSeek V4.1-Flash-1017：基准、价格与更新';
+                twitterDesc.content = 'Terminal-Bench 4.0 42.3（上一版 31.2），DeepSWE v1.1 77.0，1M 上下文，MIT 权重。';
+            } else {
+                titleEl.textContent = 'DeepSeek V4.1-Flash-1017: Benchmarks, API Pricing & What\'s New';
+                metaDesc.content = 'DeepSeek-V4.1-Flash-1017 (Oct 17, 2026): full benchmark table, official deepseek-flash pricing, 1M context, MIT weights and the Opus 5 comparison.';
+                ogTitle.content = 'DeepSeek V4.1-Flash-1017: Benchmarks, API Pricing & What\'s New';
+                ogDesc.content = 'Terminal-Bench 4.0 42.3 (up from 31.2), DeepSWE v1.1 77.0, 1M context, MIT weights, and $0.15 / $0.60 per 1M tokens off-peak.';
+                twitterTitle.content = 'DeepSeek V4.1-Flash-1017: Benchmarks, Pricing & What\'s New';
+                twitterDesc.content = 'Terminal-Bench 4.0 42.3 vs 31.2, DeepSWE v1.1 77.0, 1M context, MIT weights.';
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', function() {
+            const langDisplay = currentLanguage === 'en' ? 'English' : '中文';
+            document.getElementById('current-lang').textContent = langDisplay;
+
+            document.querySelectorAll('[data-zh][data-en]').forEach(element => {
+                const text = element.getAttribute(`data-${currentLanguage}`);
+                if (text) {
+                    element.textContent = text;
+                }
+            });
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+
+    <!-- Ads: Popunder + Smartlink + Social Bar (effectivecpmnetwork.com) -->
+    <!-- Ad: Popunder (effectivecpmnetwork.com — Adsterra's CDN)
+     Popunder_1 (id=30113317) — re-enabled 2026-07-09 after user request. -->
+<script src="https://pl30213816.effectivecpmnetwork.com/b1/de/14/b1de14656aa288f3a0abad48f1d4c29f.js"></script>
+<script src="https://www.effectivecpmnetwork.com/k6mwpc8t?key=ee4176418ab78a252d7b97ece931a5fa"></script>
+    <!-- Ad: Social Bar (effectivecpmnetwork.com — Adsterra's CDN)
+     SocialBar_1 (id=30113319) retrieved from beta.publishers.adsterra.com dashboard (2026-07-05). -->
+<script src="https://pl30213818.effectivecpmnetwork.com/74/61/a5/7461a528560e86fb15b2e286cd2dbeff.js"></script><!-- /Ads -->
+</body>
+</html>

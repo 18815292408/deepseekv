@@ -10,6 +10,7 @@
 - V4 vs GPT-5 vs Claude: https://www.deepseekv.pro/deepseek-v4-vs-gpt5-vs-claude.html — head-to-head comparison
 - Coding Benchmark: https://www.deepseekv.pro/deepseek-v4-coding-benchmark.html — LiveCodeBench 93.5%, Codeforces 3206
 - Long Context: https://www.deepseekv.pro/deepseek-v4-long-context.html — 1M token context, MRCR 83.5%
+- V4.1-Flash-1017: https://www.deepseekv.pro/deepseek-v4-1-flash-1017.html — Oct 17 2026 Flash checkpoint, benchmark table, deepseek-flash pricing
 - Advertising Disclosure: https://www.deepseekv.pro/advertising-disclosure.html
 
 ## Key Topics
