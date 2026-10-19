@@ -195,6 +195,16 @@
             y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
         })(window, document, "clarity", "script", "yvxkrkcri5");
     </script>
+    <!-- Ad layout v1 (2026-10-19): 728 = desktop only, 320x50 = mobile only, 300x250 and native in content. -->
+    <style id="ad-layout-v1">
+        .ad-container { margin: 0; }
+        @media (max-width: 767px) {
+            .ad-container.ad-728 { display: none !important; }
+        }
+        @media (min-width: 768px) {
+            .ad-container.ad-320 { display: none !important; }
+        }
+    </style>
 </head>
 <body>
     <!-- Navigation -->
@@ -248,9 +258,7 @@
         <p style="margin-top: 1rem; color: var(--t1); font-size: 0.95rem; max-width: 700px;" data-zh="1M token ≈ 150 万汉字 ≈ 1 本《三国演义》+ 0.5 本《红楼梦》。能一次性吞下整本小说、整套代码仓库、5+ 本技术书。" data-en="1M tokens ≈ 1.5M Chinese characters ≈ 1 Romance of the Three Kingdoms + 0.5 Dream of the Red Chamber. Can ingest entire novels, full code repos, 5+ technical books at once.">1M tokens ≈ 1.5M Chinese characters ≈ 1 Romance of the Three Kingdoms + 0.5 Dream of the Red Chamber. Can ingest entire novels, full code repos, 5+ technical books at once.</p>
     </section>
 
-    <!-- Ad: Banner 728x90 (highperformanceformat.com — Adsterra's CDN)
-     Banner 728x90_1 (id=301745523) retrieved from beta.publishers.adsterra.com dashboard (2026-07-09). -->
-    <div class="container" style="padding: 0 2rem;">
+    <div class="container ad-container ad-728" style="padding: 0 2rem;">
     <div style="background: rgba(0,0,0,0.03); border: 1px dashed rgba(0,0,0,0.1); padding: 0.5rem; margin: 2rem auto; max-width: 1200px; border-radius: 8px; text-align: center;">
         <div style="font-size: 0.7rem; color: #888; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0;">
             SPONSORED · <a href="/advertising-disclosure.html" style="color: #888; text-decoration: underline;">Advertising Disclosure</a>
@@ -267,8 +275,26 @@
         <script src="https://www.highperformanceformat.com/ee8bc1e77d94a913b862ff8aaead0cca/invoke.js"></script>
     </div>
     </div>
-
-    <!-- Architecture -->
+    <!-- Ad: Banner 320x50 (bauval.org - Adsterra CDN)
+         320x50_1 (id=31813454) created 2026-10-19. Mobile only: .ad-320 is hidden from 768px up. -->
+    <div class="container ad-container ad-320" style="padding: 0 2rem;">
+    <div style="background: rgba(0,0,0,0.03); border: 1px dashed rgba(0,0,0,0.1); padding: 0.5rem; margin: 2rem auto; max-width: 1200px; border-radius: 8px; text-align: center;">
+        <div style="font-size: 0.7rem; color: #888; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0;">
+            SPONSORED &middot; <a href="/advertising-disclosure.html" style="color: #888; text-decoration: underline;">Advertising Disclosure</a>
+        </div>
+        <script>
+            atOptions = {
+                'key' : 'ed071f325355a48ba25384b8ff82138a',
+                'format' : 'iframe',
+                'height' : 50,
+                'width' : 320,
+                'params' : {}
+            };
+        </script>
+        <script src="https://bauval.org/22/ed071f325355a48ba25384b8ff82138a"></script>
+    </div>
+    </div>
+<!-- Architecture -->
     <section id="architecture" class="container section">
         <div class="section-header">
             <h2 data-zh="🏗️ 混合注意力架构：百万上下文的成本密码" data-en="🏗️ Hybrid Attention: The Cost Code Behind 1M Context">🏗️ Hybrid Attention: The Cost Code Behind 1M Context</h2>
@@ -303,6 +329,23 @@
     </section>
 
     <!-- Benchmark -->
+<div class="container ad-container ad-300" style="padding: 0 2rem;">
+    <div style="background: rgba(0,0,0,0.03); border: 1px dashed rgba(0,0,0,0.1); padding: 0.5rem; margin: 2rem auto; max-width: 1200px; border-radius: 8px; text-align: center;">
+        <div style="font-size: 0.7rem; color: #888; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0;">
+            SPONSORED · <a href="/advertising-disclosure.html" style="color: #888; text-decoration: underline;">Advertising Disclosure</a>
+        </div>
+        <script>
+            atOptions = {
+                'key' : '856aa80835ef4d5205c4bb07b7b9d37c',
+                'format' : 'iframe',
+                'height' : 250,
+                'width' : 300,
+                'params' : {}
+            };
+        </script>
+        <script src="https://www.highperformanceformat.com/856aa80835ef4d5205c4bb07b7b9d37c/invoke.js"></script>
+    </div>
+    </div>
     <section id="benchmark" class="container section">
         <div class="section-header">
             <h2 data-zh="📊 MRCR 1M：百万上下文检索基准对比" data-en="📊 MRCR 1M: Million-Token Retrieval Benchmark">📊 MRCR 1M: Million-Token Retrieval Benchmark</h2>
@@ -410,6 +453,15 @@
     </section>
 
     <!-- Scenarios -->
+    <div class="container ad-container ad-native" style="padding: 0 2rem;">
+<div class="ad-native-banner" style="background: rgba(0,0,0,0.03); border: 1px dashed rgba(0,0,0,0.1); padding: 0.5rem; margin: 2rem auto; max-width: 1200px; border-radius: 8px;">
+    <div style="font-size: 0.7rem; color: #888; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0; text-align: center;">
+        SPONSORED · <a href="/advertising-disclosure.html" style="color: #888; text-decoration: underline;">Advertising Disclosure</a>
+    </div>
+    <script async="async" data-cfasync="false" src="https://pl30213815.effectivecpmnetwork.com/ebe954634f6c78466c5e14609e5dd149/invoke.js"></script>
+    <div id="container-ebe954634f6c78466c5e14609e5dd149" style="min-height: 60px;"></div>
+</div>
+    </div>
     <section id="scenarios" class="container section">
         <div class="section-header">
             <h2 data-zh="🎯 适合用 V4 百万上下文的场景" data-en="🎯 Scenarios Suited for V4's 1M Context">🎯 Scenarios Suited for V4's 1M Context</h2>
@@ -487,26 +539,6 @@
     </section>
 
 
-    <!-- Ad: Banner 300x250 (highperformanceformat.com — Adsterra's CDN)
-     Banner 300x250_1 (id=301745522) retrieved from beta.publishers.adsterra.com dashboard (2026-07-09). -->
-    <div class="container" style="padding: 0 2rem;">
-    <div style="background: rgba(0,0,0,0.03); border: 1px dashed rgba(0,0,0,0.1); padding: 0.5rem; margin: 2rem auto; max-width: 1200px; border-radius: 8px; text-align: center;">
-        <div style="font-size: 0.7rem; color: #888; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0;">
-            SPONSORED · <a href="/advertising-disclosure.html" style="color: #888; text-decoration: underline;">Advertising Disclosure</a>
-        </div>
-        <script>
-            atOptions = {
-                'key' : '856aa80835ef4d5205c4bb07b7b9d37c',
-                'format' : 'iframe',
-                'height' : 250,
-                'width' : 300,
-                'params' : {}
-            };
-        </script>
-        <script src="https://www.highperformanceformat.com/856aa80835ef4d5205c4bb07b7b9d37c/invoke.js"></script>
-    </div>
-    </div>
-
     <!-- Footer -->
     <footer>
         <p>&copy; 2026 DeepSeek Technologies. All rights reserved.</p>
@@ -521,17 +553,6 @@
         </div>
         <p style="margin-top: 2rem; font-size: 0.875rem;" data-zh="数据来源：DeepSeek V4 官方技术报告、央视实测、第三方用户测试，2026 年 4-5 月数据。" data-en="Source: DeepSeek V4 official technical report, CCTV test, third-party user tests — April-May 2026 data.">Source: DeepSeek V4 official technical report, CCTV test, third-party user tests — April-May 2026 data.</p>
     
-    <!-- Ad: Native Banner (effectivecpmnetwork.com — Adsterra's CDN)
-     NativeBanner_1 (id=30113316) retrieved from beta.publishers.adsterra.com dashboard (2026-07-05).
-     Adsterra uses effectivecpmnetwork.com as the CDN for Native Banner, Social Bar, Popunder,
-     Smartlink across all publisher accounts. -->
-<div class="ad-native-banner" style="background: rgba(0,0,0,0.03); border: 1px dashed rgba(0,0,0,0.1); padding: 0.5rem; margin: 2rem auto; max-width: 1200px; border-radius: 8px;">
-    <div style="font-size: 0.7rem; color: #888; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0; text-align: center;">
-        SPONSORED · <a href="/advertising-disclosure.html" style="color: #888; text-decoration: underline;">Advertising Disclosure</a>
-    </div>
-    <script async="async" data-cfasync="false" src="https://pl30213815.effectivecpmnetwork.com/ebe954634f6c78466c5e14609e5dd149/invoke.js"></script>
-    <div id="container-ebe954634f6c78466c5e14609e5dd149" style="min-height: 60px;"></div>
-</div>
     </footer>
 
     <script>

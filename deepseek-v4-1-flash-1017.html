@@ -218,6 +218,16 @@
             .container { padding: 0 1rem; }
         }
     </style>
+    <!-- Ad layout v1 (2026-10-19): 728 = desktop only, 320x50 = mobile only, 300x250 and native in content. -->
+    <style id="ad-layout-v1">
+        .ad-container { margin: 0; }
+        @media (max-width: 767px) {
+            .ad-container.ad-728 { display: none !important; }
+        }
+        @media (min-width: 768px) {
+            .ad-container.ad-320 { display: none !important; }
+        }
+    </style>
 </head>
 <body>
     <!-- Navigation -->
@@ -278,10 +288,7 @@
         </div>
     </section>
 
-    <!-- Ad: Banner 728x90 (highperformanceformat.com — Adsterra's CDN)
-     Banner 728x90_1 (id=301745523) retrieved from beta.publishers.adsterra.com dashboard (2026-07-09).
-     Placed below the first-screen answer so the answer and the headline table render before any ad. -->
-    <div class="container" style="padding: 0 2rem;">
+    <div class="container ad-container ad-728" style="padding: 0 2rem;">
     <div style="background: rgba(0,0,0,0.03); border: 1px dashed rgba(0,0,0,0.1); padding: 0.5rem; margin: 2rem auto; max-width: 1200px; border-radius: 8px; text-align: center;">
         <div style="font-size: 0.7rem; color: #888; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0;">
             SPONSORED &middot; <a href="/advertising-disclosure.html" style="color: #888; text-decoration: underline;">Advertising Disclosure</a>
@@ -298,8 +305,26 @@
         <script src="https://www.highperformanceformat.com/ee8bc1e77d94a913b862ff8aaead0cca/invoke.js"></script>
     </div>
     </div>
-
-    <!-- What changed -->
+    <!-- Ad: Banner 320x50 (bauval.org - Adsterra CDN)
+         320x50_1 (id=31813454) created 2026-10-19. Mobile only: .ad-320 is hidden from 768px up. -->
+    <div class="container ad-container ad-320" style="padding: 0 2rem;">
+    <div style="background: rgba(0,0,0,0.03); border: 1px dashed rgba(0,0,0,0.1); padding: 0.5rem; margin: 2rem auto; max-width: 1200px; border-radius: 8px; text-align: center;">
+        <div style="font-size: 0.7rem; color: #888; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0;">
+            SPONSORED &middot; <a href="/advertising-disclosure.html" style="color: #888; text-decoration: underline;">Advertising Disclosure</a>
+        </div>
+        <script>
+            atOptions = {
+                'key' : 'ed071f325355a48ba25384b8ff82138a',
+                'format' : 'iframe',
+                'height' : 50,
+                'width' : 320,
+                'params' : {}
+            };
+        </script>
+        <script src="https://bauval.org/22/ed071f325355a48ba25384b8ff82138a"></script>
+    </div>
+    </div>
+<!-- What changed -->
     <section id="changed" class="container section">
         <div class="section-header">
             <h2 data-zh="🆕 1017 更新改了什么" data-en="🆕 What the 1017 Update Changed">🆕 What the 1017 Update Changed</h2>
@@ -344,6 +369,23 @@
     </section>
 
     <!-- Benchmarks -->
+<div class="container ad-container ad-300" style="padding: 0 2rem;">
+    <div style="background: rgba(0,0,0,0.03); border: 1px dashed rgba(0,0,0,0.1); padding: 0.5rem; margin: 2rem auto; max-width: 1200px; border-radius: 8px; text-align: center;">
+        <div style="font-size: 0.7rem; color: #888; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0;">
+            SPONSORED &middot; <a href="/advertising-disclosure.html" style="color: #888; text-decoration: underline;">Advertising Disclosure</a>
+        </div>
+        <script>
+            atOptions = {
+                'key' : '856aa80835ef4d5205c4bb07b7b9d37c',
+                'format' : 'iframe',
+                'height' : 250,
+                'width' : 300,
+                'params' : {}
+            };
+        </script>
+        <script src="https://www.highperformanceformat.com/856aa80835ef4d5205c4bb07b7b9d37c/invoke.js"></script>
+    </div>
+    </div>
     <section id="benchmarks" class="container section">
         <div class="section-header">
             <h2 data-zh="📊 完整基准表：1017 vs V4.1-Flash、K3、GLM-5.3、GPT-5.6 Sol、Opus 5" data-en="📊 Full Benchmark Table: 1017 vs V4.1-Flash, K3, GLM-5.3, GPT-5.6 Sol and Opus 5">📊 Full Benchmark Table: 1017 vs V4.1-Flash, K3, GLM-5.3, GPT-5.6 Sol and Opus 5</h2>
@@ -459,6 +501,15 @@
     </section>
 
     <!-- Run it -->
+    <div class="container ad-container ad-native" style="padding: 0 2rem;">
+<div class="ad-native-banner" style="background: rgba(0,0,0,0.03); border: 1px dashed rgba(0,0,0,0.1); padding: 0.5rem; margin: 2rem auto; max-width: 1200px; border-radius: 8px;">
+    <div style="font-size: 0.7rem; color: #888; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0; text-align: center;">
+        SPONSORED &middot; <a href="/advertising-disclosure.html" style="color: #888; text-decoration: underline;">Advertising Disclosure</a>
+    </div>
+    <script async="async" data-cfasync="false" src="https://pl30213815.effectivecpmnetwork.com/ebe954634f6c78466c5e14609e5dd149/invoke.js"></script>
+    <div id="container-ebe954634f6c78466c5e14609e5dd149" style="min-height: 60px;"></div>
+</div>
+    </div>
     <section id="run" class="container section">
         <div class="section-header">
             <h2 data-zh="🧩 拿权重、自己跑：这次要注意什么" data-en="🧩 Weights and Self-Hosting: What to Watch">🧩 Weights and Self-Hosting: What to Watch</h2>
@@ -557,26 +608,6 @@
         </ul>
     </section>
 
-    <!-- Ad: Banner 300x250 (highperformanceformat.com — Adsterra's CDN)
-     Banner 300x250_1 (id=301745522) retrieved from beta.publishers.adsterra.com dashboard (2026-07-09). -->
-    <div class="container" style="padding: 0 2rem;">
-    <div style="background: rgba(0,0,0,0.03); border: 1px dashed rgba(0,0,0,0.1); padding: 0.5rem; margin: 2rem auto; max-width: 1200px; border-radius: 8px; text-align: center;">
-        <div style="font-size: 0.7rem; color: #888; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0;">
-            SPONSORED &middot; <a href="/advertising-disclosure.html" style="color: #888; text-decoration: underline;">Advertising Disclosure</a>
-        </div>
-        <script>
-            atOptions = {
-                'key' : '856aa80835ef4d5205c4bb07b7b9d37c',
-                'format' : 'iframe',
-                'height' : 250,
-                'width' : 300,
-                'params' : {}
-            };
-        </script>
-        <script src="https://www.highperformanceformat.com/856aa80835ef4d5205c4bb07b7b9d37c/invoke.js"></script>
-    </div>
-    </div>
-
     <!-- Footer -->
     <footer>
         <p data-zh="© 2026 deepseekv.pro — 独立第三方资料站，与 DeepSeek（深度求索）、Z.ai、Anthropic 均无隶属关系。" data-en="© 2026 deepseekv.pro — an independent third-party resource, not affiliated with DeepSeek, Z.ai or Anthropic.">© 2026 deepseekv.pro — an independent third-party resource, not affiliated with DeepSeek, Z.ai or Anthropic.</p>
@@ -592,17 +623,6 @@
         </div>
         <p style="margin-top: 2rem; font-size: 0.875rem;" data-zh="数据来源：DeepSeek 官方模型卡与 API 文档、OpenRouter 模型页、Google 搜索结果页快照，2026-10-17 读取。" data-en="Data sources: DeepSeek's official model card and API docs, the OpenRouter model page, and a Google SERP snapshot — read 2026-10-17.">Data sources: DeepSeek's official model card and API docs, the OpenRouter model page, and a Google SERP snapshot — read 2026-10-17.</p>
 
-    <!-- Ad: Native Banner (effectivecpmnetwork.com — Adsterra's CDN)
-     NativeBanner_1 (id=30113316) retrieved from beta.publishers.adsterra.com dashboard (2026-07-05).
-     Adsterra uses effectivecpmnetwork.com as the CDN for Native Banner, Social Bar, Popunder,
-     Smartlink across all publisher accounts. -->
-<div class="ad-native-banner" style="background: rgba(0,0,0,0.03); border: 1px dashed rgba(0,0,0,0.1); padding: 0.5rem; margin: 2rem auto; max-width: 1200px; border-radius: 8px;">
-    <div style="font-size: 0.7rem; color: #888; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0; text-align: center;">
-        SPONSORED &middot; <a href="/advertising-disclosure.html" style="color: #888; text-decoration: underline;">Advertising Disclosure</a>
-    </div>
-    <script async="async" data-cfasync="false" src="https://pl30213815.effectivecpmnetwork.com/ebe954634f6c78466c5e14609e5dd149/invoke.js"></script>
-    <div id="container-ebe954634f6c78466c5e14609e5dd149" style="min-height: 60px;"></div>
-</div>
     </footer>
 
     <script>

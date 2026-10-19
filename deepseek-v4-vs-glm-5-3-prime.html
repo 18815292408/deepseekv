@@ -217,6 +217,16 @@
             .container { padding: 0 1rem; }
         }
     </style>
+    <!-- Ad layout v1 (2026-10-19): 728 = desktop only, 320x50 = mobile only, 300x250 and native in content. -->
+    <style id="ad-layout-v1">
+        .ad-container { margin: 0; }
+        @media (max-width: 767px) {
+            .ad-container.ad-728 { display: none !important; }
+        }
+        @media (min-width: 768px) {
+            .ad-container.ad-320 { display: none !important; }
+        }
+    </style>
 </head>
 <body>
     <!-- Navigation -->
@@ -264,9 +274,7 @@
         </div>
     </section>
 
-    <!-- Ad: Banner 728x90 (highperformanceformat.com — Adsterra's CDN)
-     Banner 728x90_1 (id=301745523) retrieved from beta.publishers.adsterra.com dashboard (2026-07-09). -->
-    <div class="container" style="padding: 0 2rem;">
+    <div class="container ad-container ad-728" style="padding: 0 2rem;">
     <div style="background: rgba(0,0,0,0.03); border: 1px dashed rgba(0,0,0,0.1); padding: 0.5rem; margin: 2rem auto; max-width: 1200px; border-radius: 8px; text-align: center;">
         <div style="font-size: 0.7rem; color: #888; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0;">
             SPONSORED · <a href="/advertising-disclosure.html" style="color: #888; text-decoration: underline;">Advertising Disclosure</a>
@@ -283,8 +291,26 @@
         <script src="https://www.highperformanceformat.com/ee8bc1e77d94a913b862ff8aaead0cca/invoke.js"></script>
     </div>
     </div>
-
-    <!-- Bottom line -->
+    <!-- Ad: Banner 320x50 (bauval.org - Adsterra CDN)
+         320x50_1 (id=31813454) created 2026-10-19. Mobile only: .ad-320 is hidden from 768px up. -->
+    <div class="container ad-container ad-320" style="padding: 0 2rem;">
+    <div style="background: rgba(0,0,0,0.03); border: 1px dashed rgba(0,0,0,0.1); padding: 0.5rem; margin: 2rem auto; max-width: 1200px; border-radius: 8px; text-align: center;">
+        <div style="font-size: 0.7rem; color: #888; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0;">
+            SPONSORED &middot; <a href="/advertising-disclosure.html" style="color: #888; text-decoration: underline;">Advertising Disclosure</a>
+        </div>
+        <script>
+            atOptions = {
+                'key' : 'ed071f325355a48ba25384b8ff82138a',
+                'format' : 'iframe',
+                'height' : 50,
+                'width' : 320,
+                'params' : {}
+            };
+        </script>
+        <script src="https://bauval.org/22/ed071f325355a48ba25384b8ff82138a"></script>
+    </div>
+    </div>
+<!-- Bottom line -->
     <section id="answer" class="container section">
         <div class="insight-box">
             <h4 data-zh="一句话结论" data-en="The bottom line">The bottom line</h4>
@@ -365,6 +391,23 @@
     </section>
 
     <!-- Benchmarks -->
+<div class="container ad-container ad-300" style="padding: 0 2rem;">
+    <div style="background: rgba(0,0,0,0.03); border: 1px dashed rgba(0,0,0,0.1); padding: 0.5rem; margin: 2rem auto; max-width: 1200px; border-radius: 8px; text-align: center;">
+        <div style="font-size: 0.7rem; color: #888; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0;">
+            SPONSORED · <a href="/advertising-disclosure.html" style="color: #888; text-decoration: underline;">Advertising Disclosure</a>
+        </div>
+        <script>
+            atOptions = {
+                'key' : '856aa80835ef4d5205c4bb07b7b9d37c',
+                'format' : 'iframe',
+                'height' : 250,
+                'width' : 300,
+                'params' : {}
+            };
+        </script>
+        <script src="https://www.highperformanceformat.com/856aa80835ef4d5205c4bb07b7b9d37c/invoke.js"></script>
+    </div>
+    </div>
     <section id="benchmarks" class="container section">
         <div class="section-header">
             <h2 data-zh="📊 厂商公布的基准对比" data-en="📊 Vendor-Published Benchmarks">📊 Vendor-Published Benchmarks</h2>
@@ -459,6 +502,15 @@
     </section>
 
     <!-- Speed -->
+    <div class="container ad-container ad-native" style="padding: 0 2rem;">
+<div class="ad-native-banner" style="background: rgba(0,0,0,0.03); border: 1px dashed rgba(0,0,0,0.1); padding: 0.5rem; margin: 2rem auto; max-width: 1200px; border-radius: 8px;">
+    <div style="font-size: 0.7rem; color: #888; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0; text-align: center;">
+        SPONSORED · <a href="/advertising-disclosure.html" style="color: #888; text-decoration: underline;">Advertising Disclosure</a>
+    </div>
+    <script async="async" data-cfasync="false" src="https://pl30213815.effectivecpmnetwork.com/ebe954634f6c78466c5e14609e5dd149/invoke.js"></script>
+    <div id="container-ebe954634f6c78466c5e14609e5dd149" style="min-height: 60px;"></div>
+</div>
+    </div>
     <section id="speed" class="container section">
         <div class="section-header">
             <h2 data-zh="⚡ Prime 的「加速」到底加在哪里" data-en="⚡ What Prime Actually Accelerates">⚡ What Prime Actually Accelerates</h2>
@@ -561,26 +613,6 @@
         </ul>
     </section>
 
-    <!-- Ad: Banner 300x250 (highperformanceformat.com — Adsterra's CDN)
-     Banner 300x250_1 (id=301745522) retrieved from beta.publishers.adsterra.com dashboard (2026-07-09). -->
-    <div class="container" style="padding: 0 2rem;">
-    <div style="background: rgba(0,0,0,0.03); border: 1px dashed rgba(0,0,0,0.1); padding: 0.5rem; margin: 2rem auto; max-width: 1200px; border-radius: 8px; text-align: center;">
-        <div style="font-size: 0.7rem; color: #888; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0;">
-            SPONSORED · <a href="/advertising-disclosure.html" style="color: #888; text-decoration: underline;">Advertising Disclosure</a>
-        </div>
-        <script>
-            atOptions = {
-                'key' : '856aa80835ef4d5205c4bb07b7b9d37c',
-                'format' : 'iframe',
-                'height' : 250,
-                'width' : 300,
-                'params' : {}
-            };
-        </script>
-        <script src="https://www.highperformanceformat.com/856aa80835ef4d5205c4bb07b7b9d37c/invoke.js"></script>
-    </div>
-    </div>
-
     <!-- Footer -->
     <footer>
         <p data-zh="© 2026 deepseekv.pro — 独立第三方资料站，与 DeepSeek、Z.ai、Anthropic 均无隶属关系。" data-en="© 2026 deepseekv.pro — an independent third-party resource, not affiliated with DeepSeek, Z.ai or Anthropic.">© 2026 deepseekv.pro — an independent third-party resource, not affiliated with DeepSeek, Z.ai or Anthropic.</p>
@@ -595,17 +627,6 @@
         </div>
         <p style="margin-top: 2rem; font-size: 0.875rem;" data-zh="数据来源：DeepSeek API 官方文档与模型卡、Z.ai / OpenRouter 模型卡、Claude Platform Docs，2026-10-13 读取。" data-en="Data sources: DeepSeek official API docs and model cards, Z.ai / OpenRouter model cards, Claude Platform Docs — read 2026-10-13.">Data sources: DeepSeek official API docs and model cards, Z.ai / OpenRouter model cards, Claude Platform Docs — read 2026-10-13.</p>
 
-    <!-- Ad: Native Banner (effectivecpmnetwork.com — Adsterra's CDN)
-     NativeBanner_1 (id=30113316) retrieved from beta.publishers.adsterra.com dashboard (2026-07-05).
-     Adsterra uses effectivecpmnetwork.com as the CDN for Native Banner, Social Bar, Popunder,
-     Smartlink across all publisher accounts. -->
-<div class="ad-native-banner" style="background: rgba(0,0,0,0.03); border: 1px dashed rgba(0,0,0,0.1); padding: 0.5rem; margin: 2rem auto; max-width: 1200px; border-radius: 8px;">
-    <div style="font-size: 0.7rem; color: #888; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0; text-align: center;">
-        SPONSORED · <a href="/advertising-disclosure.html" style="color: #888; text-decoration: underline;">Advertising Disclosure</a>
-    </div>
-    <script async="async" data-cfasync="false" src="https://pl30213815.effectivecpmnetwork.com/ebe954634f6c78466c5e14609e5dd149/invoke.js"></script>
-    <div id="container-ebe954634f6c78466c5e14609e5dd149" style="min-height: 60px;"></div>
-</div>
     </footer>
 
     <script>
