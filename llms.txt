@@ -11,6 +11,7 @@
 - Coding Benchmark: https://www.deepseekv.pro/deepseek-v4-coding-benchmark.html — LiveCodeBench 93.5%, Codeforces 3206
 - Long Context: https://www.deepseekv.pro/deepseek-v4-long-context.html — 1M token context, MRCR 83.5%
 - V4.1-Flash-1017: https://www.deepseekv.pro/deepseek-v4-1-flash-1017.html — Oct 17 2026 Flash checkpoint, benchmark table, deepseek-flash pricing
+- DeepInfer: https://www.deepseekv.pro/deepinfer.html — DeepSeek's Apache-2.0 inference engine: what shipped, the missing serving layers, the SM100/Ascend 950 hardware gate
 - Advertising Disclosure: https://www.deepseekv.pro/advertising-disclosure.html
 
 ## Key Topics

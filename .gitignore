@@ -60,3 +60,6 @@ out/
 .vercel
 .backup-pre-adsterra-fix/
 .backup-
+
+# 内页研究记录（不发布）
+.seo-notes/

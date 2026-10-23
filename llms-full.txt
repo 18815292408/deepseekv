@@ -146,6 +146,21 @@ DeepSeek-V4.1-Flash-1017 is the Flash-tier checkpoint released on 17 October 202
 
 ---
 
+## DeepInfer (released 2026-10-20)
+URL: https://www.deepseekv.pro/deepinfer.html
+
+DeepInfer is DeepSeek's production inference framework for DeepSeek-V4.1-Flash, open-sourced on 20 October 2026 under Apache 2.0.
+- One model only: DeepSeek-V4.1-Flash (default checkpoint V4.1-Flash-1017); offline inference, not a hosted API
+- Hardware allow-list: NVIDIA SM100 (Blackwell) and Huawei Ascend 950; Hopper and older NVIDIA are not supported
+- Ships optimized kernels (FlashMLA, DeepGEMM, DeepEP, TileKernels, DeepSelect), Wide-EP + EPLB, DSpark speculative decoding, SWA bounded replay, async scheduling, batch-invariant/deterministic modes (NVIDIA only) and structured outputs
+- Not included: KV cache system, VE/prefill/decode disaggregation, data-parallel load balancing, API server
+- Production figures (vendor): 155 trillion tokens/day per cluster, US$38 revenue per GPU-hour at valley pricing
+- Smallest efficient deployment: 64 prefill + 64 decode GPUs; published benchmarks run on 4 prefill and 64 decode SM100 GPUs
+- deepseek-recipe (MIT) converts Chat Completions, Responses and Messages API requests with the same logic as the official API
+- API prices did not change with the release: $0.15 input / $0.60 output per 1M tokens off-peak
+
+---
+
 ## Advertising Disclosure
 URL: https://www.deepseekv.pro/advertising-disclosure.html
 

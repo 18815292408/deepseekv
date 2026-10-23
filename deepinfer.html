@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeepInfer: What DeepSeek Open-Sourced (and What It Left Out)</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" id="meta-description" content="DeepInfer: DeepSeek's Apache-2.0 inference engine for V4.1-Flash — what shipped, what's missing, and why most teams still can't run it.">
+    <meta name="keywords" id="meta-keywords" content="deepinfer, deepseek deepinfer, deepinfer github, deepinfer inference framework, deepinfer vs vllm, deepinfer benchmark, deepseek v4.1 flash inference, deepinfer sm100, deepinfer ascend 950">
+    <meta name="author" content="DeepSeek V Pro">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+    <meta name="language" content="en">
+
+    <!-- Open Graph -->
+    <meta property="og:title" id="og-title" content="DeepInfer: What DeepSeek Open-Sourced (and What It Left Out)">
+    <meta property="og:description" id="og-description" content="Apache 2.0, V4.1-Flash only, SM100 and Ascend 950 only. What DeepInfer ships, the three serving layers it does not, and what it changes for API buyers.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://www.deepseekv.pro/deepinfer.html">
+    <meta property="og:image" content="https://www.deepseekv.pro/images/deepseek-comparison-og.png">
+    <meta property="og:site_name" content="DeepSeek V Pro">
+    <meta property="article:published_time" content="2026-10-23">
+    <meta property="article:modified_time" content="2026-10-23">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" id="twitter-title" content="DeepInfer: What DeepSeek Open-Sourced (and What It Left Out)">
+    <meta name="twitter:description" id="twitter-description" content="The engine behind DeepSeek's API is now Apache 2.0 — but it is offline-only, SM100/Ascend 950-only, and missing KV cache, P/D split and load balancing.">
+    <meta name="twitter:image" content="https://www.deepseekv.pro/images/deepseek-comparison-og.png">
+
+    <meta name="theme-color" content="#0066FF">
+
+    <!-- Schema.org: TechArticle -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": "DeepInfer: What DeepSeek Open-Sourced and What It Left Out",
+      "description": "DeepInfer is DeepSeek's production inference framework for DeepSeek-V4.1-Flash, released under Apache 2.0 on 20 October 2026. This analysis covers what shipped, the KV cache, prefill/decode and load-balancing pieces left out, the SM100 and Ascend 950 hardware gate, the published benchmarks, and what it means for API pricing.",
+      "author": {"@type": "Organization", "name": "DeepSeek V Pro"},
+      "publisher": {"@type": "Organization", "name": "DeepSeek V Pro"},
+      "datePublished": "2026-10-23",
+      "dateModified": "2026-10-23",
+      "mainEntityOfPage": {"@type": "WebPage", "@id": "https://www.deepseekv.pro/deepinfer.html"},
+      "keywords": "deepinfer, deepseek deepinfer, deepinfer github, deepinfer vs vllm, deepinfer benchmark, deepseek v4.1 flash inference",
+      "articleSection": "AI Infrastructure",
+      "inLanguage": "en"
+    }
+    </script>
+
+    <!-- Schema.org: FAQPage -->
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is DeepInfer?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "DeepInfer is DeepSeek's open-source inference framework for DeepSeek-V4.1-Flash, released on 20 October 2026 under the Apache 2.0 licence. It packages the kernel stack DeepSeek had already published (FlashMLA, DeepGEMM, DeepEP and others) into one engine with expert parallelism, DSpark speculative decoding, SWA bounded replay, asynchronous scheduling and deterministic modes. It is an offline engine, not a hosted API."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is DeepInfer a drop-in replacement for vLLM or SGLang?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. DeepInfer serves exactly one model, DeepSeek-V4.1-Flash, and only on NVIDIA SM100 or Huawei Ascend 950 hardware. What it omits are the parts of a complete online service around that engine: a KV cache system, the load balancer across data-parallel replicas, and the orchestration around P/D disaggregation — the disaggregation itself is largely implemented, the scheduler and wiring are not. vLLM and SGLang remain the practical choice for other models, other GPUs and OpenAI-compatible serving."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which GPUs does DeepInfer support?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "NVIDIA SM100 (Blackwell) GPUs — B200 and GB200 systems — and Huawei Ascend 950 NPUs. The README lists only those two accelerator families, so Hopper and older NVIDIA architectures are outside the supported set. It does not say whether batch-invariant inference and deterministic sampling are available on Ascend."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I run DeepInfer on an H100 or H200?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Hopper-generation cards are not on the supported list. For V4.1-Flash on H200, vLLM's recipe (0.31.0 or newer) and SGLang's day-one support are the documented paths. DeepInfer targets DeepSeek's own SM100 and Ascend 950 deployment."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does DeepInfer make the DeepSeek API cheaper?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Not directly. The deepseek-flash list price did not change with the release: $0.15 input and $0.60 output per million tokens off-peak, $0.30 and $1.20 at peak, and $0.003 (off-peak) or $0.006 (peak) for cache hits. Self-hosting means a 64 prefill plus 64 decode reference deployment — 128 GPUs, DeepSeek's smallest efficient unit — and then building the KV cache and routing layers the release does not include."
+      }
+    }
+  ]
+}
+    </script>
+
+    <!-- Schema.org: BreadcrumbList -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.deepseekv.pro/"},
+        {"@type": "ListItem", "position": 2, "name": "DeepSeek V4 overview", "item": "https://www.deepseekv.pro/deepseek-v4.html"},
+        {"@type": "ListItem", "position": 3, "name": "DeepInfer", "item": "https://www.deepseekv.pro/deepinfer.html"}
+      ]
+    }
+    </script>
+
+    <link rel="canonical" href="https://www.deepseekv.pro/deepinfer.html">
+
+    <!-- Hreflang -->
+    <link rel="alternate" hreflang="en" href="https://www.deepseekv.pro/deepinfer.html">
+    <link rel="alternate" hreflang="x-default" href="https://www.deepseekv.pro/deepinfer.html">
+
+    <!-- Google tag -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PMY0EV67Q2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-PMY0EV67Q2');
+    </script>
+
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%230066FF;stop-opacity:1'/%3E%3Cstop offset='100%25' style='stop-color:%230044CC;stop-opacity:1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='6' fill='url(%23bg)'/%3E%3Cg transform='translate(16,16)'%3E%3Ctext x='16' y='20' font-family='Arial,sans-serif' font-size='7' font-weight='bold' text-anchor='middle' fill='%23FFFFFF'%3ED%3C/text%3E%3C/g%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+
+    <style>
+        :root {
+            --p: #0066FF;
+            --p-light: #3385FF;
+            --accent: #00d4ff;
+            --t0: #ffffff;
+            --t1: rgba(255,255,255,0.85);
+            --b1: rgba(255,255,255,0.05);
+            --b2: rgba(255,255,255,0.08);
+            --bd: rgba(255,255,255,0.1);
+            --g-b: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.7; color: var(--t0); background: var(--g-b); overflow-x: hidden; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+        .section { padding: 4rem 0; }
+        a { color: var(--p); text-decoration: none; }
+        a:hover { color: var(--p-light); }
+
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(10,14,39,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--bd); padding: 1rem 2rem; }
+        .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.4rem; font-weight: 700; color: var(--p); }
+        .nav-links { display: flex; gap: 1.6rem; list-style: none; }
+        .nav-links a { color: var(--t1); font-size: 0.95rem; }
+        .nav-links a:hover { color: var(--p); }
+        .lang-switcher { background: var(--b2); border: 1px solid var(--bd); border-radius: 8px; padding: 0.4rem 0.8rem; cursor: pointer; color: var(--t0); font-size: 0.9rem; display: flex; align-items: center; gap: 0.4rem; }
+
+        .hero { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 7rem 2rem 2.5rem; }
+        .hero h1 { font-size: clamp(1.75rem, 4.4vw, 3rem); font-weight: 800; background: linear-gradient(135deg, var(--p), var(--accent)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem; line-height: 1.2; max-width: 900px; text-wrap: balance; }
+        .hero .subtitle { font-size: clamp(0.98rem, 1.9vw, 1.15rem); color: var(--t1); max-width: 850px; margin-bottom: 1.5rem; }
+
+        .answer-line { width: 100%; max-width: 860px; margin: 0.1rem 0 0.85rem; font-size: clamp(0.96rem, 1.8vw, 1.06rem); font-weight: 600; color: var(--t0); line-height: 1.55; }
+        .relation-box { width: 100%; max-width: 860px; margin: 0.25rem 0 1.5rem; padding: 0.9rem 1.1rem; text-align: left; background: rgba(0,102,255,0.10); border: 1px solid rgba(0,102,255,0.45); border-radius: 12px; display: grid; gap: 0.45rem; }
+        .relation-row { display: grid; grid-template-columns: 8.6rem 1fr; gap: 0.6rem; font-size: 0.9rem; line-height: 1.55; color: var(--t1); }
+        .relation-row strong { color: var(--accent); font-weight: 700; white-space: nowrap; }
+
+        .breadcrumb { font-size: 0.85rem; color: var(--t1); margin-bottom: 1rem; }
+        .breadcrumb a { color: var(--t1); }
+
+        .hero-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 1rem; max-width: 900px; width: 100%; margin: 1.25rem 0 0; }
+        .hero-stat { background: var(--b1); border: 1px solid var(--accent); border-radius: 12px; padding: 0.9rem 1rem; }
+        .hero-stat .value { font-size: 1.45rem; font-weight: 800; color: var(--accent); line-height: 1.3; }
+        .hero-stat .label { font-size: 0.82rem; color: var(--t1); }
+
+        .section-header { margin-bottom: 2rem; text-align: center; }
+        .section-header h2 { font-size: clamp(1.5rem, 3.3vw, 2.1rem); margin-bottom: 0.7rem; color: var(--t0); }
+        .section-header p { color: var(--t1); font-size: 1.02rem; max-width: 800px; margin: 0 auto; }
+        .section p { color: var(--t1); margin-bottom: 1rem; }
+        .section h3 { color: var(--t0); margin: 1.75rem 0 0.6rem; font-size: 1.15rem; }
+
+        .benchmark-table-wrapper { overflow-x: auto; margin: 1.5rem 0; border-radius: 12px; }
+        .benchmark-table { width: 100%; border-collapse: collapse; background: var(--b1); min-width: 680px; }
+        .benchmark-table th { background: var(--p); color: white; padding: 0.85rem 1rem; text-align: left; font-weight: 600; font-size: 0.95rem; }
+        .benchmark-table td { padding: 0.8rem 1rem; border-bottom: 1px solid var(--bd); color: var(--t1); font-size: 0.94rem; vertical-align: top; }
+        .benchmark-table tr:last-child td { border-bottom: none; }
+        .benchmark-table tr:hover { background: rgba(0,102,255,0.06); }
+        .benchmark-table .v4 { color: var(--accent); font-weight: 600; }
+        .benchmark-table caption { caption-side: bottom; padding-top: 0.75rem; font-size: 0.82rem; color: var(--t1); text-align: left; }
+
+        .insight-box { background: linear-gradient(135deg, rgba(0,102,255,0.15), rgba(0,212,255,0.08)); border: 1px solid var(--p); border-radius: 12px; padding: 1.4rem 1.5rem; margin: 0 0 1.5rem; }
+        .insight-box h3 { color: var(--p-light); margin: 0 0 0.6rem; font-size: 1.1rem; }
+        .insight-box p { color: var(--t1); margin-bottom: 0.75rem; }
+        .insight-box ul { color: var(--t1); margin: 0.4rem 0 0 1.2rem; }
+        .insight-box li { margin-bottom: 0.4rem; }
+
+        .warn-box { background: rgba(255,193,7,0.08); border: 1px solid rgba(255,193,7,0.5); border-radius: 12px; padding: 1.15rem 1.4rem; margin: 1.75rem 0; }
+        .warn-box h3 { color: #ffc107; margin: 0 0 0.5rem; font-size: 1.02rem; }
+        .warn-box p { color: var(--t1); font-size: 0.95rem; margin: 0; }
+        .warn-box ul { color: var(--t1); font-size: 0.95rem; margin: 0.5rem 0 0 1.2rem; }
+
+        .scenario-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.2rem; margin-top: 1.5rem; }
+        .scenario-card { background: var(--b1); border: 1px solid var(--bd); border-radius: 12px; padding: 1.3rem; }
+        .scenario-card .icon { font-size: 1.7rem; margin-bottom: 0.4rem; }
+        .kicker { font-size: 0.68rem; letter-spacing: 0.14em; font-weight: 700; color: var(--accent); margin-bottom: 0.45rem; }
+        .req-list { margin: 1rem 0 0 1.2rem; color: var(--t1); font-size: 0.95rem; }
+        .req-list li { margin-bottom: 0.55rem; }
+        .scenario-card h4 { color: var(--t0); margin-bottom: 0.4rem; font-size: 1.02rem; }
+        .scenario-card p { color: var(--t1); font-size: 0.93rem; line-height: 1.55; margin: 0; }
+
+        .timeline { list-style: none; margin: 1.5rem 0 0; border-left: 2px solid var(--bd); padding-left: 1.3rem; }
+        .timeline li { position: relative; margin-bottom: 1.1rem; color: var(--t1); font-size: 0.96rem; }
+        .timeline li::before { content: ""; position: absolute; left: -1.72rem; top: 0.55rem; width: 9px; height: 9px; border-radius: 50%; background: var(--accent); }
+        .timeline time { color: var(--p-light); font-weight: 700; margin-right: 0.5rem; }
+
+        .steps { margin: 1.25rem 0 0 1.25rem; color: var(--t1); }
+        .steps li { margin-bottom: 0.9rem; }
+        .steps strong { color: var(--t0); }
+        pre { background: rgba(0,0,0,0.45); border: 1px solid var(--bd); border-radius: 10px; padding: 0.9rem 1rem; overflow-x: auto; margin: 0.5rem 0 0; }
+        pre code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.86rem; color: #cfe3ff; }
+
+        .faq-grid { display: grid; grid-template-columns: 1fr; gap: 1.1rem; margin-top: 1.5rem; }
+        .faq-item { background: var(--b1); border: 1px solid var(--bd); border-radius: 12px; padding: 1.3rem 1.4rem; }
+        .faq-item h4 { color: var(--p); margin-bottom: 0.6rem; font-size: 1.06rem; }
+        .faq-item p { color: var(--t1); margin: 0; }
+
+        .source-list { list-style: none; margin-top: 1rem; }
+        .source-list li { color: var(--t1); font-size: 0.9rem; margin-bottom: 0.65rem; padding-left: 1.1rem; position: relative; }
+        .source-list li::before { content: "\2192"; position: absolute; left: 0; color: var(--p); }
+
+        footer { background: rgba(0,0,0,0.5); padding: 3rem 2rem 2rem; margin-top: 4rem; text-align: center; }
+        footer p { color: var(--t1); font-size: 0.9rem; margin-bottom: 1rem; }
+        footer .links { display: flex; justify-content: center; flex-wrap: wrap; gap: 1.4rem; margin-bottom: 1rem; }
+        footer .links a { color: var(--t1); font-size: 0.9rem; }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .container { padding: 0 1rem; }
+            .hero { padding: 6.4rem 1rem 2rem; }
+            .relation-row { grid-template-columns: 1fr; gap: 0.1rem; }
+            .relation-row strong { font-size: 0.86rem; }
+            .relation-box { padding: 0.85rem 0.95rem; }
+        }
+    </style>
+    <!-- Ad layout v1 (2026-10-19): 728 = desktop only, 320x50 = mobile only, 300x250 in content. -->
+    <style id="ad-layout-v1">
+        .ad-container { margin: 0; }
+        @media (max-width: 767px) {
+            .ad-container.ad-728 { display: none !important; }
+        }
+        @media (min-width: 768px) {
+            .ad-container.ad-320 { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-inner">
+            <a href="/" class="logo">DeepInfer</a>
+            <ul class="nav-links">
+                <li><a href="#answer" data-zh="直接回答" data-en="The Answer">The Answer</a></li>
+                <li><a href="#shipped" data-zh="发布了什么" data-en="What Shipped">What Shipped</a></li>
+                <li><a href="#missing" data-zh="缺了什么" data-en="What's Missing">What's Missing</a></li>
+                <li><a href="#hardware" data-zh="硬件门槛" data-en="Hardware">Hardware</a></li>
+                <li><a href="#compare" data-zh="对比 vLLM" data-en="vs vLLM">vs vLLM</a></li>
+                <li><a href="#faq" data-zh="常见问题" data-en="FAQ">FAQ</a></li>
+            </ul>
+            <div class="lang-switcher" onclick="toggleLanguage()">
+                <span>&#127760;</span>
+                <span id="current-lang">English</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <p class="breadcrumb"><a href="/" data-zh="首页" data-en="Home">Home</a> &rsaquo; <a href="/deepseek-v4.html" data-zh="DeepSeek V4 专题" data-en="DeepSeek V4 overview">DeepSeek V4 overview</a> &rsaquo; <span data-zh="DeepInfer" data-en="DeepInfer">DeepInfer</span></p>
+        <h1 data-zh="DeepInfer：DeepSeek 开源了什么，又留下了什么" data-en="DeepInfer: What DeepSeek Open-Sourced (and What It Left Out)">DeepInfer: What DeepSeek Open-Sourced (and What It Left Out)</h1>
+
+        <p class="answer-line" data-zh="一句话：DeepInfer 是 DeepSeek 面向 V4.1-Flash 的 Apache 2.0 推理引擎——离线运行，只跑 B200/GB200（SM100）与昇腾 950，H100/H200 跑不了；它还缺了完整在线服务所需的 KV cache、P/D 解耦与负载均衡。" data-en="In one sentence: DeepInfer is DeepSeek's Apache-2.0 inference engine for DeepSeek-V4.1-Flash only — offline, B200/GB200 (SM100) or Ascend 950 only, not on H100/H200, and missing the KV cache, P/D split and load balancing a full service needs.">In one sentence: DeepInfer is DeepSeek's Apache-2.0 inference engine for DeepSeek-V4.1-Flash only — offline, B200/GB200 (SM100) or Ascend 950 only, not on H100/H200, and missing the KV cache, P/D split and load balancing a full service needs.</p>
+
+        <div class="relation-box">
+            <div class="relation-row"><strong data-zh="适合谁" data-en="Who it's for">Who it's for</strong><span data-zh="在决定要不要把 vLLM 或 SGLang 换成 DeepInfer 的推理工程师，以及按 token 付费的 API 采购方。" data-en="Inference engineers deciding whether to replace vLLM or SGLang, and API buyers who pay per token.">Inference engineers deciding whether to replace vLLM or SGLang, and API buyers who pay per token.</span></div>
+            <div class="relation-row"><strong data-zh="你能得到" data-en="What you get">What you get</strong><span data-zh="发布内容清单、缺掉的三块服务层、硬件门槛，以及自托管和 API 的账——全部来自 DeepSeek 仓库与部署问答。" data-en="The shipped feature set, the three missing serving layers, the hardware gate and the self-host-versus-API math — sourced from DeepSeek's repository and deployment Q&amp;A.">The shipped feature set, the three missing serving layers, the hardware gate and the self-host-versus-API math — sourced from DeepSeek's repository and deployment Q&amp;A.</span></div>
+            <div class="relation-row"><strong data-zh="本站不做什么" data-en="What we don't do">What we don't do</strong><span data-zh="不托管 DeepInfer、不跑你的机器、不代表 DeepSeek。这是独立第三方分析，不是官方页面。" data-en="We don't host DeepInfer, benchmark your hardware, or speak for DeepSeek. This is independent third-party analysis, not an official page.">We don't host DeepInfer, benchmark your hardware, or speak for DeepSeek. This is independent third-party analysis, not an official page.</span></div>
+        </div>
+
+        <p class="subtitle" data-zh="2026 年 10 月 20 日，DeepSeek 把自己 API 背后的推理引擎开源了。这一页把「实际发布的内容」和「发布报道暗示的内容」分开，并算清它对按 token 付费的人和自建集群的人分别意味着什么。" data-en="On 20 October 2026 DeepSeek published the engine behind its own API. This page separates what shipped from what the launch coverage implied — and what it means if you pay per token or run your own GPUs.">On 20 October 2026 DeepSeek published the engine behind its own API. This page separates what shipped from what the launch coverage implied — and what it means if you pay per token or run your own GPUs.</p>
+
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <div class="value">20 Oct 2026</div>
+                <div class="label" data-zh="Apache 2.0 开源发布日" data-en="Apache 2.0 release date">Apache 2.0 release date</div>
+            </div>
+            <div class="hero-stat">
+                <div class="value">1 model</div>
+                <div class="label" data-zh="只支持 DeepSeek-V4.1-Flash" data-en="DeepSeek-V4.1-Flash only">DeepSeek-V4.1-Flash only</div>
+            </div>
+            <div class="hero-stat">
+                <div class="value">SM100 / Ascend 950</div>
+                <div class="label" data-zh="仅这两类加速卡，Hopper 不支持" data-en="The only supported accelerators; no Hopper">The only supported accelerators; no Hopper</div>
+            </div>
+            <div class="hero-stat">
+                <div class="value">155T / day</div>
+                <div class="label" data-zh="DeepSeek 单个生产集群的日处理量" data-en="Tokens served per day by one DeepSeek cluster">Tokens served per day by one DeepSeek cluster</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Answer -->
+    <section id="answer" class="container section">
+        <div class="insight-box">
+            <h3 data-zh="直接回答" data-en="The short answer">The short answer</h3>
+            <p data-zh="DeepInfer 是 DeepSeek 面向 DeepSeek-V4.1-Flash 的生产推理框架，2026 年 10 月 20 日以 Apache 2.0 开源。它把此前分散发布的 kernel 库接进同一个引擎，并加入 Wide-EP 解码、DSpark 投机解码、SWA 有界回放和确定性执行模式。它跑在 NVIDIA SM100 与华为昇腾 950 上——不跑 H100/H200，也不跑别的模型。" data-en="DeepInfer is DeepSeek's production inference framework for DeepSeek-V4.1-Flash, open-sourced under Apache 2.0 on 20 October 2026. It wires the kernel libraries DeepSeek had already published into one engine and adds Wide-EP decoding, DSpark speculative decoding, SWA bounded replay and deterministic execution modes. It runs on NVIDIA SM100 GPUs and Huawei Ascend 950 NPUs — not on H100/H200, and not on any other model.">DeepInfer is DeepSeek's production inference framework for DeepSeek-V4.1-Flash, open-sourced under Apache 2.0 on 20 October 2026. It wires the kernel libraries DeepSeek had already published into one engine and adds Wide-EP decoding, DSpark speculative decoding, SWA bounded replay and deterministic execution modes. It runs on NVIDIA SM100 GPUs and Huawei Ascend 950 NPUs — not on H100/H200, and not on any other model.</p>
+            <ul>
+                <li data-zh="如果你调用 DeepSeek API：账单不会变。DeepInfer 是 DeepSeek 服务你的方式，不是你能租到的便宜通道。" data-en="If you call the DeepSeek API, your bill does not change. DeepInfer is how DeepSeek serves you, not a cheaper route you can rent.">If you call the DeepSeek API, your bill does not change. DeepInfer is how DeepSeek serves you, not a cheaper route you can rent.</li>
+                <li data-zh="如果你运营 SM100 或昇腾 950：这是 DeepSeek 服务路径最接近的公开副本，而且缺什么写得很清楚，不是藏起来的。" data-en="If you operate SM100 or Ascend 950 capacity, this is the closest public copy of DeepSeek's serving path, and the missing pieces are documented rather than hidden.">If you operate SM100 or Ascend 950 capacity, this is the closest public copy of DeepSeek's serving path, and the missing pieces are documented rather than hidden.</li>
+                <li data-zh="如果你在 H100、H200 或 AMD 上跑 V4.1-Flash：这不是你的引擎。vLLM 和 SGLang 已有现成 recipe，DeepInfer 不支持这些卡。" data-en="If you run V4.1-Flash on H100, H200 or AMD, this is not your engine: vLLM and SGLang already have recipes, and DeepInfer does not support those cards.">If you run V4.1-Flash on H100, H200 or AMD, this is not your engine: vLLM and SGLang already have recipes, and DeepInfer does not support those cards.</li>
+            </ul>
+            <p style="margin-top: 0.75rem;"><a href="#paths" data-zh="你属于哪一种？四条分流 →" data-en="Which one are you? Four routes →">Which one are you? Four routes →</a></p>
+        </div>
+    </section>
+
+    <div class="container ad-container ad-728" style="padding: 0 2rem;">
+    <div style="background: rgba(0,0,0,0.03); border: 1px dashed rgba(0,0,0,0.1); padding: 0.5rem; margin: 2rem auto; max-width: 1200px; border-radius: 8px; text-align: center;">
+        <div style="font-size: 0.7rem; color: #888; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0;">
+            SPONSORED &middot; <a href="/advertising-disclosure.html" style="color: #888; text-decoration: underline;">Advertising Disclosure</a>
+        </div>
+        <script>
+            atOptions = {
+                'key' : 'ee8bc1e77d94a913b862ff8aaead0cca',
+                'format' : 'iframe',
+                'height' : 90,
+                'width' : 728,
+                'params' : {}
+            };
+        </script>
+        <script src="https://www.highperformanceformat.com/ee8bc1e77d94a913b862ff8aaead0cca/invoke.js"></script>
+    </div>
+    </div>
+    <!-- Ad: Banner 320x50 (bauval.org - Adsterra CDN) — mobile only. -->
+    <div class="container ad-container ad-320" style="padding: 0 2rem;">
+    <div style="background: rgba(0,0,0,0.03); border: 1px dashed rgba(0,0,0,0.1); padding: 0.5rem; margin: 2rem auto; max-width: 1200px; border-radius: 8px; text-align: center;">
+        <div style="font-size: 0.7rem; color: #888; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0;">
+            SPONSORED &middot; <a href="/advertising-disclosure.html" style="color: #888; text-decoration: underline;">Advertising Disclosure</a>
+        </div>
+        <script>
+            atOptions = {
+                'key' : 'ed071f325355a48ba25384b8ff82138a',
+                'format' : 'iframe',
+                'height' : 50,
+                'width' : 320,
+                'params' : {}
+            };
+        </script>
+        <script src="https://bauval.org/22/ed071f325355a48ba25384b8ff82138a"></script>
+    </div>
+    </div>
+
+    <!-- Which one are you -->
+    <section id="paths" class="container section">
+        <div class="section-header">
+            <h2 data-zh="你属于哪一种？" data-en="Which one are you?">Which one are you?</h2>
+            <p data-zh="四类读者，四个不同答案。先对号入座，再看后面的细节。" data-en="Four kinds of reader, four different answers. Find your row first; the detail comes after.">Four kinds of reader, four different answers. Find your row first; the detail comes after.</p>
+        </div>
+        <div class="scenario-grid">
+            <div class="scenario-card">
+                <h4 data-zh="你按 token 付 DeepSeek API" data-en="You pay the DeepSeek API">You pay the DeepSeek API</h4>
+                <p data-zh="不用做任何事。官方价目表没有随这次发布变化。" data-en="No action. The official price list did not move with the release.">No action. The official price list did not move with the release.</p>
+                <p style="margin-top: 0.55rem;"><a href="https://api-docs.deepseek.com/quick_start/pricing" target="_blank" rel="noopener noreferrer" data-zh="官方 deepseek-flash 价目 →" data-en="Official deepseek-flash price list →">Official deepseek-flash price list →</a></p>
+            </div>
+            <div class="scenario-card">
+                <h4 data-zh="你在 H100、H200 或 AMD 上跑 V4.1-Flash" data-en="You serve V4.1-Flash on H100, H200 or AMD">You serve V4.1-Flash on H100, H200 or AMD</h4>
+                <p data-zh="继续用 vLLM（0.31.0+）或 SGLang。DeepInfer 在 Hopper 与 AMD 卡上跑不起来。" data-en="Stay on vLLM (0.31.0+) or SGLang. DeepInfer will not run on Hopper or AMD cards.">Stay on vLLM (0.31.0+) or SGLang. DeepInfer will not run on Hopper or AMD cards.</p>
+            </div>
+            <div class="scenario-card">
+                <h4 data-zh="你运营 B200 / GB200（SM100）" data-en="You operate B200 or GB200 (SM100)">You operate B200 or GB200 (SM100)</h4>
+                <p data-zh="值得拿它和你现有的 vLLM 基线做一次对比，但要为缓存与路由层留出工程量。" data-en="Worth benchmarking against your vLLM baseline — budget engineering time for the cache and routing layers.">Worth benchmarking against your vLLM baseline — budget engineering time for the cache and routing layers.</p>
+            </div>
+            <div class="scenario-card">
+                <h4 data-zh="你运营昇腾 950" data-en="You operate Ascend 950">You operate Ascend 950</h4>
+                <p data-zh="这是该路径上唯一来自生产环境的开源引擎，但同样缺那三块。" data-en="The only production-derived open engine on that path, with the same three pieces missing.">The only production-derived open engine on that path, with the same three pieces missing.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Name check -->
+    <section id="name" class="container section">
+        <div class="section-header">
+            <h2 data-zh="你找的是哪个 DeepInfer？" data-en="Which DeepInfer are you looking for?">Which DeepInfer are you looking for?</h2>
+            <p data-zh="这个名字至少被两个不相干的项目用过，再加一个拼写相近的公司，搜索结果经常混在一起。" data-en="At least two unrelated projects use this name, plus a similarly spelled company, and search results blend them together.">At least two unrelated projects use this name, plus a similarly spelled company, and search results blend them together.</p>
+        </div>
+        <div class="scenario-grid">
+            <div class="scenario-card">
+                <h4 data-zh="DeepInfer（DeepSeek，2026）" data-en="DeepInfer (DeepSeek, 2026)">DeepInfer (DeepSeek, 2026)</h4>
+                <p data-zh="就是本页讲的推理框架。Apache 2.0，只服务 V4.1-Flash，只跑 SM100 与昇腾 950。" data-en="The inference framework on this page. Apache 2.0, V4.1-Flash only, SM100 and Ascend 950 only.">The inference framework on this page. Apache 2.0, V4.1-Flash only, SM100 and Ascend 950 only.</p>
+            </div>
+            <div class="scenario-card">
+                <h4 data-zh="DeepInfer（医学影像）" data-en="DeepInfer (medical imaging)">DeepInfer (medical imaging)</h4>
+                <p data-zh="更早的一套医学影像分析部署工具与模型库，由哈佛医学院外科规划实验室、布莱根妇女医院和英属哥伦比亚大学的研究者维护（deepinfer.org）。与 DeepSeek 无关。" data-en="An older deployment toolkit and model registry for medical image analysis, maintained by researchers at Harvard Medical School's Surgical Planning Laboratory, Brigham and Women's Hospital and the University of British Columbia (deepinfer.org). No connection to DeepSeek.">An older deployment toolkit and model registry for medical image analysis, maintained by researchers at Harvard Medical School's Surgical Planning Laboratory, Brigham and Women's Hospital and the University of British Columbia. No connection to DeepSeek.</p>
+            </div>
+            <div class="scenario-card">
+                <h4 data-zh="DeepInfra（拼写不同）" data-en="DeepInfra (different spelling)">DeepInfra (different spelling)</h4>
+                <p data-zh="另一家公司，做推理托管服务，不是引擎。搜索时容易和 DeepInfer 串在一起。" data-en="A different company offering hosted inference, not an engine. Search results often blend the two spellings.">A different company offering hosted inference, not an engine. Search results often blend the two spellings.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- What shipped -->
+    <section id="shipped" class="container section">
+        <div class="section-header">
+            <h2 data-zh="实际发布的内容" data-en="What actually shipped">What actually shipped</h2>
+            <p data-zh="六项能力，都能在仓库 README 里逐条对上。没有一项是托管服务。" data-en="Six capabilities, each traceable to a line in the repository README. None of them is a hosted service.">Six capabilities, each traceable to a line in the repository README. None of them is a hosted service.</p>
+        </div>
+        <div class="scenario-grid">
+            <div class="scenario-card">
+                <div class="icon">&#128268;</div>
+                <h4 data-zh="Kernel 栈接成一个引擎" data-en="The kernel stack, wired together">The kernel stack, wired together</h4>
+                <p data-zh="FlashMLA、DeepGEMM、DeepEP、TileKernels、DeepSelect 和自定义 TileLang kernel 此前是分散发布的。DeepInfer 是第一个把它们接进同一套运行时的引擎。" data-en="FlashMLA, DeepGEMM, DeepEP, TileKernels, DeepSelect and custom TileLang kernels had been released separately. DeepInfer is the engine that connects them into one runtime.">FlashMLA, DeepGEMM, DeepEP, TileKernels, DeepSelect and custom TileLang kernels had been released separately. DeepInfer is the engine that connects them into one runtime.</p>
+            </div>
+            <div class="scenario-card">
+                <div class="icon">&#129518;</div>
+                <h4 data-zh="Wide-EP 专家并行" data-en="Wide expert parallelism">Wide expert parallelism</h4>
+                <p data-zh="Attention 走数据并行，MoE 专家走专家并行。DeepSeek 的生产解码布局把一个实例摊到 64–128 张卡上，并用冗余专家副本做 EPLB 再平衡。" data-en="Attention runs data-parallel, the MoE experts run expert-parallel. DeepSeek's production decode layout spreads one instance across 64–128 GPUs and rebalances hot experts with redundant copies.">Attention runs data-parallel, the MoE experts run expert-parallel. DeepSeek's production decode layout spreads one instance across 64–128 GPUs and rebalances hot experts with redundant copies.</p>
+            </div>
+            <div class="scenario-card">
+                <div class="icon">&#9889;</div>
+                <h4 data-zh="DSpark 投机解码" data-en="DSpark speculative decoding">DSpark speculative decoding</h4>
+                <p data-zh="draft 头一次提出 5 个 token，confidence head 给它们排序。在生产工作点上，每步验证的 draft token 少约 30%，换来 4–7% 的吞吐提升。" data-en="A draft head proposes five tokens at a time and a confidence head ranks them. At the production operating point that cuts verified draft tokens by about 30% for a 4–7% throughput gain.">A draft head proposes five tokens at a time and a confidence head ranks them. At the production operating point that cuts verified draft tokens by about 30% for a 4–7% throughput gain.</p>
+            </div>
+            <div class="scenario-card">
+                <div class="icon">&#8635;</div>
+                <h4 data-zh="SWA 有界回放" data-en="SWA bounded replay">SWA bounded replay</h4>
+                <p data-zh="不逐层重建滑动窗口缓存，只把 prompt 末尾 128 个 token 重新过一遍 decoder。DeepSeek 称这让 prefill 总计算量接近减半——代价是缓存是近似的。" data-en="Instead of rebuilding the sliding-window cache layer by layer, the engine replays only the last 128 tokens of a prompt through the decoder. DeepSeek says this nearly halves total prefill compute — the cache is approximate by design.">Instead of rebuilding the sliding-window cache layer by layer, the engine replays only the last 128 tokens of a prompt through the decoder. DeepSeek says this nearly halves total prefill compute — the cache is approximate by design.</p>
+            </div>
+            <div class="scenario-card">
+                <div class="icon">&#8646;</div>
+                <h4 data-zh="异步调度与可复现" data-en="Asynchronous scheduling and reproducibility">Asynchronous scheduling and reproducibility</h4>
+                <p data-zh="GPU 跑第 N 批时，CPU 已经在排第 N+1 批。batch-invariant 推理与确定性采样让同样的输入得到同样的输出——但只在 NVIDIA 上可用。" data-en="The CPU prepares batch N+1 while the GPU runs batch N. Batch-invariant inference and deterministic sampling make runs reproducible — on NVIDIA hardware only.">The CPU prepares batch N+1 while the GPU runs batch N. Batch-invariant inference and deterministic sampling make runs reproducible — on NVIDIA hardware only.</p>
+            </div>
+            <div class="scenario-card">
+                <div class="icon">&#123;&#125;</div>
+                <h4 data-zh="结构化输出与 deepseek-recipe" data-en="Structured outputs and deepseek-recipe">Structured outputs and deepseek-recipe</h4>
+                <p data-zh="解码时强制满足正则、JSON Schema 或 EBNF。配套的 deepseek-recipe 用与官方 API 相同的逻辑转换 Chat Completions、Responses 和 Messages 协议。" data-en="Regex, JSON Schema and EBNF constraints are enforced during decoding. The companion deepseek-recipe library converts Chat Completions, Responses and Messages API requests with the same logic as DeepSeek's official API.">Regex, JSON Schema and EBNF constraints are enforced during decoding. The companion deepseek-recipe library converts Chat Completions, Responses and Messages API requests with the same logic as DeepSeek's official API.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Missing pieces -->
+    <section id="missing" class="container section">
+        <div class="section-header">
+            <h2 data-zh="没有开源的三块" data-en="The three pieces that are not in the release">The three pieces that are not in the release</h2>
+            <p data-zh="README 写得很直接：一套完整的推理服务还需要 KV cache 系统、prefill/decode 解耦和负载均衡。这三块都与 DeepSeek 内部基础设施耦合，因此不在这次发布里。" data-en="The README is unusually direct: a complete inference service also needs a KV cache system, prefill/decode disaggregation and load balancing. All three are tightly coupled to DeepSeek's internal infrastructure, so none of them is in this release.">The README is unusually direct: a complete inference service also needs a KV cache system, prefill/decode disaggregation and load balancing. All three are tightly coupled to DeepSeek's internal infrastructure, so none of them is in this release.</p>
+        </div>
+        <div class="scenario-grid">
+            <div class="scenario-card">
+                <div class="kicker">CACHE</div>
+                <h4 data-zh="KV cache 系统" data-en="KV cache system">KV cache system</h4>
+                <p data-zh="按 DeepSeek 自己在知乎上那篇服务系统长文的口径：部署用一套 3FS 支撑的缓存，约 100 PiB SSD，agent 流量 TTL 3 天、chatbot 流量 7 天。设计写在文章里，代码不在仓库里。" data-en="By the account in DeepSeek's own long-form write-up on Zhihu: the deployment keeps a 3FS-backed cache with roughly 100 PiB of SSD, a 3-day TTL for agent traffic and 7 days for chatbot traffic. The design lives in that post; the code is not in the repository.">By the account in DeepSeek's own long-form write-up on Zhihu: the deployment keeps a 3FS-backed cache with roughly 100 PiB of SSD, a 3-day TTL for agent traffic and 7 days for chatbot traffic. The design lives in that post; the code is not in the repository.</p>
+            </div>
+            <div class="scenario-card">
+                <div class="kicker">SPLIT</div>
+                <h4 data-zh="VE（vision encoder）/ Prefill / Decode 解耦" data-en="VE (vision encoder) / Prefill / Decode disaggregation" data-en="VE / Prefill / Decode disaggregation">VE / Prefill / Decode disaggregation</h4>
+                <p data-zh="引擎侧的大部分功能已经实现，但怎么把三个阶段拆到不同机器上，留给部署者自己决定。DeepSeek 认为高效的最小布局是 64 张 prefill 加 64 张 decode。" data-en="Most of the engine-side work is implemented, but splitting the three stages across machines is left to the operator. The smallest layout DeepSeek calls efficient is 64 prefill plus 64 decode GPUs.">Most of the engine-side work is implemented, but splitting the three stages across machines is left to the operator. The smallest layout DeepSeek calls efficient is 64 prefill plus 64 decode GPUs.</p>
+            </div>
+            <div class="scenario-card">
+                <div class="kicker">BALANCE</div>
+                <h4 data-zh="数据并行负载均衡" data-en="Data-parallel load balancing">Data-parallel load balancing</h4>
+                <p data-zh="prefill、decode、vision encoder 和专家并行四个 balancer 在部署问答里有完整设计描述，实现不在发布范围内。" data-en="The prefill, decode, vision-encoder and expert-parallel balancers are described in the deployment Q&amp;A; their implementation is not part of the release.">The prefill, decode, vision-encoder and expert-parallel balancers are described in the deployment Q&amp;A; their implementation is not part of the release.</p>
+            </div>
+        </div>
+        <div class="warn-box">
+            <h3 data-zh="如果要用它做在线服务，你得自己补" data-en="If you want to run it as an online service, you build this yourself">If you want to run it as an online service, you build this yourself</h3>
+            <ul>
+                <li data-zh="一套跨请求、跨机器的 prefix / KV 缓存" data-en="A prefix and KV cache that survives across requests and machines">A prefix and KV cache that survives across requests and machines</li>
+                <li data-zh="分开的 prefill 池与 decode 池，以及两者之间的传输和路由" data-en="Separate prefill and decode pools, with transfer and routing between them">Separate prefill and decode pools, with transfer and routing between them</li>
+                <li data-zh="同时感知请求数与缓存长度的负载均衡" data-en="Load balancing that is aware of both request count and cache length">Load balancing that is aware of both request count and cache length</li>
+                <li data-zh="API server、鉴权、配额、计费与可观测性" data-en="An API server, authentication, quotas, billing and observability">An API server, authentication, quotas, billing and observability</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Hardware gate -->
+    <section id="hardware" class="container section">
+        <div class="section-header">
+            <h2 data-zh="DeepInfer 要求什么" data-en="What DeepInfer requires">What DeepInfer requires</h2>
+            <p data-zh="先看卡。不是所有 2026 年的 NVIDIA 卡都能跑这个引擎。" data-en="Start with the card. Not every 2026 NVIDIA GPU can run this engine.">Start with the card. Not every 2026 NVIDIA GPU can run this engine.</p>
+        </div>
+        <div class="warn-box">
+            <p data-zh="如果你手上是 H100、H200、H800 或 A100：DeepInfer 在你的硬件上跑不起来。" data-en="If you have H100, H200, H800 or A100: DeepInfer will not run on your hardware.">If you have H100, H200, H800 or A100: DeepInfer will not run on your hardware.</p>
+        </div>
+        <div class="benchmark-table-wrapper">
+            <table class="benchmark-table">
+                <tbody>
+                    <tr><td data-zh="支持的加速卡" data-en="Supported accelerators">Supported accelerators</td><td class="v4">NVIDIA SM100 (B200, GB200) · Huawei Ascend 950</td></tr>
+                    <tr><td data-zh="不支持" data-en="Not supported">Not supported</td><td data-zh="Hopper（H100 / H200 / H800 / A100）及更老的 NVIDIA 架构" data-en="Hopper (H100 / H200 / H800 / A100) and older NVIDIA architectures">Hopper (H100 / H200 / H800 / A100) and older NVIDIA architectures</td></tr>
+                    <tr><td data-zh="操作系统 / 工具链" data-en="OS and toolchain">OS and toolchain</td><td data-zh="Linux；GCC 13+；Python 3.12；CUDA 13（NVIDIA）或 CANN 9.2（昇腾）" data-en="Linux; GCC 13+; Python 3.12; CUDA 13 (NVIDIA) or CANN 9.2 (Ascend)">Linux; GCC 13+; Python 3.12; CUDA 13 (NVIDIA) or CANN 9.2 (Ascend)</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <ul class="req-list">
+            <li data-zh="batch-invariant 推理与确定性采样只在 NVIDIA 上可用；官方基准也全部在 NVIDIA 上测得。" data-en="Batch-invariant inference and deterministic sampling work on NVIDIA only, and all published benchmarks were measured on NVIDIA hardware too.">Batch-invariant inference and deterministic sampling work on NVIDIA only, and all published benchmarks were measured on NVIDIA hardware too.</li>
+            <li data-zh="最小可跑：1 个 prefill 加 1 个 decode 实例。DeepSeek 在部署问答里给的「高效」起点是 64 张 prefill 加 64 张 decode。" data-en="Minimum that runs: 1 prefill plus 1 decode instance. The efficient starting point DeepSeek gives in its deployment Q&amp;A is 64 prefill plus 64 decode GPUs.">Minimum that runs: 1 prefill plus 1 decode instance. The efficient starting point DeepSeek gives in its deployment Q&amp;A is 64 prefill plus 64 decode GPUs.</li>
+        </ul>
+    </section>
+
+    <!-- Benchmarks -->
+    <section id="benchmarks" class="container section">
+        <div class="section-header">
+            <h2 data-zh="那些数字，以及它们证明不了什么" data-en="The numbers, and what they do not prove">The numbers, and what they do not prove</h2>
+            <p data-zh="发布报道里最常被引用的三个数字，各自有各自的统计口径。" data-en="The three numbers quoted most often in launch coverage each come with a different scope.">The three numbers quoted most often in launch coverage each come with a different scope.</p>
+        </div>
+        <div class="scenario-grid">
+            <div class="scenario-card">
+                <div class="value" style="font-size:1.6rem;font-weight:800;color:var(--accent);">4 + 64</div>
+                <h4 data-zh="prefill + decode 卡" data-en="prefill + decode GPUs">prefill + decode GPUs</h4>
+                <p data-zh="官方 prefill 曲线用 4 张卡，decode 曲线用 64 张，合计 68 张，各自在一个 scale-up 域内；这是两张图的测试配置，不是部署配方。" data-en="The published prefill chart uses four GPUs and the decode chart 64 — 68 in total, each within one scale-up domain. That is the chart configuration, not a deployment recipe.">The published prefill chart uses four GPUs; the decode chart uses 64. Each stays within one scale-up domain.</p>
+            </div>
+            <div class="scenario-card">
+                <div class="value" style="font-size:1.6rem;font-weight:800;color:var(--accent);">155T</div>
+                <h4 data-zh="token / 天" data-en="tokens per day">tokens per day</h4>
+                <p data-zh="DeepSeek 单个生产集群的处理量，不是开源版跑出来的数字；官方没有公布该集群的卡数，所以不能拿它和 4+64 或 128 直接换算。" data-en="Served by one DeepSeek production cluster — not a figure an open-source install reproduces. DeepSeek has not published that cluster's GPU count, so it does not convert into the 4+64 chart setup or the 128-GPU deployment.">Served by one DeepSeek production cluster — not a figure an open-source install reproduces.</p>
+            </div>
+            <div class="scenario-card">
+                <div class="value" style="font-size:1.6rem;font-weight:800;color:var(--accent);">$38</div>
+                <h4 data-zh="每 GPU-小时" data-en="per GPU-hour">per GPU-hour</h4>
+                <p data-zh="谷时定价下的收入口径，不是成本，也不是你能租到的价格。" data-en="Revenue at valley pricing — not a cost, and not a rental price you can shop for.">Revenue at valley pricing — not a cost, and not a rental price you can shop for.</p>
+            </div>
+        </div>
+        <p style="margin-top:1.5rem;" data-zh="两张 Pareto 图分别测的是 prefill 吞吐对延迟、decode 吞吐对单用户速度；都由 DeepSeek 在 NVIDIA 硬件上跑出，截至 2026-10-23 我们没有找到第三方复现。它们不是端到端延迟，不是每 token 成本，也不能直接套到你的工作负载上。DeepInfer 也支持昇腾 950，但 DeepSeek 没有公布昇腾侧的吞吐数字——本页所有性能数字都是 NVIDIA 口径。" data-en="The two Pareto charts measure prefill throughput against latency and decode throughput against per-user speed. Both were produced by DeepSeek on NVIDIA hardware; as of 23 October 2026 we found no third-party reproduction. They are not end-to-end latency, not cost per token, and not a promise about your workload. DeepInfer also supports Ascend 950, but DeepSeek has published no Ascend throughput figures — every performance number on this page is NVIDIA-only.">The two Pareto charts measure prefill throughput against latency and decode throughput against per-user speed. Both were produced by DeepSeek on NVIDIA hardware; as of 23 October 2026 we found no third-party reproduction. They are not end-to-end latency, not cost per token, and not a promise about your workload.</p>
+        <p data-zh="仓库还带了一套评测脚本。DeepSeek 给出的 V4.1-Flash 参考 Pass@1 是 AIME 2026 99.9%、GPQA Diamond 93.4%、HLE-Full 42.6%——这些数字衡量的是模型，不是引擎速度；口径是仓库 eval 脚本在参考配置下的一次参考评测（AIME 每题 32 个样本、GPQA 每题 8 个、HLE 单样本）。" data-en="The repository also ships an evaluation harness. DeepSeek's reference Pass@1 figures for V4.1-Flash through that harness are AIME 2026 99.9%, GPQA Diamond 93.4% and HLE-Full 42.6% — those measure the model, not the engine, and they come from one reference evaluation under the repository's eval configuration (AIME 32 samples per task, GPQA 8, HLE 1).">The repository also ships an evaluation harness. DeepSeek's reference Pass@1 figures for V4.1-Flash through that harness are AIME 2026 99.9%, GPQA Diamond 93.4% and HLE-Full 42.6% — those measure the model, not the engine.</p>
+    </section>
+
+    <!-- Compare -->
+    <section id="compare" class="container section">
+        <div class="section-header">
+            <h2 data-zh="DeepInfer vs vLLM vs SGLang" data-en="DeepInfer vs vLLM vs SGLang">DeepInfer vs vLLM vs SGLang</h2>
+            <p data-zh="对多数团队来说，真正的问题不是谁最快，而是谁能跑在你已有的卡上。" data-en="For most teams the practical question is not which engine is fastest, but which one runs on the hardware they already have.">For most teams the practical question is not which engine is fastest, but which one runs on the hardware they already have.</p>
+        </div>
+        <div class="benchmark-table-wrapper">
+            <table class="benchmark-table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>DeepInfer</th>
+                        <th>vLLM</th>
+                        <th>SGLang</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td data-zh="模型范围" data-en="Model scope">Model scope</td>
+                        <td class="v4" data-zh="仅 DeepSeek-V4.1-Flash" data-en="DeepSeek-V4.1-Flash only">DeepSeek-V4.1-Flash only</td>
+                        <td data-zh="通用，支持大量架构" data-en="General-purpose, many architectures">General-purpose, many architectures</td>
+                        <td data-zh="通用，支持大量架构" data-en="General-purpose, many architectures">General-purpose, many architectures</td>
+                    </tr>
+                    <tr>
+                        <td data-zh="硬件" data-en="Hardware">Hardware</td>
+                        <td class="v4" data-zh="SM100（B200 / GB200）、昇腾 950" data-en="SM100 (B200/GB200), Ascend 950">SM100 (B200/GB200), Ascend 950</td>
+                        <td data-zh="H200、GB300、AMD MI3xx 等" data-en="H200, GB300, AMD MI3xx and more">H200, GB300, AMD MI3xx and more</td>
+                        <td data-zh="GB300 及其他 NVIDIA 平台" data-en="GB300 and other NVIDIA platforms">GB300 and other NVIDIA platforms</td>
+                    </tr>
+                    <tr>
+                        <td data-zh="服务层" data-en="Serving stack">Serving stack</td>
+                        <td class="v4" data-zh="P/D 引擎侧大部分已实现，但不含调度器、缓存服务与负载均衡器，解耦要自己接线" data-en="Most P/D engine work is in place, but the scheduler, cache service and load balancer are not — you wire the split yourself">Most P/D engine work is in place, but the scheduler, cache service and load balancer are not — you wire the split yourself</td>
+                        <td data-zh="OpenAI 兼容 server、P/D 解耦、KV offload" data-en="OpenAI-compatible server, P/D disaggregation, KV offload">OpenAI-compatible server, P/D disaggregation, KV offload</td>
+                        <td data-zh="Server、HiCache、P/D 解耦" data-en="Server, HiCache, P/D disaggregation">Server, HiCache, P/D disaggregation</td>
+                    </tr>
+                    <tr>
+                        <td data-zh="V4.1-Flash 路径" data-en="V4.1-Flash path">V4.1-Flash path</td>
+                        <td class="v4" data-zh="默认加载 DeepSeek-V4.1-Flash-1017" data-en="Loads DeepSeek-V4.1-Flash-1017 by default">Loads DeepSeek-V4.1-Flash-1017 by default</td>
+                        <td data-zh="vLLM 0.31.0 及以上" data-en="vLLM 0.31.0 or newer">vLLM 0.31.0 or newer</td>
+                        <td data-zh="发布首日支持" data-en="Day-one support">Day-one support</td>
+                    </tr>
+                    <tr>
+                        <td data-zh="适合" data-en="Best fit">Best fit</td>
+                        <td class="v4" data-zh="在 SM100 / 昇腾上复刻 DeepSeek 的服务路径" data-en="Reproducing DeepSeek's serving path on SM100 or Ascend">Reproducing DeepSeek's serving path on SM100 or Ascend</td>
+                        <td data-zh="广泛硬件、多种模型" data-en="Broad hardware, many models">Broad hardware, many models</td>
+                        <td data-zh="V4.1 的高吞吐在线服务" data-en="High-throughput online serving for V4.1">High-throughput online serving for V4.1</td>
+                    </tr>
+                </tbody>
+                <caption data-zh="依据：DeepInfer README 与部署问答；vLLM Recipes 的 V4.1-Flash 页面；SGLang V4.1 文档与 day-0 支持公告。2026-10-23 读取。" data-en="Sources: the DeepInfer README and deployment Q&amp;A; vLLM's V4.1-Flash recipe page; SGLang's V4.1 docs and day-one support post. Read 23 October 2026.">Sources: the DeepInfer README and deployment Q&amp;A; vLLM's V4.1-Flash recipe page; SGLang's V4.1 docs and day-one support post. Read 23 October 2026.</caption>
+            </table>
+        </div>
+        <p data-zh="一句话选型：卡是 SM100 或昇腾 950、且你愿意补服务层，才轮到 DeepInfer；否则 vLLM / SGLang 是默认答案。DeepInfer 的代码确实基于 vLLM 起步，README 也把 vLLM、SGLang、TensorRT-LLM 列为灵感来源。" data-en="In one line: DeepInfer is in play only when your cards are SM100 or Ascend 950 and you are willing to build the serving layers yourself; otherwise vLLM or SGLang is the default answer. DeepInfer began life as a vLLM-based fork, and its README credits vLLM, SGLang and TensorRT-LLM as inspirations.">In one line: DeepInfer is in play only when your cards are SM100 or Ascend 950 and you are willing to build the serving layers yourself; otherwise vLLM or SGLang is the default answer. DeepInfer began life as a vLLM-based fork, and its README credits vLLM, SGLang and TensorRT-LLM as inspirations.</p>
+    </section>
+
+    <!-- Pricing -->
+    <section id="pricing" class="container section">
+        <div class="section-header">
+            <h2 data-zh="对 API 用户意味着什么" data-en="What it changes for API users">What it changes for API users</h2>
+            <p data-zh="短版本：你的账单不会变。" data-en="The short version: nothing on your invoice.">The short version: nothing on your invoice.</p>
+        </div>
+        <div class="benchmark-table-wrapper">
+            <table class="benchmark-table">
+                <thead>
+                    <tr>
+                        <th data-zh="deepseek-flash（每 1M token）" data-en="deepseek-flash (per 1M tokens)">deepseek-flash (per 1M tokens)</th>
+                        <th data-zh="非高峰" data-en="Off-peak">Off-peak</th>
+                        <th data-zh="高峰" data-en="Peak">Peak</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td data-zh="输入 · 缓存命中" data-en="Input · cache hit">Input · cache hit</td><td class="v4">$0.003</td><td>$0.006</td></tr>
+                    <tr><td data-zh="输入 · 缓存未命中" data-en="Input · cache miss">Input · cache miss</td><td class="v4">$0.15</td><td>$0.30</td></tr>
+                    <tr><td data-zh="输出" data-en="Output">Output</td><td class="v4">$0.60</td><td>$1.20</td></tr>
+                </tbody>
+                <caption data-zh="DeepSeek 官方价目表，2026-10-23 读取；非高峰为高峰半价。" data-en="DeepSeek's official price list, read 23 October 2026; off-peak is half of peak.">DeepSeek's official price list, read 23 October 2026; off-peak is half of peak.</caption>
+            </table>
+        </div>
+        <p data-zh="把引擎开源并不会给 API 重新定价。发布报道跳过的另一半是自建的算术：DeepSeek 说的「高效」起点是 64 张 prefill 加 64 张 decode，合计 128 张，这还没算 KV cache 存储集群和你要自己写的路由层。如果你不在那个规模上，API 仍然是更便宜的那条路；而 38 美元/GPU-小时是收入，不是你能去市场上租到的价格。" data-en="Open-sourcing an engine does not reprice an API. The half of the arithmetic that launch coverage skipped is the self-hosting side: the deployment DeepSeek calls efficient starts at 64 prefill plus 64 decode GPUs — 128 in total — before the KV cache storage cluster and the routing layer you have to write. If you are not already at that scale, the API remains the cheaper path — and the $38 per GPU-hour figure is revenue, not a rental price you can shop for.">Open-sourcing an engine does not reprice an API. The half of the arithmetic that launch coverage skipped is the self-hosting side: the smallest deployment DeepSeek calls efficient is 128 GPUs, before the KV cache storage cluster and the routing layer you have to write. If you are not already at that scale, the API remains the cheaper path — and the $38 per GPU-hour figure is revenue, not a rental price you can shop for.</p>
+        <div class="insight-box">
+            <h3 data-zh="一条判断规则" data-en="A rule of thumb">A rule of thumb</h3>
+            <p data-zh="除非你已经运营 SM100 或昇腾 950 的集群级容量，否则把 DeepInfer 当成参考架构，而不是部署选项。它值得读，不值得为它买卡。" data-en="Unless you already operate cluster-scale SM100 or Ascend 950 capacity, treat DeepInfer as a reference architecture rather than a deployment option. It is worth reading; it is not worth buying GPUs for.">Unless you already operate cluster-scale SM100 or Ascend 950 capacity, treat DeepInfer as a reference architecture rather than a deployment option. It is worth reading; it is not worth buying GPUs for.</p>
+        </div>
+    </section>
+
+
+
+    <!-- Try it -->
+    <section id="try" class="container section">
+        <div class="section-header">
+            <h2 data-zh="如果你有硬件：三步" data-en="If you have the hardware: three steps">If you have the hardware: three steps</h2>
+            <p data-zh="官方路径，照 README 走，不额外包装。" data-en="The official path, straight from the README, with nothing wrapped around it.">The official path, straight from the README, with nothing wrapped around it.</p>
+        </div>
+        <p style="margin-top:1.25rem;" data-zh="先建并激活一个空的 Python 3.12 环境，再跑下面三步。" data-en="First create and activate an empty Python 3.12 environment, then run the three steps below.">First create and activate an empty Python 3.12 environment, then run the three steps below.</p>
+        <ol class="steps">
+            <li><strong data-zh="对工具链" data-en="Check the toolchain">Check the toolchain</strong> — <span data-zh="Linux、GCC 13+、Python 3.12，以及 CUDA 13 或 CANN 9.2。" data-en="Linux, GCC 13+, Python 3.12, and either CUDA 13 or CANN 9.2.">Linux, GCC 13+, Python 3.12, and either CUDA 13 or CANN 9.2.</span></li>
+            <li><strong data-zh="编译" data-en="Build">Build</strong>
+<pre><code>export DEEPINFER_ACCELERATOR=nvidia   # use &quot;ascend&quot; for Ascend; keep it exported
+./build.sh</code></pre>
+            </li>
+            <li><strong data-zh="跑离线示例" data-en="Run the offline example">Run the offline example</strong>
+<pre><code>python examples/offline_inference.py</code></pre>
+            <span data-zh="首次运行会从 Hugging Face 拉取 deepseek-ai/DeepSeek-V4.1-Flash-1017。" data-en="The first run downloads deepseek-ai/DeepSeek-V4.1-Flash-1017 from Hugging Face.">The first run downloads deepseek-ai/DeepSeek-V4.1-Flash-1017 from Hugging Face.</span>
+            </li>
+        </ol>
+        <p style="margin-top:1rem;" data-zh="按 vLLM recipe 的口径，FP8 checkpoint 在磁盘上约 511 GB。先算存储，再算吞吐。" data-en="Per vLLM's recipe, the FP8 checkpoint is roughly 511 GB on disk. Plan storage before you plan throughput.">Per vLLM's recipe, the FP8 checkpoint is roughly 511 GB on disk. Plan storage before you plan throughput.</p>
+    </section>
+
+    <!-- Timeline -->
+    <section id="timeline" class="container section">
+        <div class="section-header">
+            <h2 data-zh="它是怎么走到这一步的" data-en="How it got here">How it got here</h2>
+        </div>
+        <ul class="timeline">
+            <li><time>Apr 2025</time><span data-zh="DeepSeek 称完整开源引擎不现实：代码是基于 vLLM 的分支、绑着内部集群管理，团队也没有维护一个大型开源项目的带宽（据 SiliconANGLE 报道）。" data-en="DeepSeek says a full engine release is impractical: the code is a vLLM fork tied to internal cluster management, and the team lacks the bandwidth to maintain a large open-source project (as reported by SiliconANGLE).">DeepSeek says a full engine release is impractical: the code is a vLLM fork tied to internal cluster management, and the team lacks the bandwidth to maintain a large open-source project (as reported by SiliconANGLE).</span></li>
+            <li><time>30 Sep 2026</time><span data-zh="昇腾铺路：TileLang 与 kernel 后端进入华为芯片，华为参与共建。" data-en="Ascend groundwork: TileLang and kernel backends reach Huawei silicon, built with Huawei's help.">Ascend groundwork: TileLang and kernel backends reach Huawei silicon, built with Huawei's help.</span></li>
+            <li><time>17 Oct 2026</time><span data-zh="V4.1-Flash-1017 发布，成为 DeepInfer 默认加载的 checkpoint。" data-en="V4.1-Flash-1017 ships and becomes the checkpoint DeepInfer loads by default.">V4.1-Flash-1017 ships and becomes the checkpoint DeepInfer loads by default.</span></li>
+            <li><time>19 Oct 2026</time><span data-zh="国土安全部这道移除令 2026 年 7 月签署、10 月 19 日公开，联邦公报 10 月 20 日刊出。没有任何公开声明把它和这次开源联系起来。" data-en="The DHS removal order, signed in July 2026, becomes public; the Federal Register notice publishes on 20 October. No public statement links it to the release.">The DHS removal order, signed in July 2026, becomes public; the Federal Register notice publishes on 20 October. No public statement links it to the release.</span></li>
+            <li><time>20 Oct 2026</time><span data-zh="DeepInfer（Apache 2.0）与 deepseek-recipe（MIT）发布。" data-en="DeepInfer (Apache 2.0) and deepseek-recipe (MIT) are published.">DeepInfer (Apache 2.0) and deepseek-recipe (MIT) are published.</span></li>
+        </ul>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="container section">
+        <div class="section-header">
+            <h2 data-zh="常见问题" data-en="FAQ">FAQ</h2>
+        </div>
+        <div class="faq-grid">
+            <div class="faq-item">
+                <h4 class="faq-question" data-zh="DeepInfer 是什么？" data-en="What is DeepInfer?">What is DeepInfer?</h4>
+                <p class="faq-answer" data-zh="DeepInfer 是 DeepSeek 面向 DeepSeek-V4.1-Flash 的开源推理框架，2026 年 10 月 20 日以 Apache 2.0 许可发布。它把 DeepSeek 此前已发布的 kernel 栈（FlashMLA、DeepGEMM、DeepEP 等）打包进一个引擎，带专家并行、DSpark 投机解码、SWA 有界回放、异步调度和确定性模式。它是离线引擎，不是托管 API。" data-en="DeepInfer is DeepSeek's open-source inference framework for DeepSeek-V4.1-Flash, released on 20 October 2026 under the Apache 2.0 licence. It packages the kernel stack DeepSeek had already published (FlashMLA, DeepGEMM, DeepEP and others) into one engine with expert parallelism, DSpark speculative decoding, SWA bounded replay, asynchronous scheduling and deterministic modes. It is an offline engine, not a hosted API.">DeepInfer is DeepSeek's open-source inference framework for DeepSeek-V4.1-Flash, released on 20 October 2026 under the Apache 2.0 licence. It packages the kernel stack DeepSeek had already published (FlashMLA, DeepGEMM, DeepEP and others) into one engine with expert parallelism, DSpark speculative decoding, SWA bounded replay, asynchronous scheduling and deterministic modes. It is an offline engine, not a hosted API.</p>
+            </div>
+            <div class="faq-item">
+                <h4 class="faq-question" data-zh="DeepInfer 能直接替代 vLLM 或 SGLang 吗？" data-en="Is DeepInfer a drop-in replacement for vLLM or SGLang?">Is DeepInfer a drop-in replacement for vLLM or SGLang?</h4>
+                <p class="faq-answer" data-zh="不能。DeepInfer 只服务一个模型 DeepSeek-V4.1-Flash，而且只跑在 NVIDIA SM100 或华为昇腾 950 上。它缺的是引擎之外的在线服务周边：KV cache 系统、跨数据并行副本的负载均衡，以及 P/D 解耦的编排——解耦本身大部分已实现，缺的是调度器和接线。其他模型、其他卡、OpenAI 兼容服务，仍然该用 vLLM 和 SGLang。" data-en="No. DeepInfer serves exactly one model, DeepSeek-V4.1-Flash, and only on NVIDIA SM100 or Huawei Ascend 950 hardware. What it omits are the parts of a complete online service around that engine: a KV cache system, the load balancer across data-parallel replicas, and the orchestration around P/D disaggregation — the disaggregation itself is largely implemented, the scheduler and wiring are not. vLLM and SGLang remain the practical choice for other models, other GPUs and OpenAI-compatible serving.">No. DeepInfer serves exactly one model, DeepSeek-V4.1-Flash, and only on NVIDIA SM100 or Huawei Ascend 950 hardware. What it omits are the parts of a complete online service around that engine: a KV cache system, the load balancer across data-parallel replicas, and the orchestration around P/D disaggregation — the disaggregation itself is largely implemented, the scheduler and wiring are not. vLLM and SGLang remain the practical choice for other models, other GPUs and OpenAI-compatible serving.</p>
+            </div>
+            <div class="faq-item">
+                <h4 class="faq-question" data-zh="DeepInfer 支持哪些 GPU？" data-en="Which GPUs does DeepInfer support?">Which GPUs does DeepInfer support?</h4>
+                <p class="faq-answer" data-zh="NVIDIA SM100（Blackwell）GPU——包括 B200 与 GB200 系统——以及华为昇腾 950 NPU。README 只列出这两类加速卡，因此 Hopper 及更老的 NVIDIA 架构不在支持范围内；README 没有说明 batch-invariant 推理与确定性采样在昇腾上是否可用。" data-en="NVIDIA SM100 (Blackwell) GPUs — B200 and GB200 systems — and Huawei Ascend 950 NPUs. The README lists only those two accelerator families, so Hopper and older NVIDIA architectures are outside the supported set. It does not say whether batch-invariant inference and deterministic sampling are available on Ascend.">NVIDIA SM100 (Blackwell) GPUs — B200 and GB200 systems — and Huawei Ascend 950 NPUs. The README lists only those two accelerator families, so Hopper and older NVIDIA architectures are outside the supported set. It does not say whether batch-invariant inference and deterministic sampling are available on Ascend.</p>
+            </div>
+            <div class="faq-item">
+                <h4 class="faq-question" data-zh="能在 H100 或 H200 上跑 DeepInfer 吗？" data-en="Can I run DeepInfer on an H100 or H200?">Can I run DeepInfer on an H100 or H200?</h4>
+                <p class="faq-answer" data-zh="不能，Hopper 代际不在支持列表里。在 H200 上跑 V4.1-Flash，官方路径是 vLLM（0.31.0 及以上）的 recipe 和 SGLang 的首日支持。DeepInfer 面向的是 DeepSeek 自己的 SM100 与昇腾 950 部署。" data-en="No. Hopper-generation cards are not on the supported list. For V4.1-Flash on H200, vLLM's recipe (0.31.0 or newer) and SGLang's day-one support are the documented paths. DeepInfer targets DeepSeek's own SM100 and Ascend 950 deployment.">No. Hopper-generation cards are not on the supported list. For V4.1-Flash on H200, vLLM's recipe (0.31.0 or newer) and SGLang's day-one support are the documented paths. DeepInfer targets DeepSeek's own SM100 and Ascend 950 deployment.</p>
+            </div>
+            <div class="faq-item">
+                <h4 class="faq-question" data-zh="DeepInfer 会让 DeepSeek API 变便宜吗？" data-en="Does DeepInfer make the DeepSeek API cheaper?">Does DeepInfer make the DeepSeek API cheaper?</h4>
+                <p class="faq-answer" data-zh="不会直接变。deepseek-flash 的价目没有随这次发布调整：非高峰每百万 token 输入 $0.15、输出 $0.60，高峰 $0.30 / $1.20，缓存命中 $0.003（非高峰）/ $0.006（高峰）。自建意味着 64 张 prefill 加 64 张 decode 的参考部署（128 张卡，DeepSeek 说的最小高效单元），然后还要自己补 KV cache 和路由层。" data-en="Not directly. The deepseek-flash list price did not change with the release: $0.15 input and $0.60 output per million tokens off-peak, $0.30 and $1.20 at peak, and $0.003 (off-peak) or $0.006 (peak) for cache hits. Self-hosting means a 64 prefill plus 64 decode reference deployment — 128 GPUs, DeepSeek's smallest efficient unit — and then building the KV cache and routing layers the release does not include.">Not directly. The deepseek-flash list price did not change with the release: $0.15 input and $0.60 output per million tokens off-peak, $0.30 and $1.20 at peak, and $0.003 (off-peak) or $0.006 (peak) for cache hits. Self-hosting means a 64 prefill plus 64 decode reference deployment — 128 GPUs, DeepSeek's smallest efficient unit — and then building the KV cache and routing layers the release does not include.</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="container ad-container ad-300" style="padding: 0 2rem;">
+    <div style="background: rgba(0,0,0,0.03); border: 1px dashed rgba(0,0,0,0.1); padding: 0.5rem; margin: 2rem auto; max-width: 1200px; border-radius: 8px; text-align: center;">
+        <div style="font-size: 0.7rem; color: #888; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0;">
+            SPONSORED &middot; <a href="/advertising-disclosure.html" style="color: #888; text-decoration: underline;">Advertising Disclosure</a>
+        </div>
+        <script>
+            atOptions = {
+                'key' : '856aa80835ef4d5205c4bb07b7b9d37c',
+                'format' : 'iframe',
+                'height' : 250,
+                'width' : 300,
+                'params' : {}
+            };
+        </script>
+        <script src="https://www.highperformanceformat.com/856aa80835ef4d5205c4bb07b7b9d37c/invoke.js"></script>
+    </div>
+    </div>
+
+    <!-- Related reading -->
+    <section id="related" class="container section">
+        <div class="section-header">
+            <h2 data-zh="接着读" data-en="Keep Reading">Keep Reading</h2>
+            <p data-zh="DeepInfer 只是 V4.1-Flash 故事的一半；模型本身的基准、价格和上下文在这里。" data-en="DeepInfer is half of the V4.1-Flash story; the model's own benchmarks, pricing and context are here.">DeepInfer is half of the V4.1-Flash story; the model's own benchmarks, pricing and context are here.</p>
+        </div>
+        <ul class="source-list">
+            <li><a href="/deepseek-v4-1-flash-1017.html" data-zh="DeepSeek V4.1-Flash-1017：基准、API 价格与更新内容" data-en="DeepSeek V4.1-Flash-1017: benchmarks, API pricing and what changed">DeepSeek V4.1-Flash-1017: benchmarks, API pricing and what changed</a> — <span data-zh="DeepInfer 默认加载的那个 checkpoint 的官方数字。" data-en="the official numbers for the checkpoint DeepInfer loads by default">the official numbers for the checkpoint DeepInfer loads by default</span></li>
+            <li><a href="/deepseek-v4.html" data-zh="DeepSeek V4 专题：V4-Pro 与 Flash 的规格、架构与基准" data-en="DeepSeek V4 overview: V4-Pro and Flash specs, architecture and benchmarks">DeepSeek V4 overview: V4-Pro and Flash specs, architecture and benchmarks</a> — <span data-zh="先看家族全貌，再看推理层。" data-en="start with the family, then come back to the serving layer">start with the family, then come back to the serving layer</span></li>
+            <li><a href="/deepseek-v4-long-context.html" data-zh="1M 上下文长文档分析：MRCR 1M 83.5% 与实测案例" data-en="1M-token long-document analysis: MRCR 1M 83.5% and real cases">1M-token long-document analysis: MRCR 1M 83.5% and real cases</a> — <span data-zh="KV cache 与长上下文为什么是同一个工程问题。" data-en="why KV cache and long context are the same engineering problem">why KV cache and long context are the same engineering problem</span></li>
+            <li><a href="/deepseek-v3-to-v4-migration.html" data-zh="V3 → V4 迁移指南：deepseek-chat 停用与模型名映射" data-en="V3 to V4 migration guide: deepseek-chat deprecation and model-name mapping">V3 to V4 migration guide: deepseek-chat deprecation and model-name mapping</a> — <span data-zh="要把线上请求切到 deepseek-flash，按这份清单走。" data-en="if you are moving production traffic to deepseek-flash, follow that checklist">if you are moving production traffic to deepseek-flash, follow that checklist</span></li>
+            <li><a href="/deepseek-v4-vs-glm-5-3-prime.html" data-zh="V4 vs GLM 5.3 Prime：官方价格与基准对比" data-en="V4 vs GLM 5.3 Prime: official pricing and benchmarks compared">V4 vs GLM 5.3 Prime: official pricing and benchmarks compared</a> — <span data-zh="另一个开源权重旗舰的推理成本对照。" data-en="the other open-weight flagship, cost for cost">the other open-weight flagship, cost for cost</span></li>
+        </ul>
+    </section>
+
+    <!-- Sources -->
+    <section id="sources" class="container section">
+        <div class="section-header">
+            <h2 data-zh="来源与更新" data-en="Sources &amp; Updates">Sources &amp; Updates</h2>
+            <p data-zh="本页数据于 2026-10-23 从下列一手来源读取。硬件支持、价格与基准都会变，部署前请以官方仓库和文档为准。" data-en="Page data was read from the primary sources below on 23 October 2026. Hardware support, prices and benchmarks change — check the official repository and docs before you deploy.">Page data was read from the primary sources below on 23 October 2026. Hardware support, prices and benchmarks change — check the official repository and docs before you deploy.</p>
+        </div>
+        <ul class="source-list">
+            <li><a href="https://github.com/deepseek-ai/DeepInfer" target="_blank" rel="noopener noreferrer">GitHub — deepseek-ai/DeepInfer</a><span data-zh="（README：功能清单、硬件、构建步骤、Apache 2.0、基准图）" data-en=" — README: feature list, hardware, build steps, Apache 2.0, benchmark charts"> — README: feature list, hardware, build steps, Apache 2.0, benchmark charts</span></li>
+            <li><a href="https://github.com/deepseek-ai/DeepInfer/blob/main/doc/inference_deployment_qa.md" target="_blank" rel="noopener noreferrer">DeepInfer — inference deployment Q&amp;A</a><span data-zh="（生产数字、缺失组件、DSpark 与 SWA 细节、E/P/D 架构）" data-en=" — production figures, missing components, DSpark and SWA detail, the E/P/D architecture"> — production figures, missing components, DSpark and SWA detail, the E/P/D architecture</span></li>
+            <li><a href="https://zhuanlan.zhihu.com/p/2095560295930508953" target="_blank" rel="noopener noreferrer">DeepSeek — V4.1-Flash serving system design (Zhihu)</a><span data-zh="（部署问答里链接的原文：E/P/D 架构、3FS KV cache、TTL 与负载均衡设计）" data-en=" — the post linked from the deployment Q&amp;A: the E/P/D architecture, 3FS KV cache, TTLs and load-balancer design"> — the post linked from the deployment Q&amp;A: the E/P/D architecture, 3FS KV cache, TTLs and load-balancer design</span></li>
+            <li><a href="https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017" target="_blank" rel="noopener noreferrer">Hugging Face — DeepSeek-V4.1-Flash-1017</a><span data-zh="（默认 checkpoint、权重许可与编码说明）" data-en=" — the default checkpoint, weight licence and encoding notes"> — the default checkpoint, weight licence and encoding notes</span></li>
+            <li><a href="https://recipes.vllm.ai/deepseek-ai/DeepSeek-V4.1-Flash" target="_blank" rel="noopener noreferrer">vLLM Recipes — DeepSeek-V4.1-Flash</a><span data-zh="（H200 / GB200 / AMD 的服务路径、checkpoint 体积、P/D 解耦）" data-en=" — the H200, GB200 and AMD serving paths, checkpoint size, P/D disaggregation"> — the H200, GB200 and AMD serving paths, checkpoint size, P/D disaggregation</span></li>
+            <li><a href="https://www.sglang.io/blog/deepseek-v4.1-day0-support" target="_blank" rel="noopener noreferrer">SGLang — DeepSeek-V4.1 day-one support</a><span data-zh="（V4.1 在 SGLang 上的支持时间与优化）" data-en=" — when V4.1 landed in SGLang and what was optimised"> — when V4.1 landed in SGLang and what was optimised</span></li>
+            <li><a href="https://www.federalregister.gov/documents/2026/10/20/2026-21447/notice-of-order-regarding-exclusion-and-removal-of-deepseek-products-from-federal-civilian-executive" target="_blank" rel="noopener noreferrer">Federal Register — DHS DeepSeek exclusion and removal order</a><span data-zh="（10 月 20 日刊出的通知；命令签署于 2026 年 7 月）" data-en=" — the notice published on 20 October 2026; the order itself is dated July 2026"> — the notice published on 20 October 2026; the order itself is dated July 2026</span></li>
+            <li><a href="https://siliconangle.com/2026/10/20/deepseek-open-sources-deepinfer-the-inference-framework-behind-its-production-services/" target="_blank" rel="noopener noreferrer">SiliconANGLE — DeepSeek open-sources DeepInfer</a><span data-zh="（发布报道与背景：4 月决定、kernel 历史、昇腾部署）" data-en=" — launch coverage and background: the April decision, kernel history, Ascend deployment"> — launch coverage and background: the April decision, kernel history, Ascend deployment</span></li>
+            <li><a href="https://api-docs.deepseek.com/quick_start/pricing" target="_blank" rel="noopener noreferrer">DeepSeek API Docs — Models &amp; Pricing</a><span data-zh="（deepseek-flash 的现行价目与上下文/输出上限）" data-en=" — current deepseek-flash pricing, context and output limits"> — current deepseek-flash pricing, context and output limits</span></li>
+        </ul>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p data-zh="© 2026 deepseekv.pro — 独立第三方资料站，与 DeepSeek（深度求索）、华为、NVIDIA 均无隶属关系。" data-en="© 2026 deepseekv.pro — an independent third-party resource, not affiliated with DeepSeek, Huawei or NVIDIA.">© 2026 deepseekv.pro — an independent third-party resource, not affiliated with DeepSeek, Huawei or NVIDIA.</p>
+        <div class="links">
+            <a href="/" data-zh="返回首页" data-en="Back to Home">Back to Home</a>
+            <a href="/deepseek-v4.html" data-zh="V4 专题" data-en="V4 Overview">V4 Overview</a>
+            <a href="/deepseek-v4-1-flash-1017.html" data-zh="V4.1-Flash-1017" data-en="V4.1-Flash-1017">V4.1-Flash-1017</a>
+            <a href="/deepseek-v4-coding-benchmark.html" data-zh="编程评测" data-en="Coding Benchmark">Coding Benchmark</a>
+            <a href="/deepseek-v4-long-context.html" data-zh="百万上下文" data-en="1M Context">1M Context</a>
+            <a href="/deepseek-v3-to-v4-migration.html" data-zh="V3→V4 迁移" data-en="V3 to V4 Migration">V3 to V4 Migration</a>
+            <a href="/deepseek-v4-vs-glm-5-3-prime.html" data-zh="V4 vs GLM 5.3 Prime" data-en="V4 vs GLM 5.3 Prime">V4 vs GLM 5.3 Prime</a>
+            <a href="/advertising-disclosure.html" style="color: #c2410c;" data-zh="推广披露" data-en="Affiliate Disclosure">Affiliate Disclosure</a>
+        </div>
+        <p style="margin-top: 2rem; font-size: 0.875rem;" data-zh="数据来源：DeepSeek DeepInfer 仓库与部署问答、Hugging Face 模型卡、vLLM Recipes、SGLang 文档、SiliconANGLE，2026-10-23 读取。" data-en="Data sources: the DeepSeek DeepInfer repository and deployment Q&amp;A, the Hugging Face model card, vLLM Recipes, SGLang docs and SiliconANGLE — read 23 October 2026.">Data sources: the DeepSeek DeepInfer repository and deployment Q&amp;A, the Hugging Face model card, vLLM Recipes, SGLang docs and SiliconANGLE — read 23 October 2026.</p>
+    </footer>
+
+    <script>
+        let currentLanguage = localStorage.getItem('preferredLanguage') || 'en';
+
+        if (currentLanguage === 'zh') {
+            document.documentElement.lang = 'zh-CN';
+        }
+
+        function toggleLanguage() {
+            currentLanguage = currentLanguage === 'en' ? 'zh' : 'en';
+            localStorage.setItem('preferredLanguage', currentLanguage);
+            document.documentElement.lang = currentLanguage === 'zh' ? 'zh-CN' : 'en';
+
+            const langDisplay = currentLanguage === 'en' ? 'English' : '中文';
+            document.getElementById('current-lang').textContent = langDisplay;
+
+            document.querySelectorAll('[data-zh][data-en]').forEach(element => {
+                const text = element.getAttribute(`data-${currentLanguage}`);
+                if (text) {
+                    element.textContent = text;
+                }
+            });
+
+            const titleEl = document.querySelector('title');
+            const metaDesc = document.getElementById('meta-description');
+            const ogTitle = document.getElementById('og-title');
+            const ogDesc = document.getElementById('og-description');
+            const twitterTitle = document.getElementById('twitter-title');
+            const twitterDesc = document.getElementById('twitter-description');
+
+            if (currentLanguage === 'zh') {
+                titleEl.textContent = 'DeepInfer：DeepSeek 开源了什么，又留下了什么';
+                metaDesc.content = 'DeepInfer 是 DeepSeek 面向 V4.1-Flash 的 Apache 2.0 推理引擎：发布了什么、缺了什么、为什么多数团队仍然跑不了。';
+                ogTitle.content = 'DeepInfer：DeepSeek 开源了什么，又留下了什么';
+                ogDesc.content = 'Apache 2.0，只服务 V4.1-Flash，只跑 SM100 与昇腾 950；缺 KV cache、P/D 解耦与负载均衡；对 API 买家意味着什么。';
+                twitterTitle.content = 'DeepInfer：DeepSeek 开源了什么，又留下了什么';
+                twitterDesc.content = 'DeepSeek API 背后的引擎开源了，但它是离线引擎、只支持两类加速卡，还缺三块服务层。';
+            } else {
+                titleEl.textContent = 'DeepInfer: What DeepSeek Open-Sourced (and What It Left Out)';
+                metaDesc.content = 'DeepInfer: DeepSeek\'s Apache-2.0 inference engine for V4.1-Flash — what shipped, what\'s missing, and why most teams still can\'t run it.';
+                ogTitle.content = 'DeepInfer: What DeepSeek Open-Sourced (and What It Left Out)';
+                ogDesc.content = 'Apache 2.0, V4.1-Flash only, SM100 and Ascend 950 only. What DeepInfer ships, the three serving layers it does not, and what it changes for API buyers.';
+                twitterTitle.content = 'DeepInfer: What DeepSeek Open-Sourced (and What It Left Out)';
+                twitterDesc.content = 'The engine behind DeepSeek\'s API is now Apache 2.0 — but it is offline-only, SM100/Ascend 950-only, and missing KV cache, P/D split and load balancing.';
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', function() {
+            const langDisplay = currentLanguage === 'en' ? 'English' : '中文';
+            document.getElementById('current-lang').textContent = langDisplay;
+
+            document.querySelectorAll('[data-zh][data-en]').forEach(element => {
+                const text = element.getAttribute(`data-${currentLanguage}`);
+                if (text) {
+                    element.textContent = text;
+                }
+            });
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+
+    <!-- Ads: Popunder + Smartlink + Social Bar (effectivecpmnetwork.com) -->
+<script src="https://pl30213816.effectivecpmnetwork.com/b1/de/14/b1de14656aa288f3a0abad48f1d4c29f.js"></script>
+<script src="https://www.effectivecpmnetwork.com/k6mwpc8t?key=ee4176418ab78a252d7b97ece931a5fa"></script>
+<script src="https://pl30213818.effectivecpmnetwork.com/74/61/a5/7461a528560e86fb15b2e286cd2dbeff.js"></script><!-- /Ads -->
+</body>
+</html>
