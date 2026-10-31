@@ -52,6 +52,14 @@
         <priority>0.9</priority>
     </url>
 
+    <!-- dsh-superagent 开源仓库智能体（2026-10-31 发布） -->
+    <url>
+        <loc>https://www.deepseekv.pro/dsh-superagent.html</loc>
+        <lastmod>2026-10-31</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+    </url>
+
     <!-- 广告披露页面 -->
     <url>
         <loc>https://www.deepseekv.pro/advertising-disclosure.html</loc>

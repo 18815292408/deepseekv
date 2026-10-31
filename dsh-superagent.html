@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dsh-superagent: DeepSeek's Proactive GitHub Agent (Oct 31, 2026)</title>
+
+    <meta name="description" id="meta-description" content="DeepSeek's dsh-superagent (MIT, 2026-10-31): a research prototype running a proactive coding agent for one GitHub repo as a DSH bundle. Install, design, limits.">
+    <meta name="keywords" id="meta-keywords" content="dsh-superagent, DeepSeek Harness, DSH bundle, DeepSeek agent, proactive coding agent, dsh-superagent-prototype, DeepSeek GitHub agent, agent design, Ticket Eval Mandate, open source agent 2026">
+    <meta name="author" content="DeepSeek V Pro">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+    <meta name="language" content="en">
+
+    <meta property="og:title" id="og-title" content="dsh-superagent: DeepSeek's Proactive GitHub Agent (Oct 31, 2026)">
+    <meta property="og:description" id="og-description" content="DeepSeek's dsh-superagent (MIT, 2026-10-31): a research prototype running a proactive coding agent for one GitHub repo as a DSH bundle. Install, design, limits.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://www.deepseekv.pro/dsh-superagent.html">
+    <meta property="og:image" content="https://www.deepseekv.pro/images/deepseek-long-context-og.png">
+    <meta property="og:site_name" content="DeepSeek V Pro">
+    <meta property="article:published_time" content="2026-10-31">
+    <meta property="article:modified_time" content="2026-10-31">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" id="twitter-title" content="dsh-superagent: DeepSeek's Proactive GitHub Agent (Oct 31, 2026)">
+    <meta name="twitter:description" id="twitter-description" content="DeepSeek's dsh-superagent (MIT, 2026-10-31): a research prototype running a proactive coding agent for one GitHub repo as a DSH bundle. Install, design, limits.">
+    <meta name="twitter:image" content="https://www.deepseekv.pro/images/deepseek-long-context-og.png">
+
+    <meta name="theme-color" content="#0066FF">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": "dsh-superagent: DeepSeek's Proactive GitHub Agent, Reviewed",
+      "description": "What DeepSeek actually published on 2026-10-31: an MIT research prototype that turns one GitHub repository into an agent work queue as a DeepSeek Harness bundle. Domain model, requirements, install commands, presets and limits, all read from the official repository.",
+      "author": {"@type": "Organization", "name": "DeepSeek V Pro"},
+      "publisher": {"@type": "Organization", "name": "DeepSeek V Pro"},
+      "datePublished": "2026-10-31",
+      "dateModified": "2026-10-31",
+      "mainEntityOfPage": {"@type": "WebPage", "@id": "https://www.deepseekv.pro/dsh-superagent.html"},
+      "keywords": "dsh-superagent, DeepSeek Harness, DSH bundle, proactive coding agent, Ticket, Eval, Mandate",
+      "articleSection": "DeepSeek Ecosystem",
+      "inLanguage": "en"
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is dsh-superagent an official DeepSeek product?",
+          "acceptedAnswer": {"@type": "Answer", "text": "No. The repository README states it is a research prototype for reference only and not an official DeepSeek product, that the code grew out of the team's day-to-day work with much of the engineering done by coding agents, and that it should be treated as research code rather than production-ready software."}
+        },
+        {
+          "@type": "Question",
+          "name": "Can dsh-superagent be installed by package name like a normal DSH plugin?",
+          "acceptedAnswer": {"@type": "Answer", "text": "No. package.json marks the package private at version 0.1.0, and the deployment guide installs it from a local clone: pnpm install and pnpm build, then dsh plugin --profile superagent add link:$PWD. The runnable unit is a dedicated DeepSeek Harness profile created from the Web profile template."}
+        },
+        {
+          "@type": "Question",
+          "name": "Which DeepSeek Harness version does it need?",
+          "acceptedAnswer": {"@type": "Answer", "text": "package.json declares engines.dsh as ^0.2.1-alpha.2 and Node ^22.19.0 or >=24.0.0. The 006 deployment guide pins @deepseek-ai/dsh@0.2.1-rc.3 for its one-time install block and says any other version must satisfy engines.dsh."}
+        },
+        {
+          "@type": "Question",
+          "name": "Does it act on issues nobody mentioned it in?",
+          "acceptedAnswer": {"@type": "Answer", "text": "Only when a written rule allows it, and such work starts in a mode that only records what the agent would have done. The philosophy document's rule is that it acts only when asked or when a rule the team wrote allows it; bots on a Source's bot list can only produce an inferred candidate, never an explicit request."}
+        },
+        {
+          "@type": "Question",
+          "name": "Is it safe to run on a shared machine?",
+          "acceptedAnswer": {"@type": "Answer", "text": "The deployment guide is explicit: both presets run with danger-full-access as the operator's OS user, a worker can execute programs by path and read the operator's home directory, and account wrappers choose credentials without isolating the process. Its own recommendation is a dedicated OS account that contains only the agent's credentials."}
+        }
+      ]
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.deepseekv.pro/"},
+        {"@type": "ListItem", "position": 2, "name": "DeepSeek V4 overview", "item": "https://www.deepseekv.pro/deepseek-v4.html"},
+        {"@type": "ListItem", "position": 3, "name": "dsh-superagent", "item": "https://www.deepseekv.pro/dsh-superagent.html"}
+      ]
+    }
+    </script>
+
+    <link rel="canonical" href="https://www.deepseekv.pro/dsh-superagent.html">
+
+    <link rel="alternate" hreflang="en" href="https://www.deepseekv.pro/dsh-superagent.html">
+    <link rel="alternate" hreflang="x-default" href="https://www.deepseekv.pro/dsh-superagent.html">
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PMY0EV67Q2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-PMY0EV67Q2');
+    </script>
+
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%230066FF;stop-opacity:1'/%3E%3Cstop offset='100%25' style='stop-color:%230044CC;stop-opacity:1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='6' fill='url(%23bg)'/%3E%3Cg transform='translate(16,16)'%3E%3Ctext x='16' y='20' font-family='Arial,sans-serif' font-size='7' font-weight='bold' text-anchor='middle' fill='%23FFFFFF'%3ES%3C/text%3E%3C/g%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+<style>
+        :root {
+            --p: #0066FF;
+            --p-light: #3385FF;
+            --accent: #00d4ff;
+            --t0: #ffffff;
+            --t1: rgba(255,255,255,0.85);
+            --b1: rgba(255,255,255,0.05);
+            --b2: rgba(255,255,255,0.08);
+            --bd: rgba(255,255,255,0.1);
+            --g-b: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.7; color: var(--t0); background: var(--g-b); overflow-x: hidden; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+        .section { padding: 4rem 0; }
+        a { color: var(--p); text-decoration: none; }
+        a:hover { color: var(--p-light); }
+
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(10,14,39,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--bd); padding: 1rem 2rem; }
+        .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.4rem; font-weight: 700; color: var(--p); }
+        .nav-links { display: flex; gap: 1.6rem; list-style: none; }
+        .nav-links a { color: var(--t1); font-size: 0.95rem; }
+        .nav-links a:hover { color: var(--p); }
+        .lang-switcher { background: var(--b2); border: 1px solid var(--bd); border-radius: 8px; padding: 0.4rem 0.8rem; cursor: pointer; color: var(--t0); font-size: 0.9rem; display: flex; align-items: center; gap: 0.4rem; }
+
+        .hero { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 7rem 2rem 2.5rem; }
+        .hero h1 { font-size: clamp(1.75rem, 4.4vw, 3rem); font-weight: 800; background: linear-gradient(135deg, var(--p), var(--accent)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem; line-height: 1.2; max-width: 900px; text-wrap: balance; }
+        .hero .subtitle { font-size: clamp(0.98rem, 1.9vw, 1.15rem); color: var(--t1); max-width: 850px; margin-bottom: 1.5rem; }
+
+        .answer-line { width: 100%; max-width: 860px; margin: 0.1rem 0 0.85rem; font-size: clamp(0.96rem, 1.8vw, 1.06rem); font-weight: 600; color: var(--t0); line-height: 1.55; }
+        .relation-box { width: 100%; max-width: 860px; margin: 0.25rem 0 1.5rem; padding: 0.9rem 1.1rem; text-align: left; background: rgba(0,102,255,0.10); border: 1px solid rgba(0,102,255,0.45); border-radius: 12px; display: grid; gap: 0.45rem; }
+        .relation-row { display: grid; grid-template-columns: 8.6rem 1fr; gap: 0.6rem; font-size: 0.9rem; line-height: 1.55; color: var(--t1); }
+        .relation-row strong { color: var(--accent); font-weight: 700; white-space: nowrap; }
+
+        .breadcrumb { font-size: 0.85rem; color: var(--t1); margin-bottom: 1rem; }
+        .breadcrumb a { color: var(--t1); }
+
+        .hero-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 1rem; max-width: 900px; width: 100%; margin: 1.25rem 0 0; }
+        .hero-stat { background: var(--b1); border: 1px solid var(--accent); border-radius: 12px; padding: 0.9rem 1rem; }
+        .hero-stat .value { font-size: 1.45rem; font-weight: 800; color: var(--accent); line-height: 1.3; }
+        .hero-stat .label { font-size: 0.82rem; color: var(--t1); }
+
+        .section-header { margin-bottom: 2rem; text-align: center; }
+        .section-header h2 { font-size: clamp(1.5rem, 3.3vw, 2.1rem); margin-bottom: 0.7rem; color: var(--t0); }
+        .section-header p { color: var(--t1); font-size: 1.02rem; max-width: 800px; margin: 0 auto; }
+        .section p { color: var(--t1); margin-bottom: 1rem; }
+        .section h3 { color: var(--t0); margin: 1.75rem 0 0.6rem; font-size: 1.15rem; }
+
+        .benchmark-table-wrapper { overflow-x: auto; margin: 1.5rem 0; border-radius: 12px; }
+        .benchmark-table { width: 100%; border-collapse: collapse; background: var(--b1); min-width: 680px; }
+        .benchmark-table th { background: var(--p); color: white; padding: 0.85rem 1rem; text-align: left; font-weight: 600; font-size: 0.95rem; }
+        .benchmark-table td { padding: 0.8rem 1rem; border-bottom: 1px solid var(--bd); color: var(--t1); font-size: 0.94rem; vertical-align: top; }
+        .benchmark-table tr:last-child td { border-bottom: none; }
+        .benchmark-table tr:hover { background: rgba(0,102,255,0.06); }
+        .benchmark-table .v4 { color: var(--accent); font-weight: 600; }
+        .benchmark-table caption { caption-side: bottom; padding-top: 0.75rem; font-size: 0.82rem; color: var(--t1); text-align: left; }
+
+        .insight-box { background: linear-gradient(135deg, rgba(0,102,255,0.15), rgba(0,212,255,0.08)); border: 1px solid var(--p); border-radius: 12px; padding: 1.4rem 1.5rem; margin: 0 0 1.5rem; }
+        .insight-box h3 { color: var(--p-light); margin: 0 0 0.6rem; font-size: 1.1rem; }
+        .insight-box p { color: var(--t1); margin-bottom: 0.75rem; }
+        .insight-box ul { color: var(--t1); margin: 0.4rem 0 0 1.2rem; }
+        .insight-box li { margin-bottom: 0.4rem; }
+
+        .warn-box { background: rgba(255,193,7,0.08); border: 1px solid rgba(255,193,7,0.5); border-radius: 12px; padding: 1.15rem 1.4rem; margin: 1.75rem 0; }
+        .warn-box h3 { color: #ffc107; margin: 0 0 0.5rem; font-size: 1.02rem; }
+        .warn-box p { color: var(--t1); font-size: 0.95rem; margin: 0; }
+        .warn-box ul { color: var(--t1); font-size: 0.95rem; margin: 0.5rem 0 0 1.2rem; }
+
+        .scenario-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.2rem; margin-top: 1.5rem; }
+        .scenario-card { background: var(--b1); border: 1px solid var(--bd); border-radius: 12px; padding: 1.3rem; }
+        .scenario-card .icon { font-size: 1.7rem; margin-bottom: 0.4rem; }
+        .kicker { font-size: 0.68rem; letter-spacing: 0.14em; font-weight: 700; color: var(--accent); margin-bottom: 0.45rem; }
+        .req-list { margin: 1rem 0 0 1.2rem; color: var(--t1); font-size: 0.95rem; }
+        .req-list li { margin-bottom: 0.55rem; }
+        .scenario-card h4 { color: var(--t0); margin-bottom: 0.4rem; font-size: 1.02rem; }
+        .scenario-card p { color: var(--t1); font-size: 0.93rem; line-height: 1.55; margin: 0; }
+
+        .timeline { list-style: none; margin: 1.5rem 0 0; border-left: 2px solid var(--bd); padding-left: 1.3rem; }
+        .timeline li { position: relative; margin-bottom: 1.1rem; color: var(--t1); font-size: 0.96rem; }
+        .timeline li::before { content: ""; position: absolute; left: -1.72rem; top: 0.55rem; width: 9px; height: 9px; border-radius: 50%; background: var(--accent); }
+        .timeline time { color: var(--p-light); font-weight: 700; margin-right: 0.5rem; }
+
+        .steps { margin: 1.25rem 0 0 1.25rem; color: var(--t1); }
+        .steps li { margin-bottom: 0.9rem; }
+        .steps strong { color: var(--t0); }
+        pre { background: rgba(0,0,0,0.45); border: 1px solid var(--bd); border-radius: 10px; padding: 0.9rem 1rem; overflow-x: auto; margin: 0.5rem 0 0; }
+        pre code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.86rem; color: #cfe3ff; }
+
+        .faq-grid { display: grid; grid-template-columns: 1fr; gap: 1.1rem; margin-top: 1.5rem; }
+        .faq-item { background: var(--b1); border: 1px solid var(--bd); border-radius: 12px; padding: 1.3rem 1.4rem; }
+        .faq-item h4 { color: var(--p); margin-bottom: 0.6rem; font-size: 1.06rem; }
+        .faq-item p { color: var(--t1); margin: 0; }
+
+        .source-list { list-style: none; margin-top: 1rem; }
+        .source-list li { color: var(--t1); font-size: 0.9rem; margin-bottom: 0.65rem; padding-left: 1.1rem; position: relative; }
+        .source-list li::before { content: "\2192"; position: absolute; left: 0; color: var(--p); }
+
+        footer { background: rgba(0,0,0,0.5); padding: 3rem 2rem 2rem; margin-top: 4rem; text-align: center; }
+        footer p { color: var(--t1); font-size: 0.9rem; margin-bottom: 1rem; }
+        footer .links { display: flex; justify-content: center; flex-wrap: wrap; gap: 1.4rem; margin-bottom: 1rem; }
+        footer .links a { color: var(--t1); font-size: 0.9rem; }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .container { padding: 0 1rem; }
+            .hero { padding: 6.4rem 1rem 2rem; }
+            .relation-row { grid-template-columns: 1fr; gap: 0.1rem; }
+            .relation-row strong { font-size: 0.86rem; }
+            .relation-box { padding: 0.85rem 0.95rem; }
+        }
+    </style>
+
+    <!-- Ad layout v1 (2026-10-19): 728 = desktop only, 320x50 = mobile only, 300x250 in content. -->
+    <style id="ad-layout-v1">
+        .ad-container { margin: 0; }
+        @media (max-width: 767px) {
+            .ad-container.ad-728 { display: none !important; }
+        }
+        @media (min-width: 768px) {
+            .ad-container.ad-320 { display: none !important; }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-inner">
+            <a href="/" class="logo">dsh-superagent</a>
+            <ul class="nav-links">
+                <li><a href="#shipped" data-zh="发布了什么" data-en="What Shipped">What Shipped</a></li>
+                <li><a href="#how" data-zh="怎么运转" data-en="How It Works">How It Works</a></li>
+                <li><a href="#domain" data-zh="领域模型" data-en="Domain Model">Domain Model</a></li>
+                <li><a href="#requirements" data-zh="环境要求" data-en="Requirements">Requirements</a></li>
+                <li><a href="#setup" data-zh="安装步骤" data-en="Install">Install</a></li>
+                <li><a href="#limits" data-zh="风险与边界" data-en="Limits">Limits</a></li>
+                <li><a href="#faq" data-zh="常见问题" data-en="FAQ">FAQ</a></li>
+            </ul>
+            <div class="lang-switcher" onclick="toggleLanguage()">
+                <span>&#127760;</span>
+                <span id="current-lang">English</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <p class="breadcrumb"><a href="/" data-zh="首页" data-en="Home">Home</a> &rsaquo; <a href="/deepseek-v4.html" data-zh="DeepSeek V4 专题" data-en="DeepSeek V4 overview">DeepSeek V4 overview</a> &rsaquo; <span data-zh="dsh-superagent" data-en="dsh-superagent">dsh-superagent</span></p>
+        <h1 data-zh="dsh-superagent：DeepSeek 开源的「主动型仓库智能体」" data-en="dsh-superagent: DeepSeek's Proactive GitHub Agent, Reviewed">dsh-superagent: DeepSeek's Proactive GitHub Agent, Reviewed</h1>
+
+        <p class="answer-line" data-zh="一句话：DeepSeek 在 2026-10-31 发布了 dsh-superagent——一个 MIT 协议的研究原型，把一个 GitHub 仓库变成智能体的工作队列：它监听 GitHub（可选飞书），为每个被授权的请求开一张工单，在自己的会话和目录里干活，最后回到原对话里用 PR 或评论交付。仓库自己写明：这不是官方产品，也不能按包名安装。" data-en="In one sentence: DeepSeek published dsh-superagent on 2026-10-31 — an MIT-licensed research prototype that turns one GitHub repository into a work queue for an agent: it listens to GitHub (optionally Feishu), opens a Ticket for each authorized request, works in its own session and directory, and answers in the original thread with a pull request. The README states plainly that it is not an official DeepSeek product, and it cannot be installed by package name.">In one sentence: DeepSeek published dsh-superagent on 2026-10-31 — an MIT-licensed research prototype that turns one GitHub repository into a work queue for an agent: it listens to GitHub (optionally Feishu), opens a Ticket for each authorized request, works in its own session and directory, and answers in the original thread with a pull request. The README states plainly that it is not an official DeepSeek product, and it cannot be installed by package name.</p>
+
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <div class="value">31 Oct 2026</div>
+                <div class="label" data-zh="仓库创建与公开日" data-en="Repository created and published">Repository created and published</div>
+            </div>
+            <div class="hero-stat">
+                <div class="value">MIT</div>
+                <div class="label" data-zh="许可证（README 与 package.json 一致）" data-en="Licence, in the README and package.json">Licence, in the README and package.json</div>
+            </div>
+            <div class="hero-stat">
+                <div class="value">0.1.0</div>
+                <div class="label" data-zh="版本号，package.json 标 private" data-en="Version; package.json is marked private">Version; package.json is marked private</div>
+            </div>
+            <div class="hero-stat">
+                <div class="value">9 docs</div>
+                <div class="label" data-zh="设计文档 000–008，按顺序读" data-en="Design documents 000–008, read in order">Design documents 000–008, read in order</div>
+            </div>
+        </div>
+
+        <div class="cta-buttons">
+            <a href="#setup" class="btn btn-primary"><span data-zh="看安装命令" data-en="See the install commands">See the install commands</span></a>
+            <a href="#domain" class="btn btn-secondary"><span data-zh="看它的设计" data-en="Read the design">Read the design</span></a>
+        </div>
+    </section>
+
+    <!-- What shipped -->
+    <section id="shipped" class="container section">
+        <div class="section-header">
+            <h2 data-zh="官方仓库里到底写了什么" data-en="What the official repository actually says">What the official repository actually says</h2>
+            <p data-zh="下面每一条都能在仓库或其文档里直接对上，2026-10-31 读取。仓库自述：这是为了公开发布而改写过的版本，与内部版本、以及那篇《Exploring Super-agent Design》里描述的实现在细节上并不完全相同。" data-en="Every row below can be checked against the repository or its docs; read on 31 October 2026. The README also says the code was adapted for publication, so it is not identical to the internal version or to the implementation described in the article Exploring Super-agent Design.">Every row below can be checked against the repository or its docs; read on 31 October 2026. The README also says the code was adapted for publication, so it is not identical to the internal version or to the implementation described in the article Exploring Super-agent Design.</p>
+        </div>
+        <div class="benchmark-table-wrapper">
+            <table class="benchmark-table">
+                <thead>
+                    <tr>
+                        <th data-zh="项目" data-en="Item">Item</th>
+                        <th data-zh="官方值" data-en="Official value">Official value</th>
+                        <th data-zh="出处" data-en="Where it says so">Where it says so</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Repository</td><td><code>deepseek-ai/dsh-superagent-prototype</code> — "Towards a More Autonomous Agent System"</td><td>GitHub repo page</td></tr>
+                    <tr><td>Created / default branch</td><td>2026-10-31T09:32:46Z, <code>main</code></td><td>GitHub API metadata</td></tr>
+                    <tr><td>Licence</td><td>MIT</td><td>LICENSE + package.json</td></tr>
+                    <tr><td>Version / publishability</td><td>0.1.0, <code>"private": true</code> — not an npm-installable plugin</td><td>package.json</td></tr>
+                    <tr><td>Author field</td><td>DeepSeek Harness Team &lt;team@dsh.dev&gt;</td><td>package.json</td></tr>
+                    <tr><td>Package shape</td><td>DSH bundle: <code>dsh.bundle.patch</code> → <code>./cordis.patch.yml</code>; a web client; entries <code>.</code>, <code>./client</code>, <code>./github-watch</code>, <code>./feishu-watch</code></td><td>package.json exports</td></tr>
+                    <tr><td>Languages in the tree</td><td>TypeScript, Python, CSS</td><td>GitHub language bar</td></tr>
+                    <tr><td>Docs / prompts / skills</td><td>9 numbered docs (000–008), 14 prompt files, 2 bundled skills (<code>dsh-superagent-github</code>, <code>dsh-superagent-feishu</code>)</td><td>Repository tree</td></tr>
+                    <tr><td>Runtime engines</td><td>Node <code>^22.19.0 || &gt;=24.0.0</code>; dsh <code>^0.2.1-alpha.2</code>; pnpm 11.7.0</td><td>package.json engines</td></tr>
+                    <tr><td>Two runtime dependencies</td><td><code>proper-lockfile</code> 4.1.2, <code>zod</code> 4.4.3</td><td>package.json dependencies</td></tr>
+                    <tr><td>Check command</td><td><code>pnpm check</code> = typecheck + tests + build</td><td>README + package.json scripts</td></tr>
+                    <tr><td>Stars at publication</td><td>373 stars, 29 forks, 0 open issues (snapshot, moves daily)</td><td>GitHub repo page, 2026-10-31</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="insight-box">
+            <h3 data-zh="它不是什么（仓库自己说的）" data-en="What it is not, in the repository's own words">What it is not, in the repository's own words</h3>
+            <p data-zh="「Research prototype for reference only, not an official DeepSeek product.」仓库还说，大部分工程是由编码智能体写的，代码风格和工程实践可能不一致，用之前要自己审一遍、改一遍。另外，那篇文章里讨论的一些设计只是「未来方向」，这个原型里并没有实现。" data-en="&quot;Research prototype for reference only, not an official DeepSeek product.&quot; The README adds that much of the engineering was done by coding agents, that its style and practices may be inconsistent, and that you should review and adapt it before use. It also notes that some designs discussed in the article are future directions and are not implemented in this prototype.">&quot;Research prototype for reference only, not an official DeepSeek product.&quot; The README adds that much of the engineering was done by coding agents, that its style and practices may be inconsistent, and that you should review and adapt it before use. It also notes that some designs discussed in the article are future directions and are not implemented in this prototype.</p>
+        </div>
+    </section>
+
+    <!-- How it works -->
+    <section id="how" class="container section">
+        <div class="section-header">
+            <h2 data-zh="一次请求会发生什么" data-en="What happens to one request">What happens to one request</h2>
+            <p data-zh="顺序取自 001（领域模型）、002（授权）与 003（执行）三份文档。真正的关键是第 2、3 步：不是「有人写了话」就能开工，而是要过准入和研判。" data-en="The order comes from docs 001 (domain model), 002 (authorization) and 003 (execution). Steps 2 and 3 are the whole point: a message being written is not enough to start work — it has to pass a gate and an assessment.">The order comes from docs 001 (domain model), 002 (authorization) and 003 (execution). Steps 2 and 3 are the whole point: a message being written is not enough to start work — it has to pass a gate and an assessment.</p>
+        </div>
+        <ol class="steps">
+            <li><strong data-zh="来源产生一个触发" data-en="A Source produces a Trigger">A Source produces a Trigger</strong> — <span data-zh="GitHub（通知、订阅的 Issue/PR、CI 变化、合并与关闭）或飞书（实时事件、历史恢复、轮询）。Source 记着自己的读取位置，重启不会重放旧事件。" data-en="GitHub (notifications, subscribed issues and pull requests, CI changes, merges and closes) or Feishu (live events, history recovery, polling). A Source keeps its own read position, so a restart does not replay events.">GitHub (notifications, subscribed issues and pull requests, CI changes, merges and closes) or Feishu (live events, history recovery, polling). A Source keeps its own read position, so a restart does not replay events.</span></li>
+            <li><strong data-zh="准入闸门先看「谁在说话」" data-en="The gate checks who is asking">The gate checks who is asking</strong> — <span data-zh="被允许的人直接点名智能体＝明确请求；机器人在 Source 的机器人名单里，最多只能产生「推断」候选，永远不会变成明确请求；其他人按准入表走。" data-en="An allowed person addressing the agent directly is an explicit request; a bot on the Source's bot list can only produce an inferred candidate, never an explicit request; other people go through the admission table.">An allowed person addressing the agent directly is an explicit request; a bot on the Source's bot list can only produce an inferred candidate, never an explicit request; other people go through the admission table.</span></li>
+            <li><strong data-zh="Eval 研判，给出一个决定" data-en="Eval decides">Eval decides</strong> — <span data-zh="决定只有四种：accept（接单）、stop（停止）、ignore（忽略）、unavailable（未完成）。只有 accept 才会创建工单，并附上一个 Mandate（授权），记下当时的策略版本。" data-en="There are exactly four decisions: accept, stop, ignore, unavailable. Only an accept creates a Ticket, and it carries a Mandate that records the Policy version it relied on.">There are exactly four decisions: accept, stop, ignore, unavailable. Only an accept creates a Ticket, and it carries a Mandate that records the Policy version it relied on.</span></li>
+            <li><strong data-zh="派工：一张工单、一个执行器会话、一个目录" data-en="Assignment: one Ticket, one Executor Session, one directory">Assignment: one Ticket, one Executor Session, one directory</strong> — <span data-zh="执行器会话叫 worker-&lt;工单 id&gt;，目录按工单短名建在执行根目录下（默认 &lt;stateDir&gt;/work）。目录是从本地 clone 开 worktree 出来的。" data-en="Executor Sessions are named worker-&lt;ticket id&gt;, with a directory named after the Ticket's short name under the execution root (default &lt;stateDir&gt;/work), created as a worktree from a local clone.">Executor Sessions are named worker-&lt;ticket id&gt;, with a directory named after the Ticket's short name under the execution root (default &lt;stateDir&gt;/work), created as a worktree from a local clone.</span></li>
+            <li><strong data-zh="结果回到原来的对话" data-en="The result goes back to the original conversation">The result goes back to the original conversation</strong> — <span data-zh="通过 Channel 回复：飞书话题回复、GitHub 评论、评审线程回复，形式例如一个 PR。人没行动之前，结果停在面板上，不追着人发消息。" data-en="Writes go out through a Channel: Feishu topic replies, GitHub comments, review-thread replies — for example as a pull request. Until a person acts, the result waits in the panel; it does not chase people with messages.">Writes go out through a Channel: Feishu topic replies, GitHub comments, review-thread replies — for example as a pull request. Until a person acts, the result waits in the panel; it does not chase people with messages.</span></li>
+            <li><strong data-zh="后续讨论不需要再 @ 一次" data-en="Later discussion needs no second mention">Later discussion needs no second mention</strong> — <span data-zh="工单订阅（Subscription）的线程里，新消息会作为上下文分发给已订阅的工单——包括机器人和 CI 的消息，但这条通道「绕过闸门、也不授予新权限」，工单始终受自己的 Mandate 限制。" data-en="On a thread a Ticket subscribes to, new messages fan out to it as context — including bot and CI messages — but that path bypasses the gate and grants no new authority; the Ticket stays bound by its Mandate.">On a thread a Ticket subscribes to, new messages fan out to it as context — including bot and CI messages — but that path bypasses the gate and grants no new authority; the Ticket stays bound by its Mandate.</span></li>
+        </ol>
+    </section>
+
+    <!-- Domain model -->
+    <section id="domain" class="container section">
+        <div class="section-header">
+            <h2 data-zh="九个概念，每个只守一条规则" data-en="Nine concepts, one rule each">Nine concepts, one rule each</h2>
+            <p data-zh="文档 001 说得很清楚：代码、智能体调用的工具、面板、其它文档只用这些词。所以读代码之前先把这张表记住，比读架构图省时间。" data-en="Doc 001 is explicit that the code, the tools the agents call, the panel and the other documents use these terms and no others. Learning this table before the architecture diagram saves time.">Doc 001 is explicit that the code, the tools the agents call, the panel and the other documents use these terms and no others. Learning this table before the architecture diagram saves time.</p>
+        </div>
+        <div class="benchmark-table-wrapper">
+            <table class="benchmark-table">
+                <thead>
+                    <tr>
+                        <th data-zh="概念" data-en="Concept">Concept</th>
+                        <th data-zh="它是什么" data-en="What it is">What it is</th>
+                        <th data-zh="它必须守的那条规则" data-en="The rule it keeps">The rule it keeps</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Source</td><td>一个事件流；一种可复用的实现（GitHub、飞书）加一份实例配置</td><td>自己持有读取位置和机器人身份；重启不重放</td></tr>
+                    <tr><td>Trigger</td><td>一个不可变事件，带来源自己的元数据（如发起人）</td><td>同一个 Trigger 接受两次只产生一张工单</td></tr>
+                    <tr><td>Thread</td><td>按时间排序的 Trigger；由 Source 决定哪些归为一串</td><td>同一线程同一时间最多一个 Eval 在跑</td></tr>
+                    <tr><td>Channel</td><td>线程的「写」这一侧：话题回复、评论、PR</td><td>一个线程可以有多个 Channel，一张工单持有一组</td></tr>
+                    <tr><td>Policy</td><td>带版本的研判规则，加上每个 Source 的部分（谁能发起、机器人名单）</td><td>规则变了要给进行中的工单送通知，但不撤销已发的 Mandate</td></tr>
+                    <tr><td>Eval</td><td>对一批 Trigger 的判断，两层：准入闸门 + 模型研判</td><td>不持有状态；输入包含线程快照、所有工单和当前策略</td></tr>
+                    <tr><td>Mandate</td><td>accept 授予的东西：策略版本、范围、强度、匹配规则、发起人身份</td><td>不可变；范围变大＝开新工单；只有人能撤销</td></tr>
+                    <tr><td>Ticket</td><td>一个被授权的工单位</td><td>只有 Eval 能创建；人停止后不再接收任何输入</td></tr>
+                    <tr><td>Assignment</td><td>工单与一次执行器实例的绑定</td><td>pending → running → ended，和工单状态互不跟随</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="benchmark-table-wrapper">
+            <table class="benchmark-table">
+                <thead>
+                    <tr>
+                        <th data-zh="取值组" data-en="Value group">Value group</th>
+                        <th data-zh="可能的值" data-en="Possible values">Possible values</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Decision</td><td><code>accept</code> · <code>stop</code> · <code>ignore</code> · <code>unavailable</code></td></tr>
+                    <tr><td>Strength</td><td><code>explicit</code> · <code>inferred</code></td></tr>
+                    <tr><td>Assignment</td><td><code>pending</code> · <code>running</code> · <code>ended</code></td></tr>
+                    <tr><td>Report</td><td><code>progress</code> · <code>waiting</code> · <code>ready</code> · <code>blocked</code> · <code>failed</code> · <code>dropped</code></td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="insight-box">
+            <h3 data-zh="哪部分能抄，哪部分得自己写" data-en="What you can reuse, and what you must deploy yourself">What you can reuse, and what you must deploy yourself</h3>
+            <p data-zh="001 末尾有一张「什么可复用」的表：概念和规则可以复用；Source 实现、策略内容、执行器、Channel 实现属于某一次部署。也就是说，想让它在你的仓库里干活，真正要填的是四样东西——来源、策略、执行环境、写回渠道。" data-en="Doc 001 ends with a reusability table: the concepts and their rules are reusable, while the Source implementations, Policy contents, Executor and Channel implementations belong to a deployment. In practice that means four things to fill in before it works on your repository: Sources, Policy, execution environment and Channels.">Doc 001 ends with a reusability table: the concepts and their rules are reusable, while the Source implementations, Policy contents, Executor and Channel implementations belong to a deployment. In practice that means four things to fill in before it works on your repository: Sources, Policy, execution environment and Channels.</p>
+        </div>
+    </section>
+
+    <!-- Requirements -->
+    <section id="requirements" class="container section">
+        <div class="section-header">
+            <h2 data-zh="环境要求（006 部署文档）" data-en="Requirements, from the 006 deployment guide">Requirements, from the 006 deployment guide</h2>
+            <p data-zh="这不是「装个插件」的量级：它要一个独立 profile、一个独立的 GitHub 账号、一个能在本机跑 worktree 的 clone。" data-en="This is not a plugin-sized install: it wants its own profile, its own GitHub account, and a local clone it can add worktrees to.">This is not a plugin-sized install: it wants its own profile, its own GitHub account, and a local clone it can add worktrees to.</p>
+        </div>
+        <ul class="req-list">
+            <li data-zh="运行时：Node.js 22.19+ 或 24+、pnpm、git 2.32+、Python 3.8+、tmux。" data-en="Runtime: Node.js 22.19+ or 24+, pnpm, git 2.32+, Python 3.8+ and tmux.">Runtime: Node.js 22.19+ or 24+, pnpm, git 2.32+, Python 3.8+ and tmux.</li>
+            <li data-zh="GitHub CLI <code>gh</code> 2.48 或更高；Source 的 CLI 字段必须指向 <code>gh</code> 或 <code>lark-cli</code> 包装脚本，宿主依赖它们的子命令与输出格式。" data-en="GitHub CLI <code>gh</code> 2.48 or later; the Source CLI fields must point at <code>gh</code> or <code>lark-cli</code> wrappers, whose subcommands and output formats the host relies on.">GitHub CLI <code>gh</code> 2.48 or later; the Source CLI fields must point at <code>gh</code> or <code>lark-cli</code> wrappers, whose subcommands and output formats the host relies on.</li>
+            <li data-zh="一个 github.com 上的仓库；GitHub Enterprise Server 不支持。要按工单开目录，得留一份本地 clone 给 prepare 命令做 worktree；仓库用 Git LFS 就装 git-lfs。" data-en="A repository on github.com; GitHub Enterprise Server is not supported. Creating a directory per Ticket needs a local clone for the prepare command to add worktrees; install git-lfs if the repository uses Git LFS.">A repository on github.com; GitHub Enterprise Server is not supported. Creating a directory per Ticket needs a local clone for the prepare command to add worktrees; install git-lfs if the repository uses Git LFS.</li>
+            <li data-zh="一个专门给智能体的 GitHub 用户账号，必须有仓库写权限。GitHub App 不能充当智能体，因为它要读这个账号的通知。" data-en="A dedicated GitHub user account for the agent with write access to the repository. A GitHub App cannot be the agent, because dsh-superagent reads the account's notifications.">A dedicated GitHub user account for the agent with write access to the repository. A GitHub App cannot be the agent, because dsh-superagent reads the account's notifications.</li>
+            <li data-zh="DeepSeek Harness 已配好模型提供方；默认用 profile 的默认模型，除非 Eval 或 Execution 设置里另指一个。" data-en="A model provider already configured for DeepSeek Harness; it uses the profile's default model unless the Eval or Execution settings name another.">A model provider already configured for DeepSeek Harness; it uses the profile's default model unless the Eval or Execution settings name another.</li>
+            <li data-zh="飞书是可选：需要 <code>lark-cli</code>（文档标注测试版本 1.0.90）和一个带机器人的飞书/Lark 应用。" data-en="Feishu is optional: it needs <code>lark-cli</code> (tested at 1.0.90 according to the guide) and a Feishu or Lark app with a bot.">Feishu is optional: it needs <code>lark-cli</code> (tested at 1.0.90 according to the guide) and a Feishu or Lark app with a bot.</li>
+            <li data-zh="版本口径：package.json 写的 engines 是 dsh <code>^0.2.1-alpha.2</code>；006 的一次性安装块固定装 <code>@deepseek-ai/dsh@0.2.1-rc.3</code>，并说明其它版本必须满足 engines.dsh。" data-en="Version note: package.json declares engines.dsh as <code>^0.2.1-alpha.2</code>; the one-time block in 006 installs <code>@deepseek-ai/dsh@0.2.1-rc.3</code> and says other versions must satisfy engines.dsh.">Version note: package.json declares engines.dsh as <code>^0.2.1-alpha.2</code>; the one-time block in 006 installs <code>@deepseek-ai/dsh@0.2.1-rc.3</code> and says other versions must satisfy engines.dsh.</li>
+        </ul>
+    </section>
+
+    <!-- Setup -->
+    <section id="setup" class="container section">
+        <div class="section-header">
+            <h2 data-zh="两条安装路径" data-en="Two ways in">Two ways in</h2>
+            <p data-zh="官方给了两条路：让编码智能体带着你装（推荐），或者照 006 的块手动跑。下面的命令原样来自 006 与仓库根目录，没有加自己的东西。" data-en="The official route is either to let a coding agent walk you through it (recommended) or to run the block from 006 yourself. The commands below are copied from 006 and the repository root, with nothing added.">The official route is either to let a coding agent walk you through it (recommended) or to run the block from 006 yourself. The commands below are copied from 006 and the repository root, with nothing added.</p>
+        </div>
+        <ol class="steps">
+            <li><strong data-zh="路径一：让智能体装" data-en="Route one: let an agent do it">Route one: let an agent do it</strong> — <span data-zh="README 给的原话是让编码智能体读 <code>SETUP.md</code> 和你一起装。它会一次问一个短问题（要不要飞书、哪个仓库、用哪个账号、谁可以派活），把完整计划一次性给你看，你确认后才开始装。" data-en="The README's instruction is to ask your coding agent to read <code>SETUP.md</code> and set it up with you. It asks one short question at a time (Feishu or not, which repository, which account, who may ask for work), shows the full plan once, and installs only after you confirm.">The README's instruction is to ask your coding agent to read <code>SETUP.md</code> and set it up with you. It asks one short question at a time (Feishu or not, which repository, which account, who may ask for work), shows the full plan once, and installs only after you confirm.</span></li>
+            <li><strong data-zh="路径二：手动块" data-en="Route two: the manual block">Route two: the manual block</strong>
+<pre><code>npm install -g @deepseek-ai/dsh@0.2.1-rc.3
+git clone &lt;this repository&gt; dsh-superagent &amp;&amp; cd dsh-superagent
+pnpm install &amp;&amp; pnpm build
+dsh superagent --from-default-profile web --dump-config &gt; /dev/null
+dsh plugin --profile superagent add "link:$PWD"</code></pre>
+            </li>
+            <li><strong data-zh="只有你能做的几步" data-en="The steps only the operator can do">The steps only the operator can do</strong> — <span data-zh="建智能体账号、接受仓库邀请、给每个包装脚本跑 <code>auth login</code>、飞书那边创建并发布机器人应用再跑 <code>config init</code>。装完后用 <code>&lt;wrapper&gt; api user --jq .login</code> 逐个核对登录身份。" data-en="Create the agent account, accept the repository invitation, run <code>auth login</code> for each wrapper, and on the Feishu side create and publish the bot app and run <code>config init</code>. Afterwards, check each login with <code>&lt;wrapper&gt; api user --jq .login</code>.">Create the agent account, accept the repository invitation, run <code>auth login</code> for each wrapper, and on the Feishu side create and publish the bot app and run <code>config init</code>. Afterwards, check each login with <code>&lt;wrapper&gt; api user --jq .login</code>.</span></li>
+            <li><strong data-zh="第一次试：在 Issue 里点名它" data-en="First test: mention it in an issue">First test: mention it in an issue</strong> — <span data-zh="用白名单里的账号在仓库 Issue 里评论 <code>@&lt;agent login&gt; &lt;request&gt;</code>，大约一分钟内面板上会出现一张 Ticket。" data-en="From an account on the allowed list, comment <code>@&lt;agent login&gt; &lt;request&gt;</code> on an issue in the repository; a Ticket appears on the overview within about a minute.">From an account on the allowed list, comment <code>@&lt;agent login&gt; &lt;request&gt;</code> on an issue in the repository; a Ticket appears on the overview within about a minute.</span></li>
+        </ol>
+    </section>
+
+    <!-- Limits -->
+    <section id="limits" class="container section">
+        <div class="section-header">
+            <h2 data-zh="风险与边界：文档自己写明的部分" data-en="Limits the documentation states itself">Limits the documentation states itself</h2>
+            <p data-zh="这页不替你判断「该不该用」，只把官方文档里会被忽略、但真会影响你的那几句拎出来。" data-en="This page does not decide for you whether to run it; it only pulls out the lines in the official docs that get skipped but do matter.">This page does not decide for you whether to run it; it only pulls out the lines in the official docs that get skipped but do matter.</p>
+        </div>
+        <div class="warn-box">
+            <h3 data-zh="权限模型是「和你一样的 OS 用户」" data-en="The permission model is &quot;an OS user just like you&quot;">The permission model is &quot;an OS user just like you&quot;</h3>
+            <ul>
+                <li data-zh="两个预设（<code>dsh-superagent-worker</code> 给执行器、<code>dsh-superagent-router</code> 给主会话）都以 <code>danger-full-access</code>、以操作者的 OS 用户身份运行。" data-en="Both presets — <code>dsh-superagent-worker</code> for Executors, <code>dsh-superagent-router</code> for the main Session — run with <code>danger-full-access</code> as the operator's OS user.">Both presets — <code>dsh-superagent-worker</code> for Executors, <code>dsh-superagent-router</code> for the main Session — run with <code>danger-full-access</code> as the operator's OS user.</li>
+                <li data-zh="文档直说：worker 可以按路径执行程序、可以读操作者的家目录；账号包装脚本只是选凭据，不隔离进程。要隔离，就用一个只放智能体凭据的独立 OS 账号。" data-en="The guide says outright that a worker can execute programs by path and read the operator's home directory, and that account wrappers only choose credentials — they do not isolate the process. For isolation, use a dedicated OS account holding only the agent's credentials.">The guide says outright that a worker can execute programs by path and read the operator's home directory, and that account wrappers only choose credentials — they do not isolate the process. For isolation, use a dedicated OS account holding only the agent's credentials.</li>
+                <li data-zh="这个 bundle 会改进程级的 <code>PATH</code> 和 git 设置，所以文档要求用独立 profile（<code>superagent</code>），别塞进你平时干活的 profile。" data-en="The bundle changes process-wide <code>PATH</code> and git settings, which is why the guide insists on a dedicated profile (<code>superagent</code>) rather than the one you work in.">The bundle changes process-wide <code>PATH</code> and git settings, which is why the guide insists on a dedicated profile (<code>superagent</code>) rather than the one you work in.</li>
+                <li data-zh="两个预设在 Harness 的预设列表里看得见，但文档说别给个人会话选、也别禁用它们的配置行——应用要靠它们创建和恢复会话。" data-en="Both presets appear in the DeepSeek Harness preset list, but the guide says not to select them for personal Sessions or disable their configuration rows: the application needs them to create and resume its Sessions.">Both presets appear in the DeepSeek Harness preset list, but the guide says not to select them for personal Sessions or disable their configuration rows: the application needs them to create and resume its Sessions.</li>
+                <li data-zh="它靠「少说话」省注意力，但判断质量取决于你写的策略：文档的建议是先把白名单收窄、先把主动行为设成「只记录」，看清楚它本来会做什么之后再放开。" data-en="It saves attention by staying quiet, but the quality of its judgement is set by the Policy you write: the advice is to start with a short allowed list and with proactive work only recorded, then widen once what it would have done looks right.">It saves attention by staying quiet, but the quality of its judgement is set by the Policy you write: the advice is to start with a short allowed list and with proactive work only recorded, then widen once what it would have done looks right.</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Docs -->
+    <section id="docs" class="container section">
+        <div class="section-header">
+            <h2 data-zh="九份文档，按编号顺序读" data-en="Nine documents, read in order">Nine documents, read in order</h2>
+            <p data-zh="文档自己规定：每份只建立在前面的之上，读者不会碰到还没介绍过的概念。所以跳读会卡住。" data-en="The docs require that each one builds only on the ones before it, so a reader never meets a concept that has not been introduced. Skipping around is how people get stuck.">The docs require that each one builds only on the ones before it, so a reader never meets a concept that has not been introduced. Skipping around is how people get stuck.</p>
+        </div>
+        <div class="benchmark-table-wrapper">
+            <table class="benchmark-table">
+                <thead>
+                    <tr>
+                        <th data-zh="文档" data-en="Document">Document</th>
+                        <th data-zh="它回答的问题" data-en="The question it answers">The question it answers</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>000 Philosophy</td><td>为什么它要「少占注意力」；对操作者的责任要求是什么</td></tr>
+                    <tr><td>001 Domain model</td><td>九个概念、各自守的规则、哪些概念被明确拒绝</td></tr>
+                    <tr><td>002 Authorization</td><td>谁能发起工作；follow-up、订阅、交回与释放怎么算</td></tr>
+                    <tr><td>003 Execution</td><td>一张工单从执行到交付、恢复的全过程</td></tr>
+                    <tr><td>004 Prompts</td><td>哪些提示词是团队可改的部分</td></tr>
+                    <tr><td>005 Panel</td><td>面板只显示「需要人」的东西</td></tr>
+                    <tr><td>006 Deployment</td><td>账号、启动检查、升级与排错</td></tr>
+                    <tr><td>007 Architecture</td><td>类、接口、文件与测试的索引</td></tr>
+                    <tr><td>008 Cookbook</td><td>怎么加一个新的 Source</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="container section">
+        <div class="section-header">
+            <h2 data-zh="常见问题" data-en="FAQ">FAQ</h2>
+        </div>
+        <div class="faq-grid">
+            <div class="faq-item">
+                <h4 class="faq-question" data-zh="它是 DeepSeek 的官方产品吗？" data-en="Is it an official DeepSeek product?">Is it an official DeepSeek product?</h4>
+                <p class="faq-answer" data-zh="不是。README 第一句就是「Research prototype for reference only, not an official DeepSeek product」。它来自 DeepSeek 团队日常开发，很多工程由编码智能体完成，仓库要求按研究代码对待。" data-en="No. The first line of the README is &quot;Research prototype for reference only, not an official DeepSeek product.&quot; It grew out of the team's day-to-day work with much of the engineering done by coding agents, and the repository asks you to treat it as research code.">No. The first line of the README is &quot;Research prototype for reference only, not an official DeepSeek product.&quot; It grew out of the team's day-to-day work with much of the engineering done by coding agents, and the repository asks you to treat it as research code.</p>
+            </div>
+            <div class="faq-item">
+                <h4 class="faq-question" data-zh="能像插件一样 <code>dsh plugin add</code> 一个包名吗？" data-en="Can I install it as a package name, like a plugin?">Can I install it as a package name, like a plugin?</h4>
+                <p class="faq-answer" data-zh="不能。package.json 是 <code>private: true</code>、版本 0.1.0。006 的做法是本地 clone、<code>pnpm install &amp;&amp; pnpm build</code>，再 <code>dsh plugin --profile superagent add &quot;link:$PWD&quot;</code>，装进一个从 Web 模板建出来的独立 profile。" data-en="No. package.json is <code>private: true</code> at version 0.1.0. Doc 006 clones locally, runs <code>pnpm install &amp;&amp; pnpm build</code>, then <code>dsh plugin --profile superagent add &quot;link:$PWD&quot;</code> into a dedicated profile created from the Web template.">No. package.json is <code>private: true</code> at version 0.1.0. Doc 006 clones locally, runs <code>pnpm install &amp;&amp; pnpm build</code>, then <code>dsh plugin --profile superagent add &quot;link:$PWD&quot;</code> into a dedicated profile created from the Web template.</p>
+            </div>
+            <div class="faq-item">
+                <h4 class="faq-question" data-zh="必须接飞书吗？" data-en="Do I have to wire up Feishu?">Do I have to wire up Feishu?</h4>
+                <p class="faq-answer" data-zh="不必须。README 写的是「监听 GitHub，并且可选地监听飞书」。只用 GitHub 时，把 Sources 限制为 GitHub 即可；要飞书则另需 lark-cli（文档标注 1.0.90）和带机器人的飞书应用。" data-en="No. The README says it listens to GitHub and, optionally, Feishu. With GitHub only, limit Sources to GitHub; Feishu additionally needs lark-cli (documented at 1.0.90) and a Feishu app with a bot.">No. The README says it listens to GitHub and, optionally, Feishu. With GitHub only, limit Sources to GitHub; Feishu additionally needs lark-cli (documented at 1.0.90) and a Feishu app with a bot.</p>
+            </div>
+            <div class="faq-item">
+                <h4 class="faq-question" data-zh="它会自己在没人要求的时候动手吗？" data-en="Will it act when nobody asked?">Will it act when nobody asked?</h4>
+                <p class="faq-answer" data-zh="只有在团队写下的规则允许时才可能，而且这类工作开始于「只记录它本来会做什么」的模式。文档的纪律是：它只在被要求、或规则允许时行动；机器人只能产生推断候选，不能制造明确请求。" data-en="Only where a rule the team wrote allows it, and that kind of work starts in a mode that only records what the agent would have done. The stated discipline is that it acts only when asked or when a written rule allows it, and a bot can only produce an inferred candidate, never an explicit request.">Only where a rule the team wrote allows it, and that kind of work starts in a mode that only records what the agent would have done. The stated discipline is that it acts only when asked or when a written rule allows it, and a bot can only produce an inferred candidate, never an explicit request.</p>
+            </div>
+            <div class="faq-item">
+                <h4 class="faq-question" data-zh="跑起来要花多少钱？" data-en="What does it cost to run?">What does it cost to run?</h4>
+                <p class="faq-answer" data-zh="仓库没有给任何价格或 token 预算，只说明它用 profile 的默认模型（除非 Eval 或 Execution 设置另指一个）。所以成本取决于你自己的模型配置与策略宽窄——策略越宽、工作的工单越多，花的越多。" data-en="The repository publishes no pricing or token budget; it says only that it uses the profile's default model unless the Eval or Execution settings name another. Cost therefore depends on your own model configuration and on how wide your Policy is — more allowed work means more spend.">The repository publishes no pricing or token budget; it says only that it uses the profile's default model unless the Eval or Execution settings name another. Cost therefore depends on your own model configuration and on how wide your Policy is — more allowed work means more spend.</p>
+            </div>
+            <div class="faq-item">
+                <h4 class="faq-question" data-zh="它和那篇《Exploring Super-agent Design》文章是什么关系？" data-en="How does it relate to the Exploring Super-agent Design article?">How does it relate to the Exploring Super-agent Design article?</h4>
+                <p class="faq-answer" data-zh="它是那套设计的公开原型，但 README 明确说：为了发布做了改写，跟内部版本、跟文章里描述的实现在细节上并不相同；文章里讨论的一些设计属于未来方向，这个原型里没有实现。" data-en="It is the public prototype of that design, but the README says explicitly that the code was adapted for publication and is not identical to the internal version or to the implementation the article describes; some designs in the article are future directions that this prototype does not implement.">It is the public prototype of that design, but the README says explicitly that the code was adapted for publication and is not identical to the internal version or to the implementation the article describes; some designs in the article are future directions that this prototype does not implement.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Keep reading -->
+    <section id="related" class="container section">
+        <div class="section-header">
+            <h2 data-zh="接着读" data-en="Keep Reading">Keep Reading</h2>
+            <p data-zh="dsh-superagent 是「DeepSeek 怎么让模型自己干活」这一层；模型本身的能力、价格与上下文在下面几页。" data-en="dsh-superagent is the layer where DeepSeek lets the model do the work itself; the model's own capability, pricing and context live on these pages.">dsh-superagent is the layer where DeepSeek lets the model do the work itself; the model's own capability, pricing and context live on these pages.</p>
+        </div>
+        <ul class="source-list">
+            <li><a href="/deepseek-v4.html" data-zh="DeepSeek V4 专题：V4-Pro 与 Flash 的规格、架构与基准" data-en="DeepSeek V4 overview: V4-Pro and Flash specs, architecture and benchmarks">DeepSeek V4 overview: V4-Pro and Flash specs, architecture and benchmarks</a> — <span data-zh="智能体背后那个模型家族的完整数字。" data-en="the full numbers for the model family behind the agent">the full numbers for the model family behind the agent</span></li>
+            <li><a href="/deepinfer.html" data-zh="DeepInfer：DeepSeek 开源了什么，又留下了什么" data-en="DeepInfer: what DeepSeek open-sourced and what it left out">DeepInfer: what DeepSeek open-sourced and what it left out</a> — <span data-zh="同一周的另一份开源：推理引擎，而不是智能体。" data-en="the other release that week: serving, not agents">the other release that week: serving, not agents</span></li>
+            <li><a href="/deepseek-v4-coding-benchmark.html" data-zh="V4 编程评测：SWE-bench 与 Codeforces" data-en="V4 coding benchmarks: SWE-bench and Codeforces">V4 coding benchmarks: SWE-bench and Codeforces</a> — <span data-zh="判断「它写代码行不行」看这页，别只看排行榜标题。" data-en="for judging whether it can code, rather than reading a leaderboard headline">for judging whether it can code, rather than reading a leaderboard headline</span></li>
+            <li><a href="/deepseek-v4-1-flash-1017.html" data-zh="V4.1-Flash-1017：基准、官方价格与自托管" data-en="V4.1-Flash-1017: benchmarks, official pricing and self-hosting">V4.1-Flash-1017: benchmarks, official pricing and self-hosting</a> — <span data-zh="若你想把 worker 的默认模型换成更便宜的那个。" data-en="if you want to point the worker at a cheaper default model">if you want to point the worker at a cheaper default model</span></li>
+        </ul>
+    </section>
+
+    <!-- Sources -->
+    <section id="sources" class="container section">
+        <div class="section-header">
+            <h2 data-zh="来源与更新" data-en="Sources &amp; Updates">Sources &amp; Updates</h2>
+            <p data-zh="本页所有事实于 2026-10-31 从下列一手来源读取：仓库页面、README、package.json 与编号文档。版本、引擎要求都会变，动手前请回官方仓库核对。" data-en="Every fact on this page was read from the primary sources below on 31 October 2026: the repository page, README, package.json and the numbered documents. Versions and engine requirements change — check the official repository before you start.">Every fact on this page was read from the primary sources below on 31 October 2026: the repository page, README, package.json and the numbered documents. Versions and engine requirements change — check the official repository before you start.</p>
+        </div>
+        <ul class="source-list">
+            <li><a href="https://github.com/deepseek-ai/dsh-superagent-prototype" target="_blank" rel="noopener noreferrer">GitHub — deepseek-ai/dsh-superagent-prototype</a><span data-zh="（仓库说明、创建时间、许可证、星标快照）" data-en=" — repository description, creation time, licence, star snapshot"> — repository description, creation time, licence, star snapshot</span></li>
+            <li><a href="https://github.com/deepseek-ai/dsh-superagent-prototype/blob/main/README.md" target="_blank" rel="noopener noreferrer">README.md</a><span data-zh="（「非官方产品、研究代码」声明、它做什么、文档顺序）" data-en=" — the &quot;not an official product, research code&quot; notice, what it does, reading order"> — the &quot;not an official product, research code&quot; notice, what it does, reading order</span></li>
+            <li><a href="https://github.com/deepseek-ai/dsh-superagent-prototype/blob/main/package.json" target="_blank" rel="noopener noreferrer">package.json</a><span data-zh="（版本、private、engines、依赖、pnpm check 脚本、dsh.bundle 与 client 注入）" data-en=" — version, private flag, engines, dependencies, the pnpm check script, dsh.bundle and client injects"> — version, private flag, engines, dependencies, the pnpm check script, dsh.bundle and client injects</span></li>
+            <li><a href="https://github.com/deepseek-ai/dsh-superagent-prototype/blob/main/docs/001-domain.md" target="_blank" rel="noopener noreferrer">docs/001-domain.md</a><span data-zh="（九个概念与规则、取值组、什么可复用）" data-en=" — the nine concepts and their rules, value groups, what is reusable"> — the nine concepts and their rules, value groups, what is reusable</span></li>
+            <li><a href="https://github.com/deepseek-ai/dsh-superagent-prototype/blob/main/docs/002-authorization.md" target="_blank" rel="noopener noreferrer">docs/002-authorization.md</a><span data-zh="（准入闸门、机器人与订阅的边界、交回与释放）" data-en=" — the gate, bot and subscription boundaries, hand-back and release"> — the gate, bot and subscription boundaries, hand-back and release</span></li>
+            <li><a href="https://github.com/deepseek-ai/dsh-superagent-prototype/blob/main/docs/006-deployment.md" target="_blank" rel="noopener noreferrer">docs/006-deployment.md</a><span data-zh="（前置条件、账号、一次性安装块、danger-full-access 与隔离建议）" data-en=" — prerequisites, accounts, the one-time install block, danger-full-access and the isolation advice"> — prerequisites, accounts, the one-time install block, danger-full-access and the isolation advice</span></li>
+            <li><a href="https://github.com/deepseek-ai/dsh-superagent-prototype/blob/main/SETUP.md" target="_blank" rel="noopener noreferrer">SETUP.md</a><span data-zh="（让编码智能体带你装的那套问答流程）" data-en=" — the question-by-question setup flow a coding agent follows"> — the question-by-question setup flow a coding agent follows</span></li>
+        </ul>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p data-zh="© 2026 deepseekv.pro — 独立第三方资料站，与 DeepSeek（深度求索）无隶属关系。本页是对公开仓库的整理与解读。" data-en="© 2026 deepseekv.pro — an independent third-party resource, not affiliated with DeepSeek. This page summarises and explains a public repository.">© 2026 deepseekv.pro — an independent third-party resource, not affiliated with DeepSeek. This page summarises and explains a public repository.</p>
+        <div class="links">
+            <a href="/" data-zh="返回首页" data-en="Back to Home">Back to Home</a>
+            <a href="/deepseek-v4.html" data-zh="V4 专题" data-en="V4 Overview">V4 Overview</a>
+            <a href="/deepinfer.html" data-zh="DeepInfer" data-en="DeepInfer">DeepInfer</a>
+            <a href="/deepseek-v4-1-flash-1017.html" data-zh="V4.1-Flash-1017" data-en="V4.1-Flash-1017">V4.1-Flash-1017</a>
+            <a href="/deepseek-v4-coding-benchmark.html" data-zh="编程评测" data-en="Coding Benchmark">Coding Benchmark</a>
+            <a href="/deepseek-v4-long-context.html" data-zh="百万上下文" data-en="1M Context">1M Context</a>
+            <a href="/deepseek-v3-to-v4-migration.html" data-zh="V3→V4 迁移" data-en="V3 to V4 Migration">V3 to V4 Migration</a>
+            <a href="/advertising-disclosure.html" style="color: #c2410c;" data-zh="推广披露" data-en="Affiliate Disclosure">Affiliate Disclosure</a>
+        </div>
+        <p style="margin-top: 2rem; font-size: 0.875rem;" data-zh="数据来源：deepseek-ai/dsh-superagent-prototype 仓库、README、package.json、docs/000–008 与 SETUP.md，2026-10-31 读取。" data-en="Data sources: the deepseek-ai/dsh-superagent-prototype repository, README, package.json, docs/000–008 and SETUP.md — read 31 October 2026.">Data sources: the deepseek-ai/dsh-superagent-prototype repository, README, package.json, docs/000–008 and SETUP.md — read 31 October 2026.</p>
+    </footer>
+
+    <script>
+        let currentLanguage = localStorage.getItem('preferredLanguage') || 'en';
+
+        if (currentLanguage === 'zh') {
+            document.documentElement.lang = 'zh-CN';
+        }
+
+        function toggleLanguage() {
+            currentLanguage = currentLanguage === 'en' ? 'zh' : 'en';
+            localStorage.setItem('preferredLanguage', currentLanguage);
+            document.documentElement.lang = currentLanguage === 'zh' ? 'zh-CN' : 'en';
+
+            const langDisplay = currentLanguage === 'en' ? 'English' : '中文';
+            const langEl = document.getElementById('current-lang');
+            if (langEl) { langEl.textContent = langDisplay; }
+
+            document.querySelectorAll('[data-zh][data-en]').forEach(element => {
+                const text = element.getAttribute('data-' + currentLanguage);
+                if (text) {
+                    element.textContent = text;
+                }
+            });
+
+            const titleEl = document.querySelector('title');
+            const metaDesc = document.getElementById('meta-description');
+            const ogTitle = document.getElementById('og-title');
+            const ogDesc = document.getElementById('og-description');
+            const twitterTitle = document.getElementById('twitter-title');
+            const twitterDesc = document.getElementById('twitter-description');
+
+            if (currentLanguage === 'zh') {
+                titleEl.textContent = 'dsh-superagent：DeepSeek 开源的主动型仓库智能体（2026-10-31）';
+                if (metaDesc) metaDesc.content = 'DeepSeek 于 2026-10-31 公开 dsh-superagent：MIT 研究原型，把一个 GitHub 仓库交给智能体打理，作为 DeepSeek Harness 的 bundle 运行。含官方环境要求、安装命令、领域模型与风险边界。';
+                if (ogTitle) ogTitle.content = 'dsh-superagent：DeepSeek 开源的主动型仓库智能体';
+                if (ogDesc) ogDesc.content = 'MIT 研究原型，一个仓库一个智能体；附官方安装命令、九概念领域模型、danger-full-access 风险与版本要求。';
+                if (twitterTitle) twitterTitle.content = 'dsh-superagent：DeepSeek 开源的主动型仓库智能体';
+                if (twitterDesc) twitterDesc.content = '2026-10-31 发布：MIT、0.1.0、private 包，独立 profile 安装，按工单执行。';
+            } else {
+                titleEl.textContent = 'dsh-superagent: DeepSeek\'s Proactive GitHub Agent (Oct 31, 2026)';
+                if (metaDesc) metaDesc.content = 'DeepSeek published dsh-superagent on 2026-10-31: an MIT research prototype that runs a proactive coding agent for one GitHub repository as a DeepSeek Harness bundle. Verified requirements, install commands, domain model and limits.';
+                if (ogTitle) ogTitle.content = 'dsh-superagent: DeepSeek\'s Proactive GitHub Agent (Oct 31, 2026)';
+                if (ogDesc) ogDesc.content = 'MIT research prototype, one repository per agent: official install commands, the nine-concept domain model, danger-full-access caveats and version requirements.';
+                if (twitterTitle) twitterTitle.content = 'dsh-superagent: DeepSeek\'s Proactive GitHub Agent';
+                if (twitterDesc) twitterDesc.content = 'Released 2026-10-31: MIT, 0.1.0, private package, installed into its own DSH profile, one Ticket at a time.';
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', function() {
+            const langDisplay = currentLanguage === 'en' ? 'English' : '中文';
+            const langEl = document.getElementById('current-lang');
+            if (langEl) { langEl.textContent = langDisplay; }
+            document.querySelectorAll('[data-zh][data-en]').forEach(element => {
+                const text = element.getAttribute('data-' + currentLanguage);
+                if (text) {
+                    element.textContent = text;
+                }
+            });
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    e.preventDefault();
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('.nav-links a');
+            let current = '';
+            sections.forEach(section => {
+                if (scrollY >= section.offsetTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+            navLinks.forEach(link => {
+                link.style.color = '';
+                if (link.getAttribute('href') === '#' + current) {
+                    link.style.color = 'var(--p)';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
