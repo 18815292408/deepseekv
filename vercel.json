@@ -2,6 +2,7 @@
   "version": 2,
   "builds": [
     { "src": "*.html", "use": "@vercel/static" },
+    { "src": "ads-gate.js", "use": "@vercel/static" },
     { "src": "remixicon-custom.css", "use": "@vercel/static" },
     { "src": "llms.txt", "use": "@vercel/static" },
     { "src": "llms-full.txt", "use": "@vercel/static" },
@@ -43,6 +44,6 @@
     { "source": "/sitemap.xml", "destination": "/public/sitemap.xml" },
     { "source": "/robots.txt", "destination": "/public/robots.txt" },
     { "source": "/images/(.*)", "destination": "/public/images/$1" },
-    { "source": "/((?!.*\\.xml|.*\\.txt|.*\\.png|.*\\.svg|.*\\.css|.*\\.ico|.*\\.woff2).*)", "destination": "/deepseek32-landing.html" }
+    { "source": "/((?!.*\\.xml|.*\\.txt|.*\\.png|.*\\.svg|.*\\.css|.*\\.js|.*\\.ico|.*\\.woff2).*)", "destination": "/deepseek32-landing.html" }
   ]
 }
